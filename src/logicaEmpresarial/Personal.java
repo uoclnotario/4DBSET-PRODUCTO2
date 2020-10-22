@@ -9,6 +9,8 @@ public  class Personal{
     private boolean estado;
     private Identificacion identificacion;
 
+
+    //falta añadir delegacion.
     public Personal(){
 
     }
