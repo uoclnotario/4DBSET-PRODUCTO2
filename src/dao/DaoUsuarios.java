@@ -1,5 +1,7 @@
 package dao;
 
+import logicaEmpresarial.Usuario;
+
 import java.util.List;
 
 public class DaoUsuarios implements Dao{
@@ -15,7 +17,7 @@ public class DaoUsuarios implements Dao{
     }
 
     //Busca en el xml la cadena de sha1.
-    public boolean Login(String Sha1){
+    public boolean Login(Usuario user){
 
         return true;
     }
