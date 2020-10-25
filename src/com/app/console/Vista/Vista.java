@@ -1,8 +1,10 @@
 package com.app.console.Vista;
 
+import logicaEmpresarial.Ong;
 import logicaEmpresarial.Personal;
 import logicaEmpresarial.Usuario;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface Vista {
@@ -21,5 +23,6 @@ public interface Vista {
         -Personal.
     */
 
-    public Object Crear();
+    public Object Crear(Ong datos, String PALABRACANCEALR);
+    public Object Modificar(Ong datos,int indice, String PALABRACANCEALR);
 }

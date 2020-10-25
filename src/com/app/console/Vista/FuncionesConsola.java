@@ -1,16 +1,23 @@
 package com.app.console.Vista;
 
+import java.awt.desktop.SystemEventListener;
+import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FuncionesConsola {
     public static final String MASCARATEXTO ="^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$";
-    public  static final String MASCARANUMERO="^([0-9])*$";
+    public static final String MASCARANUMERO="^([0-9])*$";
     public static final String MASCARADECIMAL="^([0-9.,])*$";
     public static final String MASCARAFECHA = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$";
+    public static final String MASCARADNI = "[0-9]{7,8}[A-Z a-z]";
+
     public  enum comprobaConversion{TEXTO,ENTERO,REAL,FECHA};
     public enum retornoConversion{FALSE,TRUE,EXIT}
 
@@ -88,4 +95,55 @@ public class FuncionesConsola {
             return retornoConversion.FALSE;
         }
     }
+
+
+    //REaliza un procedimiento unificado de leer consola y verificar el valor de entrada forzando que se devuelve un valor, o de
+    // cancelar por el usuario se devuelve null
+
+    public static  String forzarEntradaTexto(String mascara, comprobaConversion tipo, String PALABRASALIR, boolean ACEPTARTECLAENTER){
+        do{
+            String entradaTexto = FuncionesConsola.leerConsola();
+
+            //indice lo tenemos como boleano, si
+            if(ACEPTARTECLAENTER && entradaTexto.length() == 0)
+                return "(default)";
+
+            switch (FuncionesConsola.comprobarEntrada(entradaTexto, mascara, PALABRASALIR, tipo)) {
+                case TRUE:
+                        return entradaTexto;
+                case EXIT:
+                    return null;
+            }
+        }while (true);
+    }
+
+    public static  String forzarEntradaNumero(String mascara, comprobaConversion tipo, String PALABRASALIR, int minimo, int maximo){
+        do{
+            String entradaTexto = FuncionesConsola.leerConsola();
+            switch (FuncionesConsola.comprobarEntrada(entradaTexto, mascara, PALABRASALIR, tipo)) {
+                case TRUE:
+                    if(Integer.parseInt(entradaTexto) >= minimo && Integer.parseInt(entradaTexto) <=maximo)
+                    {
+                        return entradaTexto;
+                    }else{
+                        System.out.println("El valor tiene que ser entre "+minimo+"-"+maximo);
+                    }
+
+                case EXIT:
+                    return null;
+            }
+        }while (true);
+    }
+
+    public static Date convertirAFEcha(String fecha) throws ParseException {
+        Date retorno;
+        try{
+            retorno=new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
+        }catch (ParseException ex){
+            retorno  = null;
+        }
+
+        return retorno;
+    }
+
 }

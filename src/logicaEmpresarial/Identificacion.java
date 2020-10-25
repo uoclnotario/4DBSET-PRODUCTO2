@@ -40,4 +40,24 @@ public class Identificacion {
     public Tipo getTipo() {
         return tipo;
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setDomicilio(String domicilio) {
+        this.domicilio = domicilio;
+    }
+
+    public void setFechaDeNacimiento(Date fechaDeNacimiento) {
+        this.fechaDeNacimiento = fechaDeNacimiento;
+    }
+
+    public void setNif_dni(String nif_dni) {
+        this.nif_dni = nif_dni;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
 }
