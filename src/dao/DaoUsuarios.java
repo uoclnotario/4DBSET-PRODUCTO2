@@ -1,10 +1,12 @@
 package dao;
 
+import logicaEmpresarial.Ong;
 import logicaEmpresarial.Usuario;
 
 import java.util.List;
 
 public class DaoUsuarios implements Dao{
+
 
     @Override
     public List RecogerLIstado() {
@@ -13,6 +15,16 @@ public class DaoUsuarios implements Dao{
 
     @Override
     public boolean Crear(Object item) {
+        return false;
+    }
+
+    @Override
+    public boolean DescargaDatos() {
+        return false;
+    }
+
+    @Override
+    public boolean Modificar(Object item, int indice) {
         return false;
     }
 

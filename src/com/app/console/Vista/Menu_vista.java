@@ -8,7 +8,7 @@ public class Menu_vista {
 
         int valorRecogido = 0;
         System.out.println("---SELECCIONE LA ACCION A SELECCIONAR---");
-        System.out.println("--1\t PERSONAL ");
+        System.out.println("\t-1\t PERSONAL ");
 
         if(user.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR)
             System.out.println("--2\t USUARIOS ");
@@ -24,5 +24,25 @@ public class Menu_vista {
 
     public void DespedirUsuario(Usuario user){
         System.out.println("Adios "+user.getNombre());
+    }
+
+    public  void mensajeElementoCreado(boolean elementoCreado){
+
+        if(elementoCreado){
+            System.out.println("Se ha creado correctamente");
+        }else{
+            System.out.println("No se ha creado, debido a que se ha cancelado.");
+        }
+
+    }
+
+    public  void mensajeElementoEditado(boolean elementoCreado){
+
+        if(elementoCreado){
+            System.out.println("Se ha Modificado correctamente");
+        }else{
+            System.out.println("No se ha podido modificar.");
+        }
+
     }
 }

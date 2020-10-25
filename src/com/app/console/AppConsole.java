@@ -7,6 +7,7 @@ import dao.DaoUsuarios;
 import logicaEmpresarial.*;
 
 import java.awt.*;
+import java.text.ParseException;
 
 public class AppConsole {
 
@@ -16,8 +17,11 @@ public class AppConsole {
 
     private Dao modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
     private Vista vista;//Vista seleccionada por el usuario en el que se encuenta actualmente al acpliacion.
+    private Ong pilaDatos;
+
 
     public AppConsole(){
+        pilaDatos=new Ong();
         vistaMenu = new Menu_vista();
         run();
     }
@@ -50,7 +54,7 @@ public class AppConsole {
 
     }
 
-    private   boolean  MostrarMenu(){
+    private boolean  MostrarMenu(){
 
         String entradaUsuario = vistaMenu.MostrarMenu(usuarioAutentificado,PALABRAPARAVOLVER);
         int accesoApartado,minimo,maximo;
@@ -96,12 +100,12 @@ public class AppConsole {
 
     }
 
-
-    private   boolean  AbrirApartado(int apartado){
+    private boolean  AbrirApartado(int apartado){
         //Cargar modelo factory y llamar a visualizar
          modelo= getFactoyDao(apartado);
          vista = getVista(apartado);
 
+         modelo.DescargaDatos();
 
         //Mostramos el listado y recibimos que desea hacer el usuario.
          String entradaUsuario = vista.MostrarLIstado(modelo.RecogerLIstado(),PALABRAPARAVOLVER,usuarioAutentificado);
@@ -122,7 +126,9 @@ public class AppConsole {
                 }
 
                 if(apartadoSeleccionado == 0){//Si es cero se Creara un nuevo elemento, por lo que llamamos a Crear.
-                    Crear();
+                   //Aqui se podria añadir una restricción para que si el elemento ya existe de une error y no se cree.
+                    vistaMenu.mensajeElementoCreado(modelo.Crear(vista.Crear(pilaDatos,"CANCELAR")));
+
                 }else{//De lo contrario llama a mostrar uno.
                     while(MostarUno(apartadoSeleccionado-1));//Abirmos mostrar uno pasandole el apartado seleccionado -1.
                 }
@@ -136,13 +142,10 @@ public class AppConsole {
         return true;
     }
 
-
     private  boolean MostarUno(int elemento){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
-
         String entradaUsuario = vista.MostrarUno(modelo.RecogerLIstado().get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
         int apartadoSeleccionado;
-
 
         switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
                 FuncionesConsola.MASCARANUMERO,
@@ -150,43 +153,33 @@ public class AppConsole {
                 FuncionesConsola.comprobaConversion.ENTERO))
         {
             case TRUE:
-                apartadoSeleccionado = Integer.parseInt(entradaUsuario);
-                if(apartadoSeleccionado < 0 || apartadoSeleccionado >1)
-                {
-                    vistaMenu.MostrarErrorEntrada(0,modelo.RecogerLIstado().size(),PALABRAPARAVOLVER);
-                    return true;
-                }
+                    apartadoSeleccionado = Integer.parseInt(entradaUsuario);
+                    if(apartadoSeleccionado < 0 || apartadoSeleccionado >1)
+                    {
+                        vistaMenu.MostrarErrorEntrada(0,modelo.RecogerLIstado().size(),PALABRAPARAVOLVER);
+                        return true;
+                    }
 
-                if(apartadoSeleccionado == 0){//Si es cero se Creara un nuevo elemento, por lo que llamamos a Crear.
-                    Modificar();
-                }else{//De lo contrario llama a mostrar uno.
-                    Borrar();
-                }
+                    if(apartadoSeleccionado == 0){//Si es cero se Modificará
+                        //Carga la vista, se lo envia al modelo y muestra un mensaje si se ha realizado correctamente.
+                        vistaMenu.mensajeElementoEditado(modelo.Modificar(vista.Modificar(pilaDatos, elemento,"CANCELAR"), elemento));
+                    }else{//De lo contrario llama a Borrar
+
+                    }
                 break;
             case FALSE:
-                vistaMenu.MostrarErrorEntrada(0,modelo.RecogerLIstado().size(),PALABRAPARAVOLVER);
+                    vistaMenu.MostrarErrorEntrada(0,modelo.RecogerLIstado().size(),PALABRAPARAVOLVER);
                 return true;
             case EXIT:
                 return false;
         }
         return true;
     }
-    private  boolean Crear(){
-        return false;
-    }
-
-    private  boolean Modificar(){
-        return false;
-    }
-    private  boolean Borrar(){
-        return  false;
-    }
-
 
     //Factory sobre modelos y vistas.
     private  Dao getFactoyDao(int apartado){
         switch (apartado){
-            case 1: return new DaoPersonal();
+            case 1: return new DaoPersonal(pilaDatos);
             default:return  null;
         }
     }
