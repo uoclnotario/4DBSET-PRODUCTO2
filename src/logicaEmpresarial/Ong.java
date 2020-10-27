@@ -1,5 +1,6 @@
 package logicaEmpresarial;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public  class Ong {
@@ -13,6 +14,11 @@ public  class Ong {
     private List<Usuario> usuarios;
     private List<Proyecto> proyectos;
     private List<Delegacion> delegaciones;
+
+    public Ong(){
+        personal = new ArrayList<Personal>();
+        delegaciones = new ArrayList<Delegacion>();
+    }
 
 
     public String getNombre() {

@@ -1,32 +1,48 @@
 package com.app.console.Vista;
 
+import logicaEmpresarial.Ong;
 import logicaEmpresarial.Usuario;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Usuario_vista implements Vista {
 
     @Override
-    public int MostrarLIstado(List listado) {
-        return 0;
+    public String MostrarLIstado(List listado,String salir, Usuario user) {
+        return "0";
     }
 
     @Override
-    public Object Crear() {
+    public String MostrarUno(Object elemento, String salir, Usuario user) {
         return null;
     }
 
-    //Pide por consola usuario y password.
-    public Object PedirCredenciales(){
-        Usuario newUser = new Usuario();
-        newUser.setNombre("Usuario");
-        newUser.setPassword("prueba");
-        return newUser;
+    @Override
+    public Object Crear(Ong datos, String PALABRACANCELAR) {
+        return null;
     }
 
+    @Override
+    public Object Modificar(Ong datos, int indice, String PALABRACANCELAR) {
+        return null;
+    }
+
+
+    //Pide por consola usuario y password.
+    public Object PedirCredenciales(){
+        String entradaUser,entradaPass;
+        System.out.println("Introduce el nombre de usuario:");
+        entradaUser="prueba";
+
+        System.out.println("Introduzca la contraseña:");
+        entradaPass="pass";
+
+
+        return new Usuario(entradaUser,entradaPass, Usuario.tipoUsuarios.USUARIO);
+    }
     public void MostrarBienvenida(Usuario user){
         System.out.println("Bienvenido "+user.getNombre());
-
     }
     public void MostrarError(){
         System.out.println("El usuario o la clave introducidos no son correctos");
