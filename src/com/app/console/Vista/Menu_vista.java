@@ -2,6 +2,8 @@ package com.app.console.Vista;
 
 import logicaEmpresarial.Usuario;
 
+import java.awt.desktop.SystemEventListener;
+
 public class Menu_vista {
 
     public String MostrarMenu(Usuario user, String salir) {
@@ -49,4 +51,10 @@ public class Menu_vista {
         }
 
     }
+
+    public void mensajeError(String error){
+        System.out.println("Se ha producido un error: "+error);
+        System.out.println("La aplicación no pudec continuar.");
+    }
+
 }

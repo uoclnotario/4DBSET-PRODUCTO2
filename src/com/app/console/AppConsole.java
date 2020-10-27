@@ -85,7 +85,7 @@ public class AppConsole {
                     return true;//Retorna true y se volvera a repetir el menu.
                 }
 
-                while(AbrirApartado(Apartados.intToApartados(accesoApartado)));
+                while(abrirApartado(Apartados.intToApartados(accesoApartado)));
                 return true;//Cuando el usuario quiera volver al menu desde apartado, lanzamos true para volver a mostrar el menu.
 
             case FALSE:
@@ -99,15 +99,24 @@ public class AppConsole {
 
     }
 
-    private boolean  AbrirApartado(Apartados apartados){
+    private boolean  abrirApartado(Apartados apartados){
 
 
         //Cargar modelo factory y llamar a visualizar
          vista = getVista(apartados);
+         if(vista == null){
+             vistaMenu.mensajeError("Este apartado aun está en desarrollo.");
+             return false;
+         }
 
-         modelo.descargaDatos();
-
-
+         //Descargamos los datos del apartado y verificamos errores.
+         if(!modelo.descargaDatos(apartados)){
+             if(modelo.existeUnError())
+                vistaMenu.mensajeError(modelo.getMensajeError());
+             else
+                 vistaMenu.mensajeError("Error desconocido");
+             return false; //para que salga y no vuelva a intentar entrar en el bucle
+         }
 
 
         //Mostramos el listado y recibimos que desea hacer el usuario.

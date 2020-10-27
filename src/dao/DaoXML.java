@@ -28,21 +28,32 @@ public class DaoXML {
         pilaDatosGenerales = pilaDatos;
     }
 
-    public boolean descargaDatos() {
-        //Dao Personal llama a descarga tambien a delegaciones.
+    public boolean descargaDatos(Apartados apartados) {
+        //Descarga los datos, la descarga de cada apartado tendra que descargar los
+        //elementos que necesite para mostrar ejemplo:
+        //Personal necesita: Delegaciones y Proyectos para la interactuar con el usuario.
 
-        if(pilaDatosGenerales.getPersonal().size()< 1) {
-            //Esto es para depurar
-            pilaDatosGenerales.getPersonal().add(new Personal(null,
-                    null,
-                    false,
-                    new Identificacion("12345", "nombre1", null, "domicilio1", Identificacion.Tipo.PERSONA)));
+        switch (apartados){
 
-            pilaDatosGenerales.getPersonal().add(new Personal(null,
-                    null,
-                    false,
-                    new Identificacion("12345", "nombre2", null, "domicilio2", Identificacion.Tipo.PERSONA)));
+            case PERSONAL:
+                pilaDatosGenerales.getPersonal().clear();//Vacia la pila actual de personal.
+                if(pilaDatosGenerales.getPersonal().size()< 1) {
+                    //Esto es para depurar
+                    pilaDatosGenerales.getPersonal().add(new Personal(null,
+                            null,
+                            false,
+                            new Identificacion("12345", "nombre1", null, "domicilio1", Identificacion.Tipo.PERSONA)));
+
+                    pilaDatosGenerales.getPersonal().add(new Personal(null,
+                            null,
+                            false,
+                            new Identificacion("12345", "nombre2", null, "domicilio2", Identificacion.Tipo.PERSONA)));
+                }
+
+                break;
+            default:return false;
         }
+
         return true;
     }
 
@@ -113,18 +124,34 @@ public class DaoXML {
         return error;
     }
 
-    private boolean guardar(){
-        try{
-            return true;
-        }catch (Exception er){
-            return false;
-        }
-    }
 
     public boolean Login(Usuario user){
 
         return true;
     }
 
+
+
+    //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
+    //convertirlos a xml para leerlos y guardarlos.
+    private boolean guardarXML(Apartados apartado){
+        try{
+            return true;
+        }catch (Exception er){
+            mensajeError="Se ha producido un error al guardar el archivo";
+            error = true;
+            return false;
+        }
+    }
+
+    private boolean leerXML(Apartados apartado){
+        try{
+            return true;
+        }catch (Exception er){
+            mensajeError="Se ha producido un error al guardar el archivo";
+            error = true;
+            return false;
+        }
+    }
 
 }

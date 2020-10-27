@@ -116,7 +116,6 @@ public class FuncionesConsola {
             }
         }while (true);
     }
-
     public static  String forzarEntradaNumero(String mascara, comprobaConversion tipo, String PALABRASALIR, int minimo, int maximo){
         do{
             String entradaTexto = FuncionesConsola.leerConsola();
@@ -134,7 +133,6 @@ public class FuncionesConsola {
             }
         }while (true);
     }
-
     public static Date convertirAFEcha(String fecha) throws ParseException {
         Date retorno;
         try{
