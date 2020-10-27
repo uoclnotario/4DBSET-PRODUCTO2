@@ -10,19 +10,29 @@ import java.util.List;
 import java.util.Optional;
 
 public class Personal_vista implements Vista {
+
     @Override
     public String MostrarLIstado(List listado, String salir, Usuario user){
-        List<Personal> personal = (List<Personal>)listado;
-        System.out.println("Listado de personal:");
-        System.out.println("\tINDICE\tNOMBRE\tDNI");
 
-        for(int i = 0; i < personal.size();i++)
-            System.out.println("\t"+(i+1)+"\t"+personal.get(i).getGetIdentificacion().getNombre()+ "\t"+personal.get(i).getGetIdentificacion().getNif_dni());
+        if(listado == null){
 
-        System.out.println("Indique que desea realizar:");
-        System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
-        System.out.println("\t- 0 Crear un nuevo.");
-        System.out.println("\t- Escriba "+salir+" para volver al menu");
+
+
+        }else{
+            List<Personal> personal = (List<Personal>)listado;
+            System.out.println("Listado de personal:");
+            System.out.println("\tINDICE\tNOMBRE\tDNI");
+
+            for(int i = 0; i < personal.size();i++)
+                System.out.println("\t"+(i+1)+"\t"+personal.get(i).getGetIdentificacion().getNombre()+ "\t"+personal.get(i).getGetIdentificacion().getNif_dni());
+
+            System.out.println("Indique que desea realizar:");
+            System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
+            System.out.println("\t- 0 Crear un nuevo.");
+            System.out.println("\t- Escriba "+salir+" para volver al menu");
+
+        }
+
 
         return FuncionesConsola.leerConsola();
     }
@@ -45,7 +55,7 @@ public class Personal_vista implements Vista {
         System.out.println("");
         System.out.println("Nombre:\t"+ persona.getGetIdentificacion().getNombre());
         System.out.println("Fecha de nacimiento:\t"+ persona.getGetIdentificacion().getFechaDeNacimiento());
-        System.out.println("Domicilio:\t"+ persona.getGetIdentificacion().getFechaDeNacimiento());
+        System.out.println("Domicilio:\t"+ persona.getGetIdentificacion().getDomicilio());
     }
 
     @Override
@@ -92,22 +102,20 @@ public class Personal_vista implements Vista {
                 1,
                 5);
 
-        if(esMOdificacion) {
-            entradaNumero = Integer.parseInt(entradaTexto);
 
-            switch (entradaNumero) {
-                case 1 -> nuevoPersonal = new Contratados();
-                case 2 -> nuevoPersonal = new Colaboradores();
-                case 3 -> nuevoPersonal = new Voluntarios();
-                case 4 -> nuevoPersonal = new VoluntariosInternacionales();
-                default -> {
-                    System.out.println("Se ha producido un error");
-                    return null;
-                }
+        entradaNumero = Integer.parseInt(entradaTexto);
+
+        switch (entradaNumero) {
+            case 1 -> nuevoPersonal = new Contratados();
+            case 2 -> nuevoPersonal = new Colaboradores();
+            case 3 -> nuevoPersonal = new Voluntarios();
+            case 4 -> nuevoPersonal = new VoluntariosInternacionales();
+            default -> {
+                System.out.println("Se ha producido un error");
+                return null;
             }
-        }else{
-            return null;
         }
+
 
 
         //dni

@@ -8,10 +8,14 @@ public class Menu_vista {
 
         int valorRecogido = 0;
         System.out.println("---SELECCIONE LA ACCION A SELECCIONAR---");
-        System.out.println("\t-1\t PERSONAL ");
+        System.out.println("\t-1\t INGRESOS ");
+        System.out.println("\t-2\t PROYECTOS ");
+        System.out.println("\t-3\t SOCIOS ");
+        System.out.println("\t-4\t PERSONAL ");
+        System.out.println("\t-5\t DELEGACIONES ");
 
         if(user.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR)
-            System.out.println("--2\t USUARIOS ");
+            System.out.println("--6\t USUARIOS ");
 
         System.out.println("Escriba el indice del apartado o "+ salir + " para cerrar sesión:");
         return FuncionesConsola.leerConsola();

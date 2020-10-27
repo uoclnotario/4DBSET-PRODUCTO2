@@ -58,4 +58,6 @@ public  class Personal{
     public void setDelegacion(Delegacion delegacion) {
         this.delegacion = delegacion;
     }
+
+
 }
