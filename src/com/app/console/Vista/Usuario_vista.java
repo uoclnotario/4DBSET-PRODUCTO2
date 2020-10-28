@@ -1,6 +1,7 @@
 package com.app.console.Vista;
 
 import logicaEmpresarial.Ong;
+import logicaEmpresarial.Personal;
 import logicaEmpresarial.Usuario;
 
 import java.util.List;
@@ -29,22 +30,5 @@ public class Usuario_vista implements Vista {
     }
 
 
-    //Pide por consola usuario y password.
-    public Object PedirCredenciales(){
-        String entradaUser,entradaPass;
-        System.out.println("Introduce el nombre de usuario:");
-        entradaUser="prueba";
 
-        System.out.println("Introduzca la contraseña:");
-        entradaPass="pass";
-
-
-        return new Usuario(entradaUser,entradaPass, Usuario.tipoUsuarios.USUARIO);
-    }
-    public void MostrarBienvenida(Usuario user){
-        System.out.println("Bienvenido "+user.getNombre());
-    }
-    public void MostrarError(){
-        System.out.println("El usuario o la clave introducidos no son correctos");
-    }
 }

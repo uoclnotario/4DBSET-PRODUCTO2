@@ -41,7 +41,7 @@ public class Personal_vista implements Vista {
     public String MostrarUno(Object elemento, String salir, Usuario user) {
 
         System.out.println("---MOSTRANDO DATOS DE PERSONA---");
-        MostrarDatosPersona((Personal)elemento);
+        MostrarDato((Personal)elemento);
 
         System.out.println("Indique que desea realizar:");;
         System.out.println("\t- 0 Modificar esta persona.");
@@ -51,7 +51,8 @@ public class Personal_vista implements Vista {
 
         return FuncionesConsola.leerConsola();
     }
-    private void MostrarDatosPersona(Personal persona){
+
+    public void MostrarDato(Personal persona){
         System.out.println("");
         System.out.println("Nombre:\t"+ persona.getGetIdentificacion().getNombre());
         System.out.println("Fecha de nacimiento:\t"+ persona.getGetIdentificacion().getFechaDeNacimiento());

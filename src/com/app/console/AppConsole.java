@@ -27,20 +27,17 @@ public class AppConsole {
     private void run() {
         boolean userLogueado = false;
 
-        //Inicio aplicacion.
-        Usuario_vista VistaLogin=new Usuario_vista();    //Vista para loguear.
-
 
         do {
             do {
-                usuarioAutentificado = (Usuario) VistaLogin.PedirCredenciales();
+                usuarioAutentificado = (Usuario) vistaMenu.PedirCredenciales();
                 if (modelo.Login(usuarioAutentificado)) {
                     //El usuario se ha logueado correctamente.
-                    VistaLogin.MostrarBienvenida(usuarioAutentificado);
+                    vistaMenu.MostrarBienvenida(usuarioAutentificado);
                     userLogueado = true;
                 } else {
                     //Error el usuario o la clave no es correcto.
-                    VistaLogin.MostrarError();
+                    vistaMenu.MostrarError();
                 }
             } while (!userLogueado);//Hasta que el usuario no se haya logueado no continuamos.
 
@@ -174,9 +171,38 @@ public class AppConsole {
 
                     if(apartadoSeleccionado == 0){//Si es cero se Modificará
                         //Carga la vista, se lo envia al modelo y muestra un mensaje si se ha realizado correctamente.
-                        vistaMenu.mensajeElementoEditado(modelo.modificar(vista.Modificar(pilaDatos, elemento,"CANCELAR"), elemento));
+                        Object nuevoValor = vista.Modificar(pilaDatos, elemento,"CANCELAR");
+
+                        if(nuevoValor == null){
+                            vistaMenu.mensajeElementoEditado(false);
+                        }else{
+                            if(!modelo.modificar(nuevoValor,apartadoSeleccionado,apartado)){
+                                if(modelo.existeUnError()){
+                                    vistaMenu.mensajeError(modelo.getMensajeError());
+                                }
+                                    vistaMenu.mensajeElementoEditado(false);
+                            }else{
+                                vistaMenu.mensajeElementoEditado(true);
+                            }
+
+                        }
+
                     }else{//De lo contrario llama a Borrar
 
+                        if(vistaMenu.preguntarBorrar()){
+                            if(!modelo.borrar(elemento,apartado)){
+                                if(modelo.existeUnError()){
+                                    vistaMenu.mensajeError(modelo.getMensajeError());
+                                }
+                                vistaMenu.mensajeBorrar(false);
+
+                            }else{
+                                vistaMenu.mensajeBorrar(true);
+                                return false; //Sale para que no vuelva a intentar mostrar el elemento que acabamos de borrar
+                            }
+                        }else{
+                            vistaMenu.mensajeBorrar(false);
+                        }
                     }
                 break;
             case FALSE:
@@ -187,6 +213,7 @@ public class AppConsole {
         }
         return true;
     }
+
 
 
     private  Vista getVista(Apartados apartado){

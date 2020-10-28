@@ -57,4 +57,35 @@ public class Menu_vista {
         System.out.println("La aplicación no pudec continuar.");
     }
 
+    public boolean preguntarBorrar(){
+        System.out.println("¿Seguro que desea borrar?:escriba Si/s No/n");
+        return  FuncionesConsola.leerConsolaSiNo();
+    }
+
+    public void mensajeBorrar(boolean borrado){
+        if(borrado){
+            System.out.println("Se ha borrado correctamente");
+        }else{
+            System.out.println("No se ha borrado");
+        }
+    }
+
+    //Pide por consola usuario y password.
+    public Object PedirCredenciales(){
+        String entradaUser,entradaPass;
+        System.out.println("Introduce el nombre de usuario:");
+        entradaUser="prueba";
+
+        System.out.println("Introduzca la contraseña:");
+        entradaPass="pass";
+
+
+        return new Usuario(entradaUser,entradaPass, Usuario.tipoUsuarios.USUARIO);
+    }
+    public void MostrarBienvenida(Usuario user){
+        System.out.println("Bienvenido "+user.getNombre());
+    }
+    public void MostrarError(){
+        System.out.println("El usuario o la clave introducidos no son correctos");
+    }
 }

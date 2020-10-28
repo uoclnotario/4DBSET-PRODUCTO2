@@ -36,8 +36,8 @@ public class DaoXML {
         switch (apartados){
 
             case PERSONAL:
-                pilaDatosGenerales.getPersonal().clear();//Vacia la pila actual de personal.
-                if(pilaDatosGenerales.getPersonal().size()< 1) {
+                pilaDatosGenerales.getPersonal().clear();
+                    if(pilaDatosGenerales.getPersonal().size()< 1) {
                     //Esto es para depurar
                     pilaDatosGenerales.getPersonal().add(new Personal(null,
                             null,
@@ -57,10 +57,7 @@ public class DaoXML {
         return true;
     }
 
-
-
-    public List recogerLIstado(Apartados apartado)
-    {
+    public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
             case INGRESOS:return  pilaDatosGenerales.getPersonal();
@@ -73,6 +70,7 @@ public class DaoXML {
         }
 
     }
+
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
@@ -104,11 +102,59 @@ public class DaoXML {
         return true;
     }
 
-    public boolean modificar(Object item, int indice) {
-        if(item == null)return false;
-        pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
+    public boolean modificar(Object item, int indice,Apartados apartado) {
+        if(item == null)
+            return false;
+
+        //Descarga listado de xml
+        if(!descargaDatos(apartado)){
+            return false;
+        }
+
+        //Modificar el item.
+        switch (apartado){
+            case NINGUNO: return false;
+            case INGRESOS:  pilaDatosGenerales.getIngresos().set(indice,(Ingresos)item);break;
+            case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
+            case SOCIOS:    pilaDatosGenerales.getSocios().set(indice,(Socios) item);break;
+            case PERSONAL:  pilaDatosGenerales.getPersonal().set(indice,(Personal)item);break;
+            case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
+            case USUARIOS: pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);break;
+            default: return false;
+        }
+
+        //Guardar los cambios
+        if(!guardarXML(apartado))
+            return  false;
+
         return true;
     }
+
+    public boolean borrar(int indice,Apartados apartado){
+        //Descarga listado de xml
+        if(!descargaDatos(apartado)){
+            return false;
+        }
+
+        //Modificar el item.
+        switch (apartado){
+            case NINGUNO: return false;
+            case INGRESOS:  pilaDatosGenerales.getIngresos().remove(indice);break;
+            case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
+            case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
+            case PERSONAL:  pilaDatosGenerales.getPersonal().remove(indice);break;
+            case DELEGACIONES: pilaDatosGenerales.getDelegaciones().remove(indice);break;
+            case USUARIOS: pilaDatosGenerales.getUsuarios().remove(indice);break;
+            default: return false;
+        }
+
+        //Guardar los cambios
+        if(!guardarXML(apartado))
+            return  false;
+
+        return true;
+    }
+
 
     public String getMensajeError() {
         String mensaje = mensajeError;
@@ -119,12 +165,9 @@ public class DaoXML {
 
         return mensaje;
     }
-
     public boolean existeUnError(){
         return error;
     }
-
-
     public boolean Login(Usuario user){
 
         return true;
@@ -153,5 +196,8 @@ public class DaoXML {
             return false;
         }
     }
+
+
+
 
 }
