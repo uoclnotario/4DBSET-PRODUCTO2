@@ -219,6 +219,11 @@ public class AppConsole {
     private  Vista getVista(Apartados apartado){
         switch (apartado){
             case PERSONAL: return new Personal_vista();
+            case INGRESOS: return new Ingresos_vista();
+            case SOCIOS: return new Socios_vista();
+            case PROYECTOS: return new Proyectos_vista();
+            case DELEGACIONES: return new Delegaciones_vista();
+            case USUARIOS: return new Usuario_vista();
             default:return  null;
         }
     }
