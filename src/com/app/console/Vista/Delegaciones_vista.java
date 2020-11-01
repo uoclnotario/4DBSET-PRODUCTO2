@@ -15,16 +15,12 @@ public class Delegaciones_vista implements Vista {
     @Override
     public String MostrarLIstado(List listado, String salir, Usuario user) {
 
-
-
         if(listado == null){
-
-
 
     }else{
         List<Delegacion> delegacion = (List<Delegacion>)listado;
         System.out.println("Listado de las delegaciones:");
-        System.out.println("\tNOMBRE\tDIRECCION");
+        System.out.println("\tINDICE\tNOMBRE\tDIRECCION");
 
         for(int i = 0; i < delegacion.size();i++)
             System.out.println("\t"+(i+1)+"\t"+delegacion.get(i).getNombre()+ "\t"+delegacion.get(i).getDireccion());
