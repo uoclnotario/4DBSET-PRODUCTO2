@@ -30,5 +30,4 @@ public class Usuario_vista implements Vista {
     }
 
 
-
 }
