@@ -23,7 +23,6 @@ public class DaoXML {
     private boolean error;
 
 
-
     public DaoXML(Ong pilaDatos) {
         pilaDatosGenerales = pilaDatos;
     }
@@ -51,11 +50,26 @@ public class DaoXML {
                 }
 
                 break;
+            case SOCIOS:
+                pilaDatosGenerales.getPersonal().clear();
+                if(pilaDatosGenerales.getPersonal().size()< 1) {
+                    //Esto es para depurar
+                    pilaDatosGenerales.getPersonal().add(new Personal(null,
+                            null,
+                            false,
+                            new Identificacion("12345", "nombre1", null, "domicilio1", Identificacion.Tipo.PERSONA)));
+
+                    pilaDatosGenerales.getPersonal().add(new Personal(null,
+                            null,
+                            false,
+                            new Identificacion("12345", "nombre2", null, "domicilio2", Identificacion.Tipo.PERSONA)));
+                }
             default:return false;
         }
 
         return true;
     }
+
 
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
