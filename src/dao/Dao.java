@@ -6,8 +6,14 @@ import logicaEmpresarial.Personal;
 import java.util.List;
 
 public interface Dao {
-    public List RecogerLIstado();
-    public boolean Crear(Object item);
-    public boolean DescargaDatos();
-    public boolean Modificar(Object item, int indice);
+
+
+    public boolean descargaDatos();
+
+    public boolean crear(Object item);
+    public List recogerLIstado();
+    public boolean modificar(Object item, int indice);
+   // public boolean eliminar();
+
+
 }
