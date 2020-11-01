@@ -4,16 +4,6 @@ import com.app.console.Apartados;
 import logicaEmpresarial.*;
 
 
-import java.beans.ExceptionListener;
-import java.beans.XMLEncoder;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-
-
-import java.net.NetworkInterface;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DaoXML {
@@ -51,6 +41,14 @@ public class DaoXML {
                 }
 
                 break;
+            case DELEGACIONES:
+                    pilaDatosGenerales.getDelegaciones().clear();
+                        if(pilaDatosGenerales.getDelegaciones().size()<1) {
+                            pilaDatosGenerales.getDelegaciones().add(new Delegacion( "AAB", "bbc", "665655"));
+                        }
+
+                break;
+
             default:return false;
         }
 
