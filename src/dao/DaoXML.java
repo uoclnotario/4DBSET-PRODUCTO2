@@ -4,16 +4,6 @@ import com.app.console.Apartados;
 import logicaEmpresarial.*;
 
 
-import java.beans.ExceptionListener;
-import java.beans.XMLEncoder;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-
-
-import java.net.NetworkInterface;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DaoXML {
@@ -21,6 +11,7 @@ public class DaoXML {
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
+
 
 
     public DaoXML(Ong pilaDatos) {
@@ -50,26 +41,19 @@ public class DaoXML {
                 }
 
                 break;
-            case SOCIOS:
-                pilaDatosGenerales.getPersonal().clear();
-                if(pilaDatosGenerales.getPersonal().size()< 1) {
-                    //Esto es para depurar
-                    pilaDatosGenerales.getPersonal().add(new Personal(null,
-                            null,
-                            false,
-                            new Identificacion("12345", "nombre1", null, "domicilio1", Identificacion.Tipo.PERSONA)));
+            case DELEGACIONES:
+                    pilaDatosGenerales.getDelegaciones().clear();
+                        if(pilaDatosGenerales.getDelegaciones().size()<1) {
+                            pilaDatosGenerales.getDelegaciones().add(new Delegacion( "AAB", "bbc", "665655"));
+                        }
 
-                    pilaDatosGenerales.getPersonal().add(new Personal(null,
-                            null,
-                            false,
-                            new Identificacion("12345", "nombre2", null, "domicilio2", Identificacion.Tipo.PERSONA)));
-                }
+                break;
+
             default:return false;
         }
 
         return true;
     }
-
 
     public List recogerLIstado(Apartados apartado){
         switch (apartado){

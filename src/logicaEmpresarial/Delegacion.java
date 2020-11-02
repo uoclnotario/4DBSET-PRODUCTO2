@@ -9,6 +9,12 @@ public class Delegacion {
     private String telefono;
     private List<Personal> Personal;
 
+    public Delegacion(String nombre, String direccion, String telefono) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+    }
+
     public String getNombre() {
         return nombre;
     }
