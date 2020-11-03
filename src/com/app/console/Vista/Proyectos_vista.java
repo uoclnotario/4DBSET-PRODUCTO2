@@ -66,7 +66,7 @@ public class Proyectos_vista implements Vista{
 
 
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
-        Personal nuevoPersonal;
+        Proyecto nuevoProyecto;
         String entradaTexto;
         int entradaNumero;
         boolean esMOdificacion = indice != -1;
@@ -84,7 +84,7 @@ public class Proyectos_vista implements Vista{
             switch (datos.getPersonal().get(indice).getClass().getName()) {
                 case "Publico": valor="1";break;
                 case "Privado":valor="2";break;
-                case "Local":valor="3";break;
+                case "Nacional":valor="3";break;
                 case "Internacional":valor="4";break;
             }
 
@@ -104,7 +104,7 @@ public class Proyectos_vista implements Vista{
         switch (entradaNumero) {
             case 1 : nuevoProyecto = new Publico();break;
             case 2 : nuevoProyecto = new Privado();break;
-            case 3 : nuevoProyecto = new Local();break;
+            case 3 : nuevoProyecto = new Nacional();break;
             case 4 : nuevoProyecto = new Internacional();break;
             default :
                 System.out.println("Se ha producido un error");
@@ -113,32 +113,31 @@ public class Proyectos_vista implements Vista{
 
 
 
-
         //dni
 
         if(esMOdificacion)
-            System.out.println("Inserte el DNI:"+datos.getPersonal().get(indice).getGetIdentificacion().getNif_dni()+"]");
+            System.out.println("Inserte el Indice:"+datos.getProyectos().get(indice).getGetIndice().getIndice()+"]");
         else
-            System.out.println("Inserte el DNI:");
+            System.out.println("Inserte el Indice:");
 
-        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARADNI,
+        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARAINDICE,
                 FuncionesConsola.comprobaConversion.TEXTO,
                 PALABRACANCELAR,
                 esMOdificacion);
         if(entradaTexto != null) {
             if(entradaTexto.equals("(default)"))
-                nuevoPersonal.getGetIdentificacion().setNif_dni(datos.getPersonal().get(indice).getGetIdentificacion().getNif_dni());
+                nuevoPersonal.getGetIndice().setIndice(datos.getIndice().get(indice).getGetIndice().getIndice());
             else
-                nuevoPersonal.getGetIdentificacion().setNif_dni(entradaTexto);
+                nuevoPersonal.getGetIndice().setIndice(entradaTexto);
         }else{
             return null;
         }
 
         //Nombre
         if(esMOdificacion)
-            System.out.println("Inserte Nombre:"+datos.getPersonal().get(indice).getGetIdentificacion().getNombre()+"]");
+            System.out.println("Inserte Proyecto:"+datos.getProyectos().get(indice).getGetProyecto().getProyecto()+"]");
         else
-            System.out.println("Inserte Nombre:");
+            System.out.println("Inserte Proyecto:");
 
         entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
                 FuncionesConsola.comprobaConversion.TEXTO,
