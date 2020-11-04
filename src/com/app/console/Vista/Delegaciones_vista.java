@@ -26,9 +26,15 @@ public class Delegaciones_vista implements Vista {
             System.out.println("\t"+(i+1)+"\t"+delegacion.get(i).getNombre()+ "\t"+delegacion.get(i).getDireccion());
 
 
-    }
 
+        System.out.println("Indique que desea realizar:");
+        System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
 
+        }
+
+        
         return FuncionesConsola.leerConsola();
 }
 
