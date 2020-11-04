@@ -40,7 +40,25 @@ public class Delegaciones_vista implements Vista {
 
     @Override
     public String MostrarUno(Object elemento, String salir, Usuario user) {
-        return null;
+
+
+        System.out.println("---MOSTRANDO DATOS DE DELEGACION---");
+        MostrarDato((Delegacion)elemento);
+
+        System.out.println("Indique que desea realizar:");;
+        System.out.println("\t- 0 Modificar la delegacion.");
+        System.out.println("\t- 1 Borrar la delegacion.");
+
+        System.out.println("\t- Escriba "+salir+" para volver atras.");
+
+        return FuncionesConsola.leerConsola();
+    }
+
+    public void MostrarDato(Delegacion delegacion){
+        System.out.println("");
+        System.out.println("Nombre:\t"+ delegacion.getNombre());
+        System.out.println("Direccion:\t"+ delegacion.getDireccion());
+        System.out.println("Telefono:\t"+ delegacion.getTelefono());
     }
 
     @Override
