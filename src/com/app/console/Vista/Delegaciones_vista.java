@@ -34,7 +34,7 @@ public class Delegaciones_vista implements Vista {
 
         }
 
-        
+
         return FuncionesConsola.leerConsola();
 }
 
