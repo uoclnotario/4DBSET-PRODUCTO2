@@ -10,7 +10,7 @@ public  class Ong {
     private String usuarioAutentificado;
     private List<Ingresos> ingresos;
     private List<Socios> socios;
-    private List<Personal> personal;
+    public List<Personal> personal;
     private List<Usuario> usuarios;
     private List<Proyecto> proyectos;
     private List<Delegacion> delegaciones;
