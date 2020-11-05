@@ -2,28 +2,22 @@ package logicaEmpresarial;
 
 import java.util.Date;
 
-public  class Personal{
+public  class Personal extends Persona {
 
     private Date fechaAlta;
     private Date fechaBaja;
     private boolean estado;
-    private Identificacion identificacion;
     private Delegacion delegacion;
 
     //falta añadir delegacion.
     public Personal(){
-        identificacion = new Identificacion();
     }
 
-    public Personal(Date fechaAlta, Date fechaBaja, boolean estado, Identificacion identificacion) {
+    public Personal(Date fechaAlta, Date fechaBaja, boolean estado,String nif_dni, String nombre, Date fechaDeNacimiento, String domicilio, Tipo tipo) {
+        super( nif_dni,  nombre,  fechaDeNacimiento,  domicilio,  tipo);
         this.fechaAlta = fechaAlta;
         this.fechaBaja = fechaBaja;
         this.estado = estado;
-        this.identificacion = identificacion;
-    }
-
-    public Identificacion getGetIdentificacion() {
-        return identificacion;
     }
 
     public Date getFechaAlta() {
@@ -33,7 +27,6 @@ public  class Personal{
     public Date getFechaBaja() {
         return fechaBaja;
     }
-
 
     public void setEstado(boolean estado) {
         this.estado = estado;
@@ -47,9 +40,6 @@ public  class Personal{
         this.fechaBaja = fechaBaja;
     }
 
-    public void setIdentificacion(Identificacion identificacion) {
-        this.identificacion = identificacion;
-    }
 
     public Delegacion getDelegacion() {
         return delegacion;
@@ -58,6 +48,7 @@ public  class Personal{
     public void setDelegacion(Delegacion delegacion) {
         this.delegacion = delegacion;
     }
+
 
 
 }

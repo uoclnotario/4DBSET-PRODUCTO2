@@ -24,7 +24,7 @@ public class Personal_vista implements Vista {
             System.out.println("\tINDICE\tNOMBRE\tDNI");
 
             for(int i = 0; i < personal.size();i++)
-                System.out.println("\t"+(i+1)+"\t"+personal.get(i).getGetIdentificacion().getNombre()+ "\t"+personal.get(i).getGetIdentificacion().getNif_dni());
+                System.out.println("\t"+(i+1)+"\t"+personal.get(i).getNombre()+ "\t"+personal.get(i).getNif_dni());
 
             System.out.println("Indique que desea realizar:");
             System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
@@ -54,9 +54,9 @@ public class Personal_vista implements Vista {
 
     public void MostrarDato(Personal persona){
         System.out.println("");
-        System.out.println("Nombre:\t"+ persona.getGetIdentificacion().getNombre());
-        System.out.println("Fecha de nacimiento:\t"+ persona.getGetIdentificacion().getFechaDeNacimiento());
-        System.out.println("Domicilio:\t"+ persona.getGetIdentificacion().getDomicilio());
+        System.out.println("Nombre:\t"+ persona.getNombre());
+        System.out.println("Fecha de nacimiento:\t"+ persona.getFechaDeNacimiento());
+        System.out.println("Domicilio:\t"+ persona.getDomicilio());
     }
 
     @Override
@@ -122,7 +122,7 @@ public class Personal_vista implements Vista {
         //dni
 
         if(esMOdificacion)
-            System.out.println("Inserte el DNI:"+datos.getPersonal().get(indice).getGetIdentificacion().getNif_dni()+"]");
+            System.out.println("Inserte el DNI:"+datos.getPersonal().get(indice).getNif_dni()+"]");
         else
             System.out.println("Inserte el DNI:");
 
@@ -132,16 +132,16 @@ public class Personal_vista implements Vista {
                                                             esMOdificacion);
         if(entradaTexto != null) {
             if(entradaTexto.equals("(default)"))
-                nuevoPersonal.getGetIdentificacion().setNif_dni(datos.getPersonal().get(indice).getGetIdentificacion().getNif_dni());
+                nuevoPersonal.setNif_dni(datos.getPersonal().get(indice).getNif_dni());
             else
-                nuevoPersonal.getGetIdentificacion().setNif_dni(entradaTexto);
+                nuevoPersonal.setNif_dni(entradaTexto);
         }else{
             return null;
         }
 
         //Nombre
         if(esMOdificacion)
-            System.out.println("Inserte Nombre:"+datos.getPersonal().get(indice).getGetIdentificacion().getNombre()+"]");
+            System.out.println("Inserte Nombre:"+datos.getPersonal().get(indice).getNombre()+"]");
         else
             System.out.println("Inserte Nombre:");
 
@@ -151,9 +151,9 @@ public class Personal_vista implements Vista {
                                                             esMOdificacion);
         if(entradaTexto != null) {
             if(entradaTexto.equals("(default)"))
-                nuevoPersonal.getGetIdentificacion().setNombre(datos.getPersonal().get(indice).getGetIdentificacion().getNombre());
+                nuevoPersonal.setNombre(datos.getPersonal().get(indice).getNombre());
             else
-                nuevoPersonal.getGetIdentificacion().setNombre(entradaTexto);
+                nuevoPersonal.setNombre(entradaTexto);
         }else{
             return null;
         }
@@ -161,7 +161,7 @@ public class Personal_vista implements Vista {
 
 
         if(esMOdificacion)
-            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+datos.getPersonal().get(indice).getGetIdentificacion().getFechaDeNacimiento()+"]");
+            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+datos.getPersonal().get(indice).getFechaDeNacimiento()+"]");
         else
             System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:");
 
@@ -173,9 +173,9 @@ public class Personal_vista implements Vista {
         if(entradaTexto != null) {
             try {
                 if(entradaTexto.equals("(default)"))
-                    nuevoPersonal.getGetIdentificacion().setFechaDeNacimiento(datos.getPersonal().get(indice).getGetIdentificacion().getFechaDeNacimiento());
+                    nuevoPersonal.setFechaDeNacimiento(datos.getPersonal().get(indice).getFechaDeNacimiento());
                 else
-                    nuevoPersonal.getGetIdentificacion().setFechaDeNacimiento(FuncionesConsola.convertirAFEcha(entradaTexto));
+                    nuevoPersonal.setFechaDeNacimiento(FuncionesConsola.convertirAFEcha(entradaTexto));
             } catch (ParseException e) {
                 return null;
             }
@@ -185,7 +185,7 @@ public class Personal_vista implements Vista {
         //domicilio
 
         if(esMOdificacion)
-            System.out.println("Inserte el domicilio:["+datos.getPersonal().get(indice).getGetIdentificacion().getDomicilio()+"]");
+            System.out.println("Inserte el domicilio:["+datos.getPersonal().get(indice).getDomicilio()+"]");
         else
             System.out.println("Inserte el domicilio:");
 
@@ -195,9 +195,9 @@ public class Personal_vista implements Vista {
                                                             esMOdificacion);
         if(entradaTexto != null) {
             if(entradaTexto.equals("(default)"))
-                nuevoPersonal.getGetIdentificacion().setDomicilio(datos.getPersonal().get(indice).getGetIdentificacion().getDomicilio());
+                nuevoPersonal.setDomicilio(datos.getPersonal().get(indice).getDomicilio());
             else
-                nuevoPersonal.getGetIdentificacion().setDomicilio(entradaTexto);
+                nuevoPersonal.setDomicilio(entradaTexto);
         }else{
             return null;
         }
