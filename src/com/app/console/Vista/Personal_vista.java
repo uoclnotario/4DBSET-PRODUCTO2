@@ -4,8 +4,10 @@ import logicaEmpresarial.*;
 
 import javax.print.DocFlavor;
 import java.awt.desktop.SystemEventListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +23,11 @@ public class Personal_vista implements Vista {
         }else{
             List<Personal> personal = (List<Personal>)listado;
             System.out.println("Listado de personal:");
-            System.out.println("\tINDICE\tNOMBRE\tDNI");
+            System.out.printf("%-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "DNI","TIPO");
+
 
             for(int i = 0; i < personal.size();i++)
-                System.out.println("\t"+(i+1)+"\t"+personal.get(i).getNombre()+ "\t"+personal.get(i).getNif_dni());
+                System.out.printf("%-10s %-10s %-10s %-10s\n", +(i+1),personal.get(i).getNombre(), personal.get(i).getNif_dni(),personal.get(i).getTipoString());
 
             System.out.println("Indique que desea realizar:");
             System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
@@ -53,10 +56,29 @@ public class Personal_vista implements Vista {
     }
 
     public void MostrarDato(Personal persona){
-        System.out.println("");
-        System.out.println("Nombre:\t"+ persona.getNombre());
-        System.out.println("Fecha de nacimiento:\t"+ persona.getFechaDeNacimiento());
-        System.out.println("Domicilio:\t"+ persona.getDomicilio());
+
+        DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.printf("%-5s %-5s\n", "Nombre:", persona.getNombre());
+        System.out.printf("%-5s %-5s\n", "NIF:", persona.getNif_dni());
+        if(persona.getFechaDeNacimiento() != null)
+            System.out.printf("%-5s %-5s\n", "Fecha de nacimiento:", formato.format(persona.getFechaDeNacimiento()));
+        System.out.printf("%-5s %-5s\n", "Domicilio:", persona.getDomicilio());
+        System.out.printf("%-5s %-5s\n", "Tipo:", persona.getTipoString());
+
+        if(persona.getFechaAlta() != null)
+            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", formato.format(persona.getFechaAlta()));
+
+        if(persona.getEstado()){
+            System.out.printf("%-5s %-5s\n", "Estado:", "Alta");
+        }else{
+            System.out.printf("%-5s %-5s\n", "Estado:", "Baja");
+
+            if(persona.getFechaBaja() != null)
+                System.out.printf("%-5s %-5s\n", "Fecha de Baja:", formato.format(persona.getFechaBaja()));
+        }
+
+
+
     }
 
     @Override
@@ -83,6 +105,9 @@ public class Personal_vista implements Vista {
         System.out.println("\t 2-Colaborador");
         System.out.println("\t 3-Voluntario");
         System.out.println("\t 4-Voluntario internacional");
+
+
+
 
         if(esMOdificacion){
             String valor = "";
@@ -120,7 +145,6 @@ public class Personal_vista implements Vista {
 
 
         //dni
-
         if(esMOdificacion)
             System.out.println("Inserte el DNI:"+datos.getPersonal().get(indice).getNif_dni()+"]");
         else
@@ -157,9 +181,9 @@ public class Personal_vista implements Vista {
         }else{
             return null;
         }
+
+
         //fecha de nacimiento
-
-
         if(esMOdificacion)
             System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+datos.getPersonal().get(indice).getFechaDeNacimiento()+"]");
         else
@@ -231,6 +255,11 @@ public class Personal_vista implements Vista {
                 nuevoPersonal.setDelegacion(datos.getDelegaciones().get(entradaNumero -1));
             }
         }
+
+      if(!esMOdificacion){
+          nuevoPersonal.setEstado(true);
+          nuevoPersonal.setFechaAlta(new Date(System.currentTimeMillis()));
+      }
 
         return nuevoPersonal;
     }

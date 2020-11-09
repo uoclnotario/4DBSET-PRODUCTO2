@@ -45,6 +45,7 @@ public class Persona {
         return tipo;
     }
 
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
