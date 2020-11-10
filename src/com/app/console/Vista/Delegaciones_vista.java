@@ -69,8 +69,6 @@ public class Delegaciones_vista implements Vista {
     public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
-
-
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR) {
         Delegacion nuevaDelegacion ;
         String entradaTexto;

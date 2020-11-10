@@ -54,7 +54,6 @@ public class Personal_vista implements Vista {
 
         return FuncionesConsola.leerConsola();
     }
-
     public void MostrarDato(Personal persona){
 
         DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
@@ -90,8 +89,6 @@ public class Personal_vista implements Vista {
     public Object Modificar(Ong datos,int indice, String PALABRACANCEALR){
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
-
-
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Personal nuevoPersonal;
         String entradaTexto;
@@ -263,7 +260,4 @@ public class Personal_vista implements Vista {
 
         return nuevoPersonal;
     }
-
-
-
 }
