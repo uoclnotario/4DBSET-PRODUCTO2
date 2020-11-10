@@ -112,10 +112,10 @@ public class Personal_vista implements Vista {
         if(esMOdificacion){
             String valor = "";
             switch (datos.getPersonal().get(indice).getClass().getName()) {
-                case "Contratados"->valor="1";
-                case "Colaboradores"->valor="2";
-                case "Voluntarios"->valor="3";
-                case "VoluntariosInternacionales"->valor="4";
+                case "Contratados":valor = "1";break;
+                case "Colaboradores":valor= "2";break;
+                case "Voluntarios":valor = "3";break;
+                case "VoluntariosInternacionales":valor = "4";break;
             }
 
             System.out.println("Seleccióne el número del tipo de personal:["+valor+"]");
@@ -132,14 +132,14 @@ public class Personal_vista implements Vista {
         entradaNumero = Integer.parseInt(entradaTexto);
 
         switch (entradaNumero) {
-            case 1 -> nuevoPersonal = new Contratados();
-            case 2 -> nuevoPersonal = new Colaboradores();
-            case 3 -> nuevoPersonal = new Voluntarios();
-            case 4 -> nuevoPersonal = new VoluntariosInternacionales();
-            default -> {
+            case 1: nuevoPersonal = new Contratados();break;
+            case 2: nuevoPersonal =new Colaboradores();break;
+            case 3: nuevoPersonal = new Voluntarios();break;
+            case 4: nuevoPersonal = new VoluntariosInternacionales();break;
+            default :
                 System.out.println("Se ha producido un error");
                 return null;
-            }
+
         }
 
 

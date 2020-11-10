@@ -9,12 +9,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.LinkedBlockingDeque;
 
 
 public class Delegaciones_vista implements Vista {
     @Override
     public String MostrarLIstado(List listado, String salir, Usuario user) {
-
         if(listado == null){
 
     }else{
@@ -53,7 +53,6 @@ public class Delegaciones_vista implements Vista {
 
         return FuncionesConsola.leerConsola();
     }
-
     public void MostrarDato(Delegacion delegacion){
         System.out.println("");
         System.out.println("Nombre:\t"+ delegacion.getNombre());
@@ -62,22 +61,99 @@ public class Delegaciones_vista implements Vista {
     }
 
     @Override
-    public Object Crear(Ong datos, String PALABRACANCEALR) { return solicitarNuevo(datos,-1, PALABRACANCEALR);
+    public Object Crear(Ong datos, String PALABRACANCEALR) {
+        return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
-
 
     @Override
-    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {  return solicitarNuevo(datos,indice,PALABRACANCEALR);
-
+    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {
+        return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
 
-    private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
-        Delegacion nuevaDelegacion;
+
+    private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR) {
+        Delegacion nuevaDelegacion ;
         String entradaTexto;
         int entradaNumero;
         boolean esMOdificacion = indice != -1;
 
+        if(esMOdificacion){
+
+            System.out.println("Antes fallo=" + datos.getDelegaciones().size());
+            nuevaDelegacion =datos.getDelegaciones().get(indice);
+
+        }else{
+            nuevaDelegacion = new Delegacion();
+        }
 
         System.out.println("Creación de una nueva Delegación:");
+
+        //Nombre
+        if(esMOdificacion)
+            System.out.println("Inserte Nombre:["+nuevaDelegacion.getNombre()+"]");
+        else
+            System.out.println("Inserte Nombre:");
+
+        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
+                FuncionesConsola.comprobaConversion.TEXTO,
+                PALABRACANCELAR,
+                esMOdificacion);
+
+        //Si entradaTexto es null quiere decir que el usuario ha escrito la palaba de cancelar(no quiere seguir con la creacion/modificación)
+        if(entradaTexto != null) {
+            //Si la entradaTexto Vale (default) quiere decir que el usuario ha presionado enter y quiere dejarlo como esta.
+            if(!entradaTexto.equals("(default)")){
+                nuevaDelegacion.setNombre(entradaTexto);
+            }
+        }else{
+            return null;
+        }
+
+
+        //Dirección
+        if(esMOdificacion)
+            System.out.println("Inserte Dirección:["+nuevaDelegacion.getDireccion()+"]");
+        else
+            System.out.println("Inserte Dirección:");
+
+        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
+                FuncionesConsola.comprobaConversion.TEXTO,
+                PALABRACANCELAR,
+                esMOdificacion);
+
+        //Si entradaTexto es null quiere decir que el usuario ha escrito la palaba de cancelar(no quiere seguir con la creacion/modificación)
+        if(entradaTexto != null) {
+            //Si la entradaTexto Vale (default) quiere decir que el usuario ha presionado enter y quiere dejarlo como esta.
+            if(!entradaTexto.equals("(default)")){
+                nuevaDelegacion.setDireccion(entradaTexto);
+            }
+        }else{
+            return null;
+        }
+
+        //Telefono
+        if(esMOdificacion)
+            System.out.println("Inserte Telefono:["+nuevaDelegacion.getTelefono()+"]");
+        else
+            System.out.println("Inserte el numeró de telefono:");
+
+        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARANUMERO,
+                FuncionesConsola.comprobaConversion.TEXTO,
+                PALABRACANCELAR,
+                esMOdificacion);
+
+        //Si entradaTexto es null quiere decir que el usuario ha escrito la palaba de cancelar(no quiere seguir con la creacion/modificación)
+        if(entradaTexto != null) {
+            //Si la entradaTexto Vale (default) quiere decir que el usuario ha presionado enter y quiere dejarlo como esta.
+            if(!entradaTexto.equals("(default)")){
+                nuevaDelegacion.setTelefono(entradaTexto);
+            }
+        }else{
+            return null;
+        }
+
+
+        return  nuevaDelegacion;
+    }
 
 }

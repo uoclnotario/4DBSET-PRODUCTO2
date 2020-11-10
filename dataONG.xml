@@ -17,33 +17,53 @@
   <string>Pakistan</string>
  </void>
 </void>
-<void class="logicaEmpresarial.Colaboradores" id="Colaboradores0">
- <void property="fechaDeNacimiento">
-  <object class="java.util.Date">
-   <long>1602280800000</long>
-  </object>
- </void>
- <void property="nif_dni">
-  <string>11111111e</string>
- </void>
- <void property="nombre">
-  <string>ewe</string>
- </void>
- <void property="domicilio">
-  <string>wewe</string>
- </void>
-</void>
 <void class="logicaEmpresarial.Ong" id="Field0" method="getField">
  <string>personal</string>
  <void id="ArrayList0" method="get">
   <object idref="Ong0"/>
   <void method="add">
-   <object idref="Colaboradores0"/>
+   <object idref="Contratados0"/>
   </void>
   <void method="add">
-   <object idref="Contratados0"/>
+   <object class="logicaEmpresarial.Colaboradores">
+    <void property="domicilio">
+     <string>wewe</string>
+    </void>
+    <void property="fechaDeNacimiento">
+     <object class="java.util.Date">
+      <long>1602280800000</long>
+     </object>
+    </void>
+    <void property="nif_dni">
+     <string>11111111e</string>
+    </void>
+    <void property="nombre">
+     <string>ewe</string>
+    </void>
+   </object>
   </void>
  </void>
 </void>
 <void idref="ArrayList0"/>
+<void class="logicaEmpresarial.Delegacion" id="Delegacion0">
+ <void property="nombre">
+  <string>efef</string>
+ </void>
+ <void property="telefono">
+  <string>323</string>
+ </void>
+ <void property="direccion">
+  <string>efef</string>
+ </void>
+</void>
+<void class="logicaEmpresarial.Ong" id="Field1" method="getField">
+ <string>delegaciones</string>
+ <void id="ArrayList1" method="get">
+  <object idref="Ong0"/>
+  <void method="add">
+   <object idref="Delegacion0"/>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList1"/>
 </java>
