@@ -3,16 +3,111 @@ package dao;
 import com.app.console.Apartados;
 import logicaEmpresarial.*;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.*;
+
 
 import java.util.List;
 
-public class DaoXML {
+import javax.xml.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+
+public class DaoXML{
+
+    public boolean cargarXML() {
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+            Document doc;
+            doc = builder.parse(new File(Configuracion.XMLFilePath));
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean modificarEnXML() {
+        // Busca el elemento a modificar
+        NodeList items = doc.getElementsByTagName("xx");
+        for (int ix = 0; ix < items.getLength(); ix++) {
+            Element element = (Element) items.item(ix);
+            // elejir un elemento especifico por algun atributo
+            if (element.getAttribute("id").equalsIgnoreCase("3")) {
+                // borrar elemento
+                element.getParentNode().appendChild();
+            }
+        }
+
+        // Exporta de nuevo el XML
+        Transformer transformer = null;
+        try {
+            transformer = TransformerFactory.newInstance().newTransformer();
+        Result output = new StreamResult(new File(Configuracion.XMLFilePath));
+        Source input = new DOMSource(doc);
+        transformer.transform(input, output);
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean borrarEnXML() {
+        // Busca el elemento a modificar
+        NodeList items = doc.getElementsByTagName("enfermera");
+        for (int ix = 0; ix < items.getLength(); ix++) {
+            Element element = (Element) items.item(ix);
+            // elejir un elemento especifico por algun atributo
+            if (element.getAttribute("id").equalsIgnoreCase("3")) {
+                // borrar elemento
+                element.getParentNode().removeChild(element);
+            }
+        }
+
+        // Exporta de nuevo el XML
+        Transformer transformer = null;
+        try {
+            transformer = TransformerFactory.newInstance().newTransformer();
+            Result output = new StreamResult(new File(Configuracion.XMLFilePath));
+            Source input = new DOMSource(doc);
+            transformer.transform(input, output);
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+}
+
+
+/*
+public class DaoXML {
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
-
-
 
     public DaoXML(Ong pilaDatos) {
         pilaDatosGenerales = pilaDatos;
@@ -76,6 +171,7 @@ public class DaoXML {
             case NINGUNO: return false;
             case INGRESOS:
                     pilaDatosGenerales.getIngresos().add((Ingresos)item);
+
                     break;
             case PROYECTOS:
                     pilaDatosGenerales.getProyectos().add((Proyecto) item);
@@ -199,3 +295,4 @@ public class DaoXML {
 
 
 }
+*/
