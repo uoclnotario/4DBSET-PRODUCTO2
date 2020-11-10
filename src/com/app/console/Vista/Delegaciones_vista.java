@@ -26,7 +26,13 @@ public class Delegaciones_vista implements Vista {
             System.out.println("\t"+(i+1)+"\t"+delegacion.get(i).getNombre()+ "\t"+delegacion.get(i).getDireccion());
 
 
-    }
+
+        System.out.println("Indique que desea realizar:");
+        System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
+
+        }
 
 
         return FuncionesConsola.leerConsola();
@@ -34,16 +40,44 @@ public class Delegaciones_vista implements Vista {
 
     @Override
     public String MostrarUno(Object elemento, String salir, Usuario user) {
-        return null;
+
+
+        System.out.println("---MOSTRANDO DATOS DE DELEGACION---");
+        MostrarDato((Delegacion)elemento);
+
+        System.out.println("Indique que desea realizar:");;
+        System.out.println("\t- 0 Modificar la delegacion.");
+        System.out.println("\t- 1 Borrar la delegacion.");
+
+        System.out.println("\t- Escriba "+salir+" para volver atras.");
+
+        return FuncionesConsola.leerConsola();
+    }
+
+    public void MostrarDato(Delegacion delegacion){
+        System.out.println("");
+        System.out.println("Nombre:\t"+ delegacion.getNombre());
+        System.out.println("Direccion:\t"+ delegacion.getDireccion());
+        System.out.println("Telefono:\t"+ delegacion.getTelefono());
     }
 
     @Override
-    public Object Crear(Ong datos, String PALABRACANCEALR) {
-        return null;
+    public Object Crear(Ong datos, String PALABRACANCEALR) { return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
+
     @Override
-    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {
-        return null;
+    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {  return solicitarNuevo(datos,indice,PALABRACANCEALR);
+
     }
+
+    private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
+        Delegacion nuevaDelegacion;
+        String entradaTexto;
+        int entradaNumero;
+        boolean esMOdificacion = indice != -1;
+
+
+        System.out.println("Creación de una nueva Delegación:");
+
 }
