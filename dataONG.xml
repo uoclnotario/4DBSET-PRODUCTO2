@@ -4,23 +4,42 @@
 <void class="logicaEmpresarial.Contratados" id="Contratados0">
  <void property="fechaDeNacimiento">
   <object class="java.util.Date">
-   <long>1286661600000</long>
+   <long>1602280800000</long>
   </object>
  </void>
  <void property="nif_dni">
-  <string>00000000a</string>
+  <string>12345678C</string>
  </void>
  <void property="nombre">
-  <string>Personal</string>
+  <string>Prueba</string>
  </void>
  <void property="domicilio">
-  <string>Badajoz</string>
+  <string>Pakistan</string>
+ </void>
+</void>
+<void class="logicaEmpresarial.Colaboradores" id="Colaboradores0">
+ <void property="fechaDeNacimiento">
+  <object class="java.util.Date">
+   <long>1602280800000</long>
+  </object>
+ </void>
+ <void property="nif_dni">
+  <string>11111111e</string>
+ </void>
+ <void property="nombre">
+  <string>ewe</string>
+ </void>
+ <void property="domicilio">
+  <string>wewe</string>
  </void>
 </void>
 <void class="logicaEmpresarial.Ong" id="Field0" method="getField">
  <string>personal</string>
  <void id="ArrayList0" method="get">
   <object idref="Ong0"/>
+  <void method="add">
+   <object idref="Colaboradores0"/>
+  </void>
   <void method="add">
    <object idref="Contratados0"/>
   </void>

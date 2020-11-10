@@ -1,5 +1,6 @@
 package logicaEmpresarial;
 
+import java.sql.Struct;
 import java.util.Date;
 
 public  class Personal extends Persona {
@@ -23,19 +24,18 @@ public  class Personal extends Persona {
     public Date getFechaAlta() {
         return fechaAlta;
     }
-
     public Date getFechaBaja() {
         return fechaBaja;
     }
+    public boolean getEstado(){return estado;}
+
 
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
-
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
-
     public void setFechaBaja(Date fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
@@ -44,11 +44,20 @@ public  class Personal extends Persona {
     public Delegacion getDelegacion() {
         return delegacion;
     }
-
     public void setDelegacion(Delegacion delegacion) {
         this.delegacion = delegacion;
     }
+    public String getTipoString(){
+        switch(this.getClass().getName()){
+            case "logicaEmpresarial.Colaboradores":return "Colaborador";
+            case "logicaEmpresarial.Voluntarios":return "Voluntario";
+            case "logicaEmpresarial.VoluntariosInternacionales":return "Voluntario internacional";
+            case "logicaEmpresarial.Contratados":return "Contratado";
+            default: return "No definido";
+        }
 
+
+    }
 
 
 }
