@@ -62,12 +62,22 @@ public class Delegaciones_vista implements Vista {
     }
 
     @Override
-    public Object Crear(Ong datos, String PALABRACANCEALR) {
-        return null;
+    public Object Crear(Ong datos, String PALABRACANCEALR) { return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
+
     @Override
-    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {
-        return null;
+    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {  return solicitarNuevo(datos,indice,PALABRACANCEALR);
+
     }
+
+    private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
+        Delegacion nuevaDelegacion;
+        String entradaTexto;
+        int entradaNumero;
+        boolean esMOdificacion = indice != -1;
+
+
+        System.out.println("Creación de una nueva Delegación:");
+
 }
