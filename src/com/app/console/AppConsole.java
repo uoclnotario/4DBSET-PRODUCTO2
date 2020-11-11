@@ -52,24 +52,24 @@ public class AppConsole {
         String entradaUsuario = vistaMenu.MostrarMenu(usuarioAutentificado,PALABRAPARAVOLVER);
         int accesoApartado,minimo,maximo;
 
-        minimo=1;
-        if(usuarioAutentificado.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR){
-            maximo=1;
-        }else{
-            maximo=2;
-        }
+                    minimo=1;
+                    if(usuarioAutentificado.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR){
+                        maximo=1;
+                    }else{
+                        maximo=2;
+                    }
 
-        switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
-                FuncionesConsola.MASCARANUMERO,
-                PALABRAPARAVOLVER,
-                FuncionesConsola.comprobaConversion.ENTERO)){
-            case TRUE:
-                accesoApartado = Integer.parseInt(entradaUsuario);
-                //Comprobar que el usuario ha marcado un valor valido
-                if(accesoApartado <=0 || accesoApartado>Apartados.values().length)
-                {
-                    vistaMenu.MostrarErrorEntrada(minimo,maximo,PALABRAPARAVOLVER);
-                    return true;//Retorna true y se volverá a abrir el menu de nuevo
+                    switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
+                            FuncionesConsola.MASCARANUMERO,
+                            PALABRAPARAVOLVER,
+                            FuncionesConsola.comprobaConversion.ENTERO)){
+                        case TRUE:
+                            accesoApartado = Integer.parseInt(entradaUsuario);
+                            //Comprobar que el usuario ha marcado un valor valido
+                            if(accesoApartado <=0 || accesoApartado>Apartados.values().length)
+                            {
+                                vistaMenu.MostrarErrorEntrada(minimo,maximo,PALABRAPARAVOLVER);
+                                return true;//Retorna true y se volverá a abrir el menu de nuevo
                 }
 
                 //Comprobar que si el usuario no tiene permiso para entrar en este apartado
@@ -213,8 +213,8 @@ public class AppConsole {
     private Vista getVista(Apartados apartado){
         switch (apartado){
             case PERSONAL: return new Personal_vista();
-            case INGRESOS: return new Ingresos_vista();
-            case SOCIOS: return new Socios_vista();
+            case INGRESOS: return (Vista) new Ingresos_vista();
+            case SOCIOS: return (Vista) new Socios_vista();
             case PROYECTOS: return new Proyectos_vista();
             case DELEGACIONES: return new Delegaciones_vista();
             case USUARIOS: return new Usuario_vista();

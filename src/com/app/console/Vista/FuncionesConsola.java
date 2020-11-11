@@ -17,6 +17,7 @@ public class FuncionesConsola {
     public static final String MASCARADECIMAL="^([0-9.,])*$";
     public static final String MASCARAFECHA = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$";
     public static final String MASCARADNI = "[0-9]{7,8}[A-Z a-z]";
+    public static final String MASCARANIFORCIF = "[0-9]{7,8}[A-Z a-z]";
 
     public  enum comprobaConversion{TEXTO,ENTERO,REAL,FECHA};
     public enum retornoConversion{FALSE,TRUE,EXIT}
