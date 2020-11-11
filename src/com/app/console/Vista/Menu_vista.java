@@ -22,17 +22,15 @@ public class Menu_vista {
         System.out.println("Escriba el indice del apartado o "+ salir + " para cerrar sesión:");
         return FuncionesConsola.leerConsola();
     }
-
-    public  void MostrarErrorEntrada(int minimo, int maximo, String salir){
+    public void MostrarErrorEntrada(int minimo, int maximo, String salir){
         System.out.println("El valor introducido no es correcto, debe de introducir de "+minimo+" A "+ maximo);
         System.out.println("o escriba" + salir +" para cerrar la sesión.");
     }
-
     public void DespedirUsuario(Usuario user){
         System.out.println("Adios "+user.getNombre());
     }
 
-    public  void mensajeElementoCreado(boolean elementoCreado){
+    public void mensajeElementoCreado(boolean elementoCreado){
 
         if(elementoCreado){
             System.out.println("Se ha creado correctamente");
@@ -41,8 +39,7 @@ public class Menu_vista {
         }
 
     }
-
-    public  void mensajeElementoEditado(boolean elementoCreado){
+    public void mensajeElementoEditado(boolean elementoCreado){
 
         if(elementoCreado){
             System.out.println("Se ha Modificado correctamente");
@@ -51,17 +48,14 @@ public class Menu_vista {
         }
 
     }
-
     public void mensajeError(String error){
         System.out.println("Se ha producido un error: "+error);
         System.out.println("La aplicación no pudec continuar.");
     }
-
     public boolean preguntarBorrar(){
         System.out.println("¿Seguro que desea borrar?:escriba Si/s No/n");
         return  FuncionesConsola.leerConsolaSiNo();
     }
-
     public void mensajeBorrar(boolean borrado){
         if(borrado){
             System.out.println("Se ha borrado correctamente");

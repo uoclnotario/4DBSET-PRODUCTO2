@@ -4,57 +4,34 @@ import com.app.console.Apartados;
 import logicaEmpresarial.*;
 
 
+import java.beans.ExceptionListener;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.*;
+
+
+import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DaoXML {
-
+    private  String SERIALIZED_FILE_NAME = "dataONG.xml";
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
 
+    public DaoXML() {
+        pilaDatosGenerales = new Ong();
+    }
 
-
-    public DaoXML(Ong pilaDatos) {
-        pilaDatosGenerales = pilaDatos;
+    public Ong getPilaDatosGenerales() {
+        return pilaDatosGenerales;
     }
 
     public boolean descargaDatos(Apartados apartados) {
-        //Descarga los datos, la descarga de cada apartado tendra que descargar los
-        //elementos que necesite para mostrar ejemplo:
-        //Personal necesita: Delegaciones y Proyectos para la interactuar con el usuario.
-
-        switch (apartados){
-
-            case PERSONAL:
-                pilaDatosGenerales.getPersonal().clear();
-                    if(pilaDatosGenerales.getPersonal().size()< 1) {
-                    //Esto es para depurar
-                    pilaDatosGenerales.getPersonal().add(new Personal(null,
-                            null,
-                            false,
-                            new Identificacion("12345", "nombre1", null, "domicilio1", Identificacion.Tipo.PERSONA)));
-
-                    pilaDatosGenerales.getPersonal().add(new Personal(null,
-                            null,
-                            false,
-                            new Identificacion("12345", "nombre2", null, "domicilio2", Identificacion.Tipo.PERSONA)));
-                }
-
-                break;
-            case DELEGACIONES:
-                    pilaDatosGenerales.getDelegaciones().clear();
-                        if(pilaDatosGenerales.getDelegaciones().size()<1) {
-                            pilaDatosGenerales.getDelegaciones().add(new Delegacion( "AAB", "bbc", "665655"));
-                        }
-
-                break;
-
-            default:return false;
-        }
-
+        leerXML();
         return true;
     }
-
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
@@ -68,7 +45,6 @@ public class DaoXML {
         }
 
     }
-
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
@@ -96,10 +72,8 @@ public class DaoXML {
             default: return false;
         }
 
-
-        return true;
+        return guardarXML();
     }
-
     public boolean modificar(Object item, int indice,Apartados apartado) {
         if(item == null)
             return false;
@@ -122,12 +96,8 @@ public class DaoXML {
         }
 
         //Guardar los cambios
-        if(!guardarXML(apartado))
-            return  false;
-
-        return true;
+        return guardarXML();
     }
-
     public boolean borrar(int indice,Apartados apartado){
         //Descarga listado de xml
         if(!descargaDatos(apartado)){
@@ -147,12 +117,8 @@ public class DaoXML {
         }
 
         //Guardar los cambios
-        if(!guardarXML(apartado))
-            return  false;
-
-        return true;
+        return guardarXML();
     }
-
 
     public String getMensajeError() {
         String mensaje = mensajeError;
@@ -172,30 +138,41 @@ public class DaoXML {
     }
 
 
-
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
     //convertirlos a xml para leerlos y guardarlos.
-    private boolean guardarXML(Apartados apartado){
-        try{
-            return true;
-        }catch (Exception er){
+    private boolean guardarXML(){
+
+        XMLEncoder encoder = null;
+        try {
+            encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(SERIALIZED_FILE_NAME)));
+
+        } catch (FileNotFoundException fileNotFound) {
+
             mensajeError="Se ha producido un error al guardar el archivo";
             error = true;
             return false;
         }
-    }
 
-    private boolean leerXML(Apartados apartado){
-        try{
-            return true;
-        }catch (Exception er){
+        encoder.writeObject(pilaDatosGenerales);
+        encoder.close();
+        return true;
+    }
+    private boolean leerXML(){
+        XMLDecoder decoder=null;
+
+        try {
+
+            decoder=new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
+
+        } catch (FileNotFoundException e) {
+
             mensajeError="Se ha producido un error al guardar el archivo";
             error = true;
             return false;
+
         }
+        pilaDatosGenerales = (Ong) decoder.readObject();
+        return true;
     }
-
-
-
 
 }

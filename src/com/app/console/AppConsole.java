@@ -8,8 +8,8 @@ import java.awt.desktop.SystemEventListener;
 
 public class AppConsole {
 
-    private  final String PALABRAPARAVOLVER = "v";
-    private  Usuario usuarioAutentificado;
+    private final String PALABRAPARAVOLVER = "v";
+    private Usuario usuarioAutentificado;
     private Menu_vista vistaMenu;
 
     private DaoXML modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
@@ -18,12 +18,10 @@ public class AppConsole {
 
 
     public AppConsole(){
-        pilaDatos=new Ong();
         vistaMenu = new Menu_vista();
-        modelo = new DaoXML(pilaDatos);
+        modelo = new DaoXML();
         run();
     }
-
     private void run() {
         boolean userLogueado = false;
 
@@ -49,7 +47,6 @@ public class AppConsole {
         }while(true);//Bucle infinito, la aplicación si el usuario quiere salir, debera de cerrar la ventana.
 
     }
-
     private boolean  MostrarMenu(){
 
         String entradaUsuario = vistaMenu.MostrarMenu(usuarioAutentificado,PALABRAPARAVOLVER);
@@ -95,7 +92,6 @@ public class AppConsole {
         }
 
     }
-
     private boolean  abrirApartado(Apartados apartados){
 
 
@@ -136,7 +132,7 @@ public class AppConsole {
 
                 if(indiceSeleccionado == 0){//Si es cero se Creara un nuevo elemento, por lo que llamamos a Crear.
                    //Aqui se podria añadir una restricción para que si el elemento ya existe de une error y no se cree.
-                    vistaMenu.mensajeElementoCreado(modelo.crear(vista.Crear(pilaDatos,"CANCELAR"),apartados));
+                    vistaMenu.mensajeElementoCreado(modelo.crear(vista.Crear(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
 
                 }else{//De lo contrario llama a mostrar uno.
                     while(MostarUno(indiceSeleccionado-1,apartados));//Abirmos mostrar uno pasandole el apartado seleccionado -1.
@@ -150,8 +146,7 @@ public class AppConsole {
         }
         return true;
     }
-
-    private  boolean MostarUno(int elemento,Apartados apartado){
+    private boolean MostarUno(int elemento,Apartados apartado){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
         String entradaUsuario = vista.MostrarUno(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
         int apartadoSeleccionado;
@@ -171,7 +166,9 @@ public class AppConsole {
 
                     if(apartadoSeleccionado == 0){//Si es cero se Modificará
                         //Carga la vista, se lo envia al modelo y muestra un mensaje si se ha realizado correctamente.
-                        Object nuevoValor = vista.Modificar(pilaDatos, elemento,"CANCELAR");
+
+
+                        Object nuevoValor = vista.Modificar(modelo.getPilaDatosGenerales(), elemento,"CANCELAR");
 
                         if(nuevoValor == null){
                             vistaMenu.mensajeElementoEditado(false);
@@ -213,10 +210,7 @@ public class AppConsole {
         }
         return true;
     }
-
-
-
-    private  Vista getVista(Apartados apartado){
+    private Vista getVista(Apartados apartado){
         switch (apartado){
             case PERSONAL: return new Personal_vista();
             case INGRESOS: return (Vista) new Ingresos_vista();

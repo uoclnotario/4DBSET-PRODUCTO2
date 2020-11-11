@@ -1,24 +1,28 @@
 package logicaEmpresarial;
 
+import javax.swing.plaf.BorderUIResource;
 import java.util.Date;
 
-public class Identificacion {
-    public  enum  Tipo{PERSONA,EMPRESA};
+public class Persona {
+    public  enum  Tipo{FISICA,JURIDICA};
     private String nif_dni;
     private String nombre;
     private Date fechaDeNacimiento;
     private String domicilio;
     private Tipo tipo;
 
-    public Identificacion(){}
+    public Persona(){
 
-    public Identificacion(String nif_dni, String nombre, Date fechaDeNacimiento, String domicilio, Tipo tipo){
+    }
+
+    public Persona(String nif_dni, String nombre, Date fechaDeNacimiento, String domicilio, Tipo tipo){
         this.nif_dni = nif_dni;
         this.nombre = nombre;
         this.fechaDeNacimiento = fechaDeNacimiento;
         this.domicilio = domicilio;
         this.tipo = tipo;
     }
+
 
 
     public String getNombre() {
@@ -40,6 +44,7 @@ public class Identificacion {
     public Tipo getTipo() {
         return tipo;
     }
+
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
