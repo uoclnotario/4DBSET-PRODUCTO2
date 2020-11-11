@@ -3,153 +3,35 @@ package dao;
 import com.app.console.Apartados;
 import logicaEmpresarial.*;
 
+
+import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 
 
+import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-
-public class DaoXML{
-
-    public boolean cargarXML() {
-
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
-        try {
-            builder = factory.newDocumentBuilder();
-            Document doc;
-            doc = builder.parse(new File(Configuracion.XMLFilePath));
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean modificarEnXML() {
-        // Busca el elemento a modificar
-        NodeList items = doc.getElementsByTagName("xx");
-        for (int ix = 0; ix < items.getLength(); ix++) {
-            Element element = (Element) items.item(ix);
-            // elejir un elemento especifico por algun atributo
-            if (element.getAttribute("id").equalsIgnoreCase("3")) {
-                // borrar elemento
-                element.getParentNode().appendChild();
-            }
-        }
-
-        // Exporta de nuevo el XML
-        Transformer transformer = null;
-        try {
-            transformer = TransformerFactory.newInstance().newTransformer();
-        Result output = new StreamResult(new File(Configuracion.XMLFilePath));
-        Source input = new DOMSource(doc);
-        transformer.transform(input, output);
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean borrarEnXML() {
-        // Busca el elemento a modificar
-        NodeList items = doc.getElementsByTagName("enfermera");
-        for (int ix = 0; ix < items.getLength(); ix++) {
-            Element element = (Element) items.item(ix);
-            // elejir un elemento especifico por algun atributo
-            if (element.getAttribute("id").equalsIgnoreCase("3")) {
-                // borrar elemento
-                element.getParentNode().removeChild(element);
-            }
-        }
-
-        // Exporta de nuevo el XML
-        Transformer transformer = null;
-        try {
-            transformer = TransformerFactory.newInstance().newTransformer();
-            Result output = new StreamResult(new File(Configuracion.XMLFilePath));
-            Source input = new DOMSource(doc);
-            transformer.transform(input, output);
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-}
-
-
-/*
 public class DaoXML {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
+    private  String SERIALIZED_FILE_NAME = "dataONG.xml";
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
 
-    public DaoXML(Ong pilaDatos) {
-        pilaDatosGenerales = pilaDatos;
+    public DaoXML() {
+        pilaDatosGenerales = new Ong();
+    }
+
+    public Ong getPilaDatosGenerales() {
+        return pilaDatosGenerales;
     }
 
     public boolean descargaDatos(Apartados apartados) {
-        //Descarga los datos, la descarga de cada apartado tendra que descargar los
-        //elementos que necesite para mostrar ejemplo:
-        //Personal necesita: Delegaciones y Proyectos para la interactuar con el usuario.
-
-        switch (apartados){
-
-            case PERSONAL:
-                pilaDatosGenerales.getPersonal().clear();
-                    if(pilaDatosGenerales.getPersonal().size()< 1) {
-                    //Esto es para depurar
-                    pilaDatosGenerales.getPersonal().add(new Personal(null,
-                            null,
-                            false,
-                            new Identificacion("12345", "nombre1", null, "domicilio1", Identificacion.Tipo.PERSONA)));
-
-                    pilaDatosGenerales.getPersonal().add(new Personal(null,
-                            null,
-                            false,
-                            new Identificacion("12345", "nombre2", null, "domicilio2", Identificacion.Tipo.PERSONA)));
-                }
-
-                break;
-            case DELEGACIONES:
-                    pilaDatosGenerales.getDelegaciones().clear();
-                        if(pilaDatosGenerales.getDelegaciones().size()<1) {
-                            pilaDatosGenerales.getDelegaciones().add(new Delegacion( "AAB", "bbc", "665655"));
-                        }
-
-                break;
-
-            default:return false;
-        }
-
+        leerXML();
         return true;
     }
-
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
@@ -163,7 +45,6 @@ public class DaoXML {
         }
 
     }
-
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
@@ -171,7 +52,6 @@ public class DaoXML {
             case NINGUNO: return false;
             case INGRESOS:
                     pilaDatosGenerales.getIngresos().add((Ingresos)item);
-
                     break;
             case PROYECTOS:
                     pilaDatosGenerales.getProyectos().add((Proyecto) item);
@@ -192,10 +72,8 @@ public class DaoXML {
             default: return false;
         }
 
-
-        return true;
+        return guardarXML();
     }
-
     public boolean modificar(Object item, int indice,Apartados apartado) {
         if(item == null)
             return false;
@@ -218,12 +96,8 @@ public class DaoXML {
         }
 
         //Guardar los cambios
-        if(!guardarXML(apartado))
-            return  false;
-
-        return true;
+        return guardarXML();
     }
-
     public boolean borrar(int indice,Apartados apartado){
         //Descarga listado de xml
         if(!descargaDatos(apartado)){
@@ -243,12 +117,8 @@ public class DaoXML {
         }
 
         //Guardar los cambios
-        if(!guardarXML(apartado))
-            return  false;
-
-        return true;
+        return guardarXML();
     }
-
 
     public String getMensajeError() {
         String mensaje = mensajeError;
@@ -268,31 +138,41 @@ public class DaoXML {
     }
 
 
-
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
     //convertirlos a xml para leerlos y guardarlos.
-    private boolean guardarXML(Apartados apartado){
-        try{
-            return true;
-        }catch (Exception er){
+    private boolean guardarXML(){
+
+        XMLEncoder encoder = null;
+        try {
+            encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(SERIALIZED_FILE_NAME)));
+
+        } catch (FileNotFoundException fileNotFound) {
+
             mensajeError="Se ha producido un error al guardar el archivo";
             error = true;
             return false;
         }
-    }
 
-    private boolean leerXML(Apartados apartado){
-        try{
-            return true;
-        }catch (Exception er){
+        encoder.writeObject(pilaDatosGenerales);
+        encoder.close();
+        return true;
+    }
+    private boolean leerXML(){
+        XMLDecoder decoder=null;
+
+        try {
+
+            decoder=new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
+
+        } catch (FileNotFoundException e) {
+
             mensajeError="Se ha producido un error al guardar el archivo";
             error = true;
             return false;
+
         }
+        pilaDatosGenerales = (Ong) decoder.readObject();
+        return true;
     }
-
-
-
 
 }
-*/

@@ -2,9 +2,9 @@ package logicaEmpresarial;
 
 
 public class Socios {
-    private Identificacion identificacion;
+    private Persona persona;
 
-    public Identificacion getIdentificacion() {
-        return identificacion;
+    public Persona getIdentificacion() {
+        return persona;
     }
 }
