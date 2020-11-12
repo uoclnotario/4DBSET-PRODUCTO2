@@ -2,9 +2,13 @@ package logicaEmpresarial;
 
 
 public class Socios {
-    private Persona persona;
+    private String identificacion;
 
-    public Persona getIdentificacion() {
-        return persona;
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 }

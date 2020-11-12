@@ -2,19 +2,27 @@
 <java version="15" class="java.beans.XMLDecoder">
  <object class="logicaEmpresarial.Ong" id="Ong0"/>
 <void class="logicaEmpresarial.Contratados" id="Contratados0">
+ <void property="estado">
+  <boolean>true</boolean>
+ </void>
+ <void property="fechaAlta">
+  <object class="java.util.Date">
+   <long>1605046836524</long>
+  </object>
+ </void>
  <void property="fechaDeNacimiento">
   <object class="java.util.Date">
-   <long>1286661600000</long>
+   <long>1602280800000</long>
   </object>
  </void>
  <void property="nif_dni">
-  <string>00000000a</string>
+  <string>12345678c</string>
  </void>
  <void property="nombre">
-  <string>Personal</string>
+  <string>Prueba</string>
  </void>
  <void property="domicilio">
-  <string>Badajoz</string>
+  <string>Espania</string>
  </void>
 </void>
 <void class="logicaEmpresarial.Ong" id="Field0" method="getField">
@@ -22,9 +30,65 @@
  <void id="ArrayList0" method="get">
   <object idref="Ong0"/>
   <void method="add">
+   <object class="logicaEmpresarial.Colaboradores">
+    <void property="domicilio">
+     <string>wewe</string>
+    </void>
+    <void property="fechaDeNacimiento">
+     <object class="java.util.Date">
+      <long>1602280800000</long>
+     </object>
+    </void>
+    <void property="nif_dni">
+     <string>11111111e</string>
+    </void>
+    <void property="nombre">
+     <string>ewe</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
    <object idref="Contratados0"/>
+  </void>
+  <void method="add">
+   <object class="logicaEmpresarial.Contratados">
+    <void property="domicilio">
+     <string>Pakistan</string>
+    </void>
+    <void property="fechaDeNacimiento">
+     <object class="java.util.Date">
+      <long>1602280800000</long>
+     </object>
+    </void>
+    <void property="nif_dni">
+     <string>12345678C</string>
+    </void>
+    <void property="nombre">
+     <string>Prueba</string>
+    </void>
+   </object>
   </void>
  </void>
 </void>
 <void idref="ArrayList0"/>
+<void class="logicaEmpresarial.Ong" id="Field1" method="getField">
+ <string>delegaciones</string>
+ <void id="ArrayList1" method="get">
+  <object idref="Ong0"/>
+  <void method="add">
+   <object class="logicaEmpresarial.Delegacion">
+    <void property="direccion">
+     <string>CANARIAS</string>
+    </void>
+    <void property="nombre">
+     <string>Sonrisas por canarias</string>
+    </void>
+    <void property="telefono">
+     <string>1</string>
+    </void>
+   </object>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList1"/>
 </java>

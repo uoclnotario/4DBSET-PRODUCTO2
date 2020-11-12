@@ -8,12 +8,13 @@ public  class Ong {
     private String DireccionSede;
     private String Telefono;
     private String usuarioAutentificado;
-    private List<Ingresos> ingresos;
-    private List<Socios> socios;
+
+    public List<Ingresos> ingresos;
+    public List<Socios> socios;
     public List<Personal> personal;
-    private List<Usuario> usuarios;
-    private List<Proyecto> proyectos;
-    private List<Delegacion> delegaciones;
+    public List<Usuario> usuarios;
+    public List<Proyecto> proyectos;
+    public List<Delegacion> delegaciones;
 
     public Ong(){
         personal = new ArrayList<Personal>();

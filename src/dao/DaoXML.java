@@ -20,17 +20,18 @@ public class DaoXML {
     private String mensajeError;
     private boolean error;
 
+    public DaoXML() {
+        pilaDatosGenerales = new Ong();
+    }
 
-
-    public DaoXML(Ong pilaDatos) {
-        pilaDatosGenerales = pilaDatos;
+    public Ong getPilaDatosGenerales() {
+        return pilaDatosGenerales;
     }
 
     public boolean descargaDatos(Apartados apartados) {
         leerXML();
         return true;
     }
-
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
@@ -44,7 +45,6 @@ public class DaoXML {
         }
 
     }
-
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
@@ -74,7 +74,6 @@ public class DaoXML {
 
         return guardarXML();
     }
-
     public boolean modificar(Object item, int indice,Apartados apartado) {
         if(item == null)
             return false;
@@ -99,7 +98,6 @@ public class DaoXML {
         //Guardar los cambios
         return guardarXML();
     }
-
     public boolean borrar(int indice,Apartados apartado){
         //Descarga listado de xml
         if(!descargaDatos(apartado)){
@@ -122,7 +120,6 @@ public class DaoXML {
         return guardarXML();
     }
 
-
     public String getMensajeError() {
         String mensaje = mensajeError;
 
@@ -139,7 +136,6 @@ public class DaoXML {
 
         return true;
     }
-
 
 
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
@@ -161,7 +157,6 @@ public class DaoXML {
         encoder.close();
         return true;
     }
-
     private boolean leerXML(){
         XMLDecoder decoder=null;
 
