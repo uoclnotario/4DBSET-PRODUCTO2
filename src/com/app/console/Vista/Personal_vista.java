@@ -18,8 +18,6 @@ public class Personal_vista implements Vista {
 
         if(listado == null){
 
-
-
         }else{
             List<Personal> personal = (List<Personal>)listado;
             System.out.println("Listado de personal:");
