@@ -173,7 +173,7 @@ public class AppConsole {
                         if(nuevoValor == null){
                             vistaMenu.mensajeElementoEditado(false);
                         }else{
-                            if(!modelo.modificar(nuevoValor,apartadoSeleccionado,apartado)){
+                            if(!modelo.modificar(nuevoValor,elemento,apartado)){
                                 if(modelo.existeUnError()){
                                     vistaMenu.mensajeError(modelo.getMensajeError());
                                 }
