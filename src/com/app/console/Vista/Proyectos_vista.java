@@ -2,8 +2,14 @@ package com.app.console.Vista;
 
 import logicaEmpresarial.*;
 
+import javax.print.DocFlavor;
+import java.awt.desktop.SystemEventListener;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class Proyectos_vista implements Vista{
 
@@ -11,8 +17,6 @@ public class Proyectos_vista implements Vista{
     public String MostrarLIstado(List listado, String salir, Usuario user){
 
         if(listado == null){
-
-
 
         }else{
             List<Proyecto> proyectos = (List<Proyecto>)listado;
@@ -26,10 +30,7 @@ public class Proyectos_vista implements Vista{
             System.out.println("\t- Indique el indice del proyecto a visualizar o modificar ");
             System.out.println("\t- 0 Crear un nuevo.");
             System.out.println("\t- Escriba "+salir+" para volver al menu");
-
         }
-
-
         return FuncionesConsola.leerConsola();
     }
 
