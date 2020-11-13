@@ -22,19 +22,19 @@ public  class Ong {
     }
 
 
-    public String getNombre() {
+    private String getNombre() {
         return nombre;
     }
 
-    public String getDireccionSede() {
+    private String getDireccionSede() {
         return DireccionSede;
     }
 
-    public String getTelefono() {
+    private String getTelefono() {
         return Telefono;
     }
 
-    public String getUsuarioAutentificado() {
+    private String getUsuarioAutentificado() {
         return usuarioAutentificado;
     }
 
