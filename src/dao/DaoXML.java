@@ -1,6 +1,11 @@
 package dao;
 
 import com.app.console.Apartados;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.NullPermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import logicaEmpresarial.*;
 
 
@@ -11,26 +16,42 @@ import java.io.*;
 
 
 import java.net.NetworkInterface;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DaoXML {
+    XStream xstream = new XStream(new StaxDriver());
+
+
     private  String SERIALIZED_FILE_NAME = "dataONG.xml";
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
 
+    public DaoXML() {
+        xstream.setMode(XStream.ID_REFERENCES);
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(NullPermission.NULL);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.allowTypeHierarchy(Collection.class);
+        xstream.allowTypesByWildcard(new String[] {
+                "logicaEmpresarial.**"
+        });
 
+        pilaDatosGenerales = new Ong();
+    }
 
-    public DaoXML(Ong pilaDatos) {
-        pilaDatosGenerales = pilaDatos;
+    public Ong getPilaDatosGenerales() {
+        return pilaDatosGenerales;
     }
 
     public boolean descargaDatos(Apartados apartados) {
         leerXML();
         return true;
     }
-
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
@@ -44,7 +65,6 @@ public class DaoXML {
         }
 
     }
-
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
@@ -74,15 +94,10 @@ public class DaoXML {
 
         return guardarXML();
     }
-
     public boolean modificar(Object item, int indice,Apartados apartado) {
         if(item == null)
             return false;
 
-        //Descarga listado de xml
-        if(!descargaDatos(apartado)){
-            return false;
-        }
 
         //Modificar el item.
         switch (apartado){
@@ -99,7 +114,6 @@ public class DaoXML {
         //Guardar los cambios
         return guardarXML();
     }
-
     public boolean borrar(int indice,Apartados apartado){
         //Descarga listado de xml
         if(!descargaDatos(apartado)){
@@ -113,7 +127,12 @@ public class DaoXML {
             case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
             case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
             case PERSONAL:  pilaDatosGenerales.getPersonal().remove(indice);break;
-            case DELEGACIONES: pilaDatosGenerales.getDelegaciones().remove(indice);break;
+            case DELEGACIONES:
+                for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++)
+                    if(pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
+                        pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
+                pilaDatosGenerales.getDelegaciones().remove(indice);
+                break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().remove(indice);break;
             default: return false;
         }
@@ -121,7 +140,6 @@ public class DaoXML {
         //Guardar los cambios
         return guardarXML();
     }
-
 
     public String getMensajeError() {
         String mensaje = mensajeError;
@@ -141,42 +159,56 @@ public class DaoXML {
     }
 
 
-
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
     //convertirlos a xml para leerlos y guardarlos.
     private boolean guardarXML(){
+            String xml = xstream.toXML(pilaDatosGenerales);
 
-        XMLEncoder encoder = null;
-        try {
-            encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(SERIALIZED_FILE_NAME)));
+            FileOutputStream fos = null;
+            try{
+                System.out.println(xml);
 
-        } catch (FileNotFoundException fileNotFound) {
+                BufferedReader reader = new BufferedReader(new StringReader(xml));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(SERIALIZED_FILE_NAME,false));
 
-            mensajeError="Se ha producido un error al guardar el archivo";
-            error = true;
-            return false;
-        }
+                while ((xml = reader.readLine()) != null) {
 
-        encoder.writeObject(pilaDatosGenerales);
-        encoder.close();
+                    writer.write(xml + System.getProperty("line.separator"));
+
+                }
+
+                writer.close();
+            }catch (Exception e){
+                System.err.println("Error in XML Write: " + e.getMessage());
+            }
+            finally{
+                if(fos != null){
+                    try{
+                        fos.close();
+                    }catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
         return true;
     }
 
-    private boolean leerXML(){
-        XMLDecoder decoder=null;
+    private boolean leerXML()  {
+        try{
+            Path fileName = Path.of(SERIALIZED_FILE_NAME);
+            String actual = Files.readString(fileName);
 
-        try {
+            pilaDatosGenerales = new Ong();
+            pilaDatosGenerales = (Ong) xstream.fromXML(actual);
 
-            decoder=new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
-
-        } catch (FileNotFoundException e) {
-
+        }catch(Exception e){
+            System.out.println(e.getMessage());
             mensajeError="Se ha producido un error al guardar el archivo";
             error = true;
             return false;
-
         }
-        pilaDatosGenerales = (Ong) decoder.readObject();
+
         return true;
     }
 

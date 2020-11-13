@@ -9,6 +9,15 @@ public class Delegacion {
     private String telefono;
     private List<Personal> Personal;
 
+
+    public Delegacion(){}
+
+    public Delegacion(String nombre, String direccion, String telefono) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -19,6 +28,22 @@ public class Delegacion {
 
     public String getTelefono() {
         return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public void setPersonal(List<logicaEmpresarial.Personal> personal) {
+        Personal = personal;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public List<Personal> getPersonal() {

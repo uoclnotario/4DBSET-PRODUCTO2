@@ -34,4 +34,22 @@ public  class Ingresos  {
     public String getDomicilo() {
         return domicilo;
     }
+
+    public void setCifOnif(String cifOnif) {
+        this.cifOnif = cifOnif;
+    }
+
+    public void setNombreIngreso(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setDomicilioIngreso(String domicilio) { this.domicilo = domicilio;}
+
+    public void setImporte(Float importe) { this.importe = importe;}
+
+
 }
