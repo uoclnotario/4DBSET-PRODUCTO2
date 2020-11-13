@@ -2,6 +2,10 @@ package logicaEmpresarial;
 
 
 public class Usuario {
+    public Usuario() {
+
+    }
+
     public  enum tipoUsuarios{USUARIO,ADMINISTRADOR};
     private String nombre;
     private String hasing;
