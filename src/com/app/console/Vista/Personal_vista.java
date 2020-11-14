@@ -65,7 +65,9 @@ public class Personal_vista implements Vista {
 
         return FuncionesConsola.leerConsola();
     }
-    public void MostrarDato(Personal persona){
+
+
+    private void MostrarDato(Personal persona){
 
 
         System.out.printf("%-5s %-5s\n", "Nombre:", persona.getNombre());
@@ -97,7 +99,7 @@ public class Personal_vista implements Vista {
         switch (persona.getClass().getName()) {
             case "logicaEmpresarial.Contratados":
 
-                    if(((Contratados)persona).getSalario() != null){
+                    if(((Contratados)persona).getTipoContrato() != null){
                         System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", ((Contratados)persona).getTipoContrato());
                     }else{
                         System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", "No asignado.");
@@ -150,6 +152,8 @@ public class Personal_vista implements Vista {
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Personal nuevoPersonal;
+        Personal viejoPersonal = null;
+
         String entradaTexto;
         int entradaNumero = -1;
         boolean esMOdificacion = indice != -1;
@@ -166,8 +170,8 @@ public class Personal_vista implements Vista {
 
 
         if(esMOdificacion){
-
-            switch (datos.getPersonal().get(indice).getClass().getName()) {
+            viejoPersonal = datos.getPersonal().get(indice);
+            switch (viejoPersonal.getClass().getName()) {
                 case "logicaEmpresarial.Contratados":   identificarHijo = 1;        break;
                 case "logicaEmpresarial.Colaboradores":identificarHijo= 2;break;
                 case "logicaEmpresarial.Voluntarios":identificarHijo = 3;break;
@@ -220,7 +224,7 @@ public class Personal_vista implements Vista {
 
         //dni
         if(esMOdificacion)
-            System.out.println("Inserte el DNI:["+datos.getPersonal().get(indice).getNif_dni()+"]");
+            System.out.println("Inserte el DNI:["+viejoPersonal.getNif_dni()+"]");
         else
             System.out.println("Inserte el DNI:");
 
@@ -241,7 +245,7 @@ public class Personal_vista implements Vista {
 
         //Nombre
         if(esMOdificacion)
-            System.out.println("Inserte Nombre:["+datos.getPersonal().get(indice).getNombre()+"]");
+            System.out.println("Inserte Nombre:["+viejoPersonal.getNombre()+"]");
         else
             System.out.println("Inserte Nombre:");
 
@@ -261,7 +265,7 @@ public class Personal_vista implements Vista {
 
         //fecha de nacimiento
         if(esMOdificacion)
-            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+formatoFecha.format( datos.getPersonal().get(indice).getFechaDeNacimiento())+"]");
+            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+formatoFecha.format( viejoPersonal.getFechaDeNacimiento())+"]");
         else
             System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:");
 
@@ -287,7 +291,7 @@ public class Personal_vista implements Vista {
         //domicilio
 
         if(esMOdificacion)
-            System.out.println("Inserte el domicilio:["+datos.getPersonal().get(indice).getDomicilio()+"]");
+            System.out.println("Inserte el domicilio:["+viejoPersonal.getDomicilio()+"]");
         else
             System.out.println("Inserte el domicilio:");
 
@@ -303,6 +307,50 @@ public class Personal_vista implements Vista {
         }else{
             return null;
         }
+
+
+
+
+
+        switch (nuevoPersonal.getClass().getName()) {
+            case "logicaEmpresarial.Contratados":
+
+
+                    if(esMOdificacion)
+                        System.out.println("Inserte el tipo de contrato:["+((Contratados)viejoPersonal).getTipoContrato()+"]");
+                    else
+                        System.out.println("Inserte el tipo de contrato:");
+
+                    entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
+                            FuncionesConsola.comprobaConversion.TEXTO,
+                            PALABRACANCELAR,
+                            esMOdificacion);
+                    if(entradaTexto != null) {
+                        if(entradaTexto.equals("(default)"))
+                            ((Contratados)nuevoPersonal).setTipoContrato(((Contratados)datos.getPersonal().get(indice)).getTipoContrato());
+                        else
+                            ((Contratados)nuevoPersonal).setTipoContrato(entradaTexto);
+                    }else{
+                        return null;
+                    }
+                break;
+
+            case "logicaEmpresarial.Colaboradores":
+
+                break;
+
+            case "logicaEmpresarial.Voluntarios":
+            case "logicaEmpresarial.VoluntariosInternacionales":
+
+
+                if(datos.getPersonal().get(indice).getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
+
+                break;
+
+        }
+
+
+
 
 
 

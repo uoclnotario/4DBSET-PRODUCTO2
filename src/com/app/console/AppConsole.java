@@ -24,7 +24,7 @@ public class AppConsole {
         try {
             run();
         }catch (Exception ex){
-
+            vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: "+ex.getMessage() + " in="+ex.getLocalizedMessage());
         }
 
     }

@@ -82,4 +82,8 @@ public class Menu_vista {
     public void MostrarErrorLoggin(){
         System.out.println("El usuario o la clave introducidos no son correctos");
     }
+
+    public void MostrarError(String Error){
+            System.out.println(Error);
+    }
 }
