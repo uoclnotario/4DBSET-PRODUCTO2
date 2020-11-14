@@ -1,45 +1,47 @@
 package com.app.console.Vista;
 
-import logicaEmpresarial.Ingresos;
-import logicaEmpresarial.Ong;
-import logicaEmpresarial.Socios;
-import logicaEmpresarial.Usuario;
+import logicaEmpresarial.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class Socios_vista{
+public class Socios_vista implements Vista{
 
-    public String MostrarLIstado(List listado, String salir, Usuario user)
-    {
-        if(listado == null)
-        {
+    @Override
+    public String mostrarLIstado(List listado, String salir, Usuario user) {
 
-        }
-        else
-        {
+        FuncionesConsola.mostrarEncabezado("LISTADO DE SOCIOS");
+
+        if(listado == null || listado.size() == 0){
+            System.out.println("No hay ningún socio almacenado.");
+
+            System.out.println("Indique que desea realizar:");
+        }else{
             List<Socios> socios = (List<Socios>)listado;
-            System.out.println("Socios:");
-            System.out.println("\tIdentificacion\t");
 
-            for(int i = 0; i < socios.size(); i++)
-                System.out.println("\t"+(i+1)+"\t"+socios.get(i).getIdentificacion());
+            System.out.printf("%-10s %-10s %-10s\n", "INDICE", "NOMBRE", "DNI");
+
+
+            for(int i = 0; i < socios.size();i++){
+                System.out.printf("%-10s %-10s %-10s\n", +(i+1),socios.get(i).getNombre(),socios.get(i).getNif_dni());
+            }
 
             System.out.println("Indique que desea realizar:");
             System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
-            System.out.println("\t- 0 Crear un nuevo.");
-            System.out.println("\t- Escriba "+salir+" para volver al menu");
         }
+
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
 
 
         return FuncionesConsola.leerConsola();
 
     }
 
-
-    public String MostrarUno(Object elemento, String salir, Usuario user) {
+    @Override
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
         System.out.println("---MOSTRANDO DATOS DE SOCIO---");
         MostrarDato((Socios)elemento);
 
@@ -51,24 +53,22 @@ public class Socios_vista{
 
         return FuncionesConsola.leerConsola();
     }
-
     public void MostrarDato(Socios socios){
         System.out.println("");
-        System.out.println("Identificacion:\t"+ socios.getIdentificacion());
+
 
     }
-
-
-    public Object Crear(Socios datos, String PALABRACANCEALR) {
+    @Override
+    public Object crearElemento(Ong datos, String PALABRACANCEALR) {
         return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
-
-    public Object Modificar(Socios datos, int indice, String PALABRACANCEALR) {
-        return solicitarNuevo(datos,-1, PALABRACANCEALR);
+    @Override
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR) {
+       return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
-    private Object solicitarNuevo(Socios datos, int indice, String PALABRACANCELAR){
+    private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Socios nuevoIngreso = new Socios();
         String entradaTexto;
         int entradaNumero;
@@ -76,11 +76,11 @@ public class Socios_vista{
 
 
         System.out.println("Creación de nuevo socios:");
-
+/*
         //CIForNIF
 
         if(esMOdificacion)
-            System.out.println("Inserte el identificacion:"+datos.getIdentificacion()+"]");
+           // System.out.println("Inserte el identificacion:"+datos.getSocios().get(indice).getIdentificacion()+"]");
         else
             System.out.println("Inserte el identificacion:");
 
@@ -90,10 +90,10 @@ public class Socios_vista{
                 esMOdificacion);
         if(entradaTexto != null) {
 
-            nuevoIngreso.setIdentificacion(entradaTexto);
+           // nuevoIngreso.setIdentificacion(entradaTexto);
         }else{
             return null;
-        }
+        }*/
 
         return nuevoIngreso;
     }

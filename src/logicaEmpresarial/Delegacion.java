@@ -8,20 +8,19 @@ public class Delegacion {
     private String nombre;
     private String direccion;
     private String telefono;
-    private List<Personal> Personal;
-    private List<Proyecto> Proyecto;
-    private List<Personal> listaPersonal;
+    private List<Proyecto> proyecto;
+    private List<Personal> personal;
 
 
     public Delegacion(){
-        listaPersonal = new ArrayList<Personal>();
+        personal = new ArrayList<Personal>();
     }
 
     public Delegacion(String nombre, String direccion, String telefono) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
-        listaPersonal = new ArrayList<Personal>();
+        personal = new ArrayList<Personal>();
     }
 
     public String getNombre() {
@@ -37,8 +36,8 @@ public class Delegacion {
     }
 
     public List<Personal> getPersonal() {
-        if(listaPersonal == null)listaPersonal = new ArrayList<Personal>();
-        return listaPersonal;
+        if(personal == null)personal = new ArrayList<Personal>();
+        return personal;
     }
 
 
@@ -47,11 +46,11 @@ public class Delegacion {
     }
 
     public void setPersonal(List<logicaEmpresarial.Personal> personal) {
-        listaPersonal = personal;
+        personal = personal;
     }
 
     public void setProyecto(List<logicaEmpresarial.Proyecto> proyecto) {
-        Proyecto = proyecto;
+        proyecto = proyecto;
     }
 
     public void setDireccion(String direccion) {
@@ -62,11 +61,7 @@ public class Delegacion {
         this.nombre = nombre;
     }
 
-    public List<Personal> getPersonal() {
-        return Personal;
-    }
-
     public List<Proyecto> getProyecto() {
-        return Proyecto;
+        return proyecto;
     }
 }

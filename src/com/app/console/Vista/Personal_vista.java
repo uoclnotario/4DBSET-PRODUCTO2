@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class Personal_vista implements Vista {
-    private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
 
     @Override
-    public String MostrarLIstado(List listado, String salir, Usuario user){
+    public String mostrarLIstado(List listado, String salir, Usuario user){
 
-        System.out.println("***** ***** LISTADO DE PERSONAL ***** *****");
+        FuncionesConsola.mostrarEncabezado("LISTADO DE PERSONAL");
 
         if(listado == null || listado.size() == 0){
             System.out.println("No hay ningún personal almacenado.");
@@ -52,10 +52,10 @@ public class Personal_vista implements Vista {
     }
 
     @Override
-    public String MostrarUno(Object elemento, String salir, Usuario user) {
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
 
         System.out.println("***** MOSTRANDO DATOS DE PERSONA *****");
-        MostrarDato((Personal)elemento);
+        mostrarDato((Personal)elemento);
 
         System.out.println("Indique que desea realizar:");;
         System.out.println("\t- 0 Modificar esta persona.");
@@ -67,18 +67,18 @@ public class Personal_vista implements Vista {
     }
 
 
-    private void MostrarDato(Personal persona){
+    private void mostrarDato(Personal persona){
 
 
         System.out.printf("%-5s %-5s\n", "Nombre:", persona.getNombre());
         System.out.printf("%-5s %-5s\n", "NIF:", persona.getNif_dni());
         if(persona.getFechaDeNacimiento() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de nacimiento:", formatoFecha.format(persona.getFechaDeNacimiento()));
+            System.out.printf("%-5s %-5s\n", "Fecha de nacimiento:", FuncionesConsola.formatoFecha.format(persona.getFechaDeNacimiento()));
         System.out.printf("%-5s %-5s\n", "Domicilio:", persona.getDomicilio());
         System.out.printf("%-5s %-5s\n", "Tipo:", persona.getTipoString());
 
         if(persona.getFechaAlta() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", formatoFecha.format(persona.getFechaAlta()));
+            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", FuncionesConsola.formatoFecha.format(persona.getFechaAlta()));
 
         if(persona.getEstado()){
             System.out.printf("%-5s %-5s\n", "Estado:", "Alta");
@@ -86,7 +86,7 @@ public class Personal_vista implements Vista {
             System.out.printf("%-5s %-5s\n", "Estado:", "Baja");
 
             if(persona.getFechaBaja() != null)
-                System.out.printf("%-5s %-5s\n", "Fecha de Baja:", formatoFecha.format(persona.getFechaBaja()));
+                System.out.printf("%-5s %-5s\n", "Fecha de Baja:", FuncionesConsola.formatoFecha.format(persona.getFechaBaja()));
         }
 
         if(persona.getDelegacion() != null){
@@ -142,12 +142,12 @@ public class Personal_vista implements Vista {
     }
 
     @Override
-    public Object Crear(Ong datos, String PALABRACANCEALR) {
+    public Object crearElemento(Ong datos, String PALABRACANCEALR) {
         return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
     @Override
-    public Object Modificar(Ong datos,int indice, String PALABRACANCEALR){
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR){
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
@@ -265,7 +265,7 @@ public class Personal_vista implements Vista {
 
         //fecha de nacimiento
         if(esMOdificacion)
-            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+formatoFecha.format( viejoPersonal.getFechaDeNacimiento())+"]");
+            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+FuncionesConsola.formatoFecha.format( viejoPersonal.getFechaDeNacimiento())+"]");
         else
             System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:");
 

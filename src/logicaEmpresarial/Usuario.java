@@ -1,6 +1,8 @@
 package logicaEmpresarial;
 
 
+import java.util.concurrent.CopyOnWriteArraySet;
+
 public class Usuario {
     public Usuario() {
 
@@ -30,10 +32,14 @@ public class Usuario {
     public String getHasing() {
         return hasing;
     }
-
-
     public tipoUsuarios getRol() {
         return rol;
+    }
+    public String getRolString(){
+        switch (rol){
+            case ADMINISTRADOR:return "ADMINISTRADOR";
+            default:return "USUARIO";
+        }
     }
 
 

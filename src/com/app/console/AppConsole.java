@@ -4,8 +4,6 @@ import com.app.console.Vista.*;
 import dao.DaoXML;
 import logicaEmpresarial.*;
 
-import java.awt.desktop.SystemEventListener;
-
 public class AppConsole {
 
     private final String PALABRAPARAVOLVER = "v";
@@ -21,12 +19,12 @@ public class AppConsole {
         vistaMenu = new Menu_vista();
         modelo = new DaoXML();
 
-        try {
+     //   try {
             run();
-        }catch (Exception ex){
+    /*    }catch (Exception ex){
             vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: "+ex.getMessage() + " in="+ex.getLocalizedMessage());
         }
-
+*/
     }
     private void run() {
         boolean userLogueado = false;
@@ -62,7 +60,7 @@ public class AppConsole {
                     if(usuarioAutentificado.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR){
                         maximo=1;
                     }else{
-                        maximo=2;
+                        maximo=Apartados.values().length-1;
                     }
 
                     switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
@@ -72,19 +70,19 @@ public class AppConsole {
                         case TRUE:
                             accesoApartado = Integer.parseInt(entradaUsuario);
                             //Comprobar que el usuario ha marcado un valor valido
-                            if(accesoApartado <=0 || accesoApartado>Apartados.values().length)
+                            if(accesoApartado <=0 || accesoApartado>Apartados.values().length -1)
                             {
                                 vistaMenu.MostrarErrorEntrada(minimo,maximo,PALABRAPARAVOLVER);
                                 return true;//Retorna true y se volverá a abrir el menu de nuevo
                 }
 
                 //Comprobar que si el usuario no tiene permiso para entrar en este apartado
-                if(accesoApartado == 2)
+              /*  if(accesoApartado == 2)
                 {
                     vistaMenu.MostrarErrorEntrada(minimo,maximo,PALABRAPARAVOLVER);
                     return true;//Retorna true y se volvera a repetir el menu.
                 }
-
+            */
                 while(abrirApartado(Apartados.intToApartados(accesoApartado)));
                 return true;//Cuando el usuario quiera volver al menu desde apartado, lanzamos true para volver a mostrar el menu.
 
@@ -119,7 +117,7 @@ public class AppConsole {
 
 
         //Mostramos el listado y recibimos que desea hacer el usuario.
-         String entradaUsuario = vista.MostrarLIstado(modelo.recogerLIstado(apartados),PALABRAPARAVOLVER,usuarioAutentificado);
+         String entradaUsuario = vista.mostrarLIstado(modelo.recogerLIstado(apartados),PALABRAPARAVOLVER,usuarioAutentificado);
          int indiceSeleccionado;
 
         //Mientras el usuario quiera permanecer dentro del item repetimos.
@@ -138,7 +136,7 @@ public class AppConsole {
 
                 if(indiceSeleccionado == 0){//Si es cero se Creara un nuevo elemento, por lo que llamamos a Crear.
                    //Aqui se podria añadir una restricción para que si el elemento ya existe de une error y no se cree.
-                    vistaMenu.mensajeElementoCreado(modelo.crear(vista.Crear(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
+                    vistaMenu.mensajeElementoCreado(modelo.crear(vista.crearElemento(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
 
                 }else{//De lo contrario llama a mostrar uno.
                     while(MostarUno(indiceSeleccionado-1,apartados));//Abirmos mostrar uno pasandole el apartado seleccionado -1.
@@ -154,7 +152,7 @@ public class AppConsole {
     }
     private boolean MostarUno(int elemento,Apartados apartado){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
-        String entradaUsuario = vista.MostrarUno(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
+        String entradaUsuario = vista.mostrarUnElemento(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
         int apartadoSeleccionado;
 
         switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
@@ -174,7 +172,7 @@ public class AppConsole {
                         //Carga la vista, se lo envia al modelo y muestra un mensaje si se ha realizado correctamente.
 
 
-                        Object nuevoValor = vista.Modificar(modelo.getPilaDatosGenerales(), elemento,"CANCELAR");
+                        Object nuevoValor = vista.modificarElemento(modelo.getPilaDatosGenerales(), elemento,"CANCELAR");
 
                         if(nuevoValor == null){
                             vistaMenu.mensajeElementoEditado(false);

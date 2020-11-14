@@ -55,7 +55,7 @@ public class DaoXML implements Crud{
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
-            case INGRESOS:return  pilaDatosGenerales.getPersonal();
+            case INGRESOS:return  pilaDatosGenerales.getIngresos();
             case PROYECTOS:return pilaDatosGenerales.getProyectos();
             case SOCIOS:return pilaDatosGenerales.getSocios();
             case PERSONAL:return pilaDatosGenerales.getPersonal();

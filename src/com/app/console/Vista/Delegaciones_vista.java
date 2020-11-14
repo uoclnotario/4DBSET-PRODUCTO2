@@ -14,7 +14,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class Delegaciones_vista implements Vista {
     @Override
-    public String MostrarLIstado(List listado, String salir, Usuario user) {
+    public String mostrarLIstado(List listado, String salir, Usuario user) {
         if(listado == null){
 
     }else{
@@ -24,8 +24,6 @@ public class Delegaciones_vista implements Vista {
 
         for(int i = 0; i < delegacion.size();i++)
             System.out.println("\t"+(i+1)+"\t"+delegacion.get(i).getNombre()+ "\t"+delegacion.get(i).getDireccion());
-
-
 
 
         System.out.println("Indique que desea realizar:");
@@ -40,16 +38,18 @@ public class Delegaciones_vista implements Vista {
 }
 
     @Override
-    public String MostrarUno(Object elemento, String salir, Usuario user) {
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
 
-
-        System.out.println("---MOSTRANDO DATOS DE DELEGACION---");
+        FuncionesConsola.mostrarEncabezado("LISTADO DE DELEGACIONES");
         MostrarDato((Delegacion)elemento);
 
         System.out.println("Indique que desea realizar:");;
-        System.out.println("\t- 0 Modificar la delegacion.");
-        System.out.println("\t- 1 Borrar la delegacion.");
 
+        //Solo los administradore pueden modificar delegaciones.
+        if(user.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR) {
+            System.out.println("\t- 0 Modificar la delegacion.");
+            System.out.println("\t- 1 Borrar la delegacion.");
+        }
         System.out.println("\t- Escriba "+salir+" para volver atras.");
 
         return FuncionesConsola.leerConsola();
@@ -79,12 +79,12 @@ public class Delegaciones_vista implements Vista {
     }
 
     @Override
-    public Object Crear(Ong datos, String PALABRACANCEALR) {
+    public Object crearElemento(Ong datos, String PALABRACANCEALR) {
         return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
     @Override
-    public Object Modificar(Ong datos, int indice, String PALABRACANCEALR) {
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR) {
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR) {

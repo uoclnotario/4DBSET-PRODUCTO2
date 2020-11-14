@@ -1,9 +1,7 @@
 package com.app.console.Vista;
 
-import logicaEmpresarial.Delegacion;
-import logicaEmpresarial.Ong;
-import logicaEmpresarial.Personal;
-import logicaEmpresarial.Usuario;
+import logicaEmpresarial.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,28 +9,45 @@ import java.util.Optional;
 public class Usuario_vista implements Vista {
 
     @Override
-    public String MostrarLIstado(List listado, String salir, Usuario user) {
+    public String mostrarLIstado(List listado, String salir, Usuario user) {
+        if(user.getRol() != Usuario.tipoUsuarios.ADMINISTRADOR)
+        {
+            System.out.println("No tiene acceso a este apartado");
+            return null;
+        }
 
-        if (listado == null) {
+        FuncionesConsola.mostrarEncabezado("LISTADO DE USUARIO");
 
-        } else {
-            List<Usuario> usuarios = (List<Usuario>) listado;
-            System.out.println("Listado de los usuarios:");
-            System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "HASING", "ROL");
+        if(listado == null || listado.size() == 0){
+            System.out.println("No hay ningún Usuario almacenado.");
 
-            for (int i = 0; i < usuarios.size(); i++)
-                System.out.println("\t" + (i + 1) + "\t" + usuarios.get(i).getNombre() + "\t" + usuarios.get(i).getHasing());
+            System.out.println("Indique que desea realizar:");
+        }else{
+            List<Usuario> usuarios = (List<Usuario>)listado;
+
+            System.out.printf("%-10s %-10s %-10s\n", "INDICE", "NOMBRE", "PERMISOS");
+
+
+            for(int i = 0; i < usuarios.size();i++){
+                System.out.printf("%-10s %-10s %-10s \n", +(i+1),
+                        usuarios.get(i).getNombre(),
+                        usuarios.get(i).getRolString());
+            }
+
 
             System.out.println("Indique que desea realizar:");
             System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
-            System.out.println("\t- 0 Crear un nuevo.");
-            System.out.println("\t- Escriba " + salir + " para volver al menu");
         }
+
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
+
+
         return FuncionesConsola.leerConsola();
     }
 
     @Override
-    public String MostrarUno(Object elemento, String salir, Usuario user) {
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
         System.out.println("---MOSTRANDO DATOS DEL USUARIO---");
         MostrarDato((Usuario) elemento);
         System.out.println("Indique que desea realizar:");
@@ -49,11 +64,11 @@ public class Usuario_vista implements Vista {
         System.out.println("Rol:\t" + usuario.getRol());
     }
     @Override
-    public Object Crear(Ong datos, String PALABRACANCELAR) {
+    public Object crearElemento(Ong datos, String PALABRACANCELAR) {
         return solicitarNuevo(datos, -1, PALABRACANCELAR);
     }
     @Override
-    public Object Modificar(Ong datos, int indice, String PALABRACANCELAR) {
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCELAR) {
         return solicitarNuevo(datos, indice, PALABRACANCELAR);
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR) {

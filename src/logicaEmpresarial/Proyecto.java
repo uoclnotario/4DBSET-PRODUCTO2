@@ -14,7 +14,7 @@ public  class Proyecto {
     private String id;
     private String nombre;
     private Date fechaDeInicio;
-    private String delegacion;
+
     private Tipo tipo;
     private boolean estado;
 
@@ -28,38 +28,42 @@ public  class Proyecto {
         this.id = id;
         this.nombre = nombre;
         this.fechaDeInicio = fechaDeInicio;
-        this.delegacion = delegacion;
         this.tipo = tipo;
         this.estado = estado;
-    }
-
-    public Date getFechaAlta() {
-        return fechaAlta;
-    }
-
-    public Date getFechaBaja() {
-        return fechaBaja;
     }
 
     public String getNombre() {
         return nombre;
     }
 
+    public Tipo getTipo() {
+        return tipo;
+    }
+    public String getTipoString(){
+        switch (tipo){
+            case NACIONAL:return "NACIONAL";
+            case INTERNACIONAL:return "INTERNACIONAL";
+            default:return "No especificado";
+        }
+    }
+
+
     public Date getFechaDeInicio() {
         return fechaDeInicio;
     }
-
-    public String getDelegacion() {
-        return delegacion;
+    public Date getFechaAlta() {
+        return fechaAlta;
     }
+    public Date getFechaBaja() {
+        return fechaBaja;
+    }
+
+
 
     public String getId() {
         return id;
     }
 
-    public Tipo getTipo() {
-        return tipo;
-    }
 
     public boolean getEstado() { return estado;   }
 
@@ -68,31 +72,23 @@ public  class Proyecto {
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
-
     public void setFechaBaja(Date fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public void setDelegacion(Delegacion delegacion) {
-        this.delegacion = delegacion;
-    }
 
     public void setFechaDeInicio(Date fechaDeInicio) {
         this.fechaDeInicio = fechaDeInicio;
     }
-
     public void setId(String id) {
         this.id = id;
     }
-
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
-
     public void setEstado(boolean estado) { this.estado = estado; }
 
 

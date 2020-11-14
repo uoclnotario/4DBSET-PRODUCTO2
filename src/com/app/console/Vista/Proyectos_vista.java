@@ -14,30 +14,34 @@ import java.util.Optional;
 public class Proyectos_vista implements Vista{
 
     @Override
-    public String MostrarLIstado(List listado, String salir, Usuario user){
+    public String mostrarLIstado(List listado, String salir, Usuario user){
 
-        if(listado == null){
+        FuncionesConsola.mostrarEncabezado("LISTADO DE PERSONAL");
 
+        if(listado == null || listado.size() == 0){
+            System.out.println("No hay ningún personal almacenado.");
+
+            System.out.println("Indique que desea realizar:");
         }else{
             List<Proyecto> proyectos = (List<Proyecto>)listado;
-            System.out.println("Listado de proyectos:");
-            System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "ID","TIPO","DELEGACIÓN");
+
+            System.out.printf("%-10s %-10s %-10s\n", "INDICE", "NOMBRE", "TIPO");
+
 
             for(int i = 0; i < proyectos.size();i++){
-                String del="No asignado";
-
-                if(proyectos.get(i).getDelegacion() != null){
-                    System.out.println("ERROR");
-                    //del = proyectos.get(i).getDelegacion()getNombre();
-                }
-
-                System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", +(i+1),proyectos.get(i).getNombre(), proyectos.get(i).getId(),proyectos.get(i).getTipo(),del);
+                System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", +(i+1),
+                                                                     proyectos.get(i).getNombre(),
+                                                                     proyectos.get(i).getTipoString());
             }
+
+
             System.out.println("Indique que desea realizar:");
-            System.out.println("\t- Indique el indice del proyecto a visualizar o modificar ");
-            System.out.println("\t- 0 Crear un nuevo.");
-            System.out.println("\t- Escriba "+salir+" para volver al menu");
+            System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
         }
+
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
+
         return FuncionesConsola.leerConsola();
     }
 
@@ -45,7 +49,7 @@ public class Proyectos_vista implements Vista{
 
 
     @Override
-    public String MostrarUno(Object elemento, String salir, Usuario user) {
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
 
         System.out.println("---MOSTRANDO DATOS DE PROYECTO---");
         MostrarDato((Proyecto)elemento);
@@ -65,7 +69,7 @@ public class Proyectos_vista implements Vista{
         System.out.printf("%-5s %-5s\n", "Identificador:", proyecto.getId());
         if(proyecto.getFechaDeInicio() != null)
             System.out.printf("%-5s %-5s\n", "Fecha de inicio:", formato.format(proyecto.getFechaDeInicio()));
-        System.out.printf("%-5s %-5s\n", "Delegacion:", proyecto.getDelegacion());
+
         System.out.printf("%-5s %-5s\n", "Tipo:", proyecto.getTipo());
 
         if(proyecto.getFechaDeInicio() != null)
@@ -77,23 +81,16 @@ public class Proyectos_vista implements Vista{
             System.out.printf("%-5s %-5s\n", "Estado:", "Baja");
         }
 
-        if(proyecto.getDelegacion() != null){
-            System.out.println("ERROR");
-            //System.out.printf("%-5s %-5s\n", "Delegación:", proyecto.getDelegacion().getNombre());
-        }else{
-            System.out.printf("%-5s %-5s\n", "Delegación:", "No asignado.");
-        }
-
 
     }
 
     @Override
-    public Object Crear(Ong datos, String PALABRACANCEALR) {
+    public Object crearElemento(Ong datos, String PALABRACANCEALR) {
         return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
 
     @Override
-    public Object Modificar(Ong datos,int indice, String PALABRACANCEALR){
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR){
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
@@ -127,7 +124,7 @@ public class Proyectos_vista implements Vista{
                 FuncionesConsola.comprobaConversion.ENTERO,
                 PALABRACANCELAR,
                 1,
-                2);
+                2, true);
 
 
         entradaNumero = Integer.parseInt(entradaTexto);
@@ -163,36 +160,7 @@ public class Proyectos_vista implements Vista{
         }
 
 
-        if(datos.getDelegaciones().size() > 0){
 
-            for(int i = 0; i < datos.getDelegaciones().size();i++)
-                System.out.println(i+1.+"\t"+datos.getDelegaciones().get(i).getNombre());
-            System.out.println("0- No seleccionar nada.");
-
-
-            if(esMOdificacion)
-                if(datos.getProyectos().get(indice).getDelegacion() != null){
-                    System.out.println("ERROR");
-                    //System.out.println("Seleccione la delegación en la que está asginado:["+datos.getProyectos().get(indice).getDelegacion().getNombre()+"]");
-                }else{
-                    System.out.println("Seleccione la delegación en la que está asginado:[Nignuna]");
-                }
-            else{
-                System.out.println("Seleccione la delegación en la que está asginado:");
-            }
-
-
-            entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARANUMERO,
-                    FuncionesConsola.comprobaConversion.ENTERO,
-                    PALABRACANCELAR,
-                    esMOdificacion);
-
-
-            entradaNumero = Integer.parseInt(entradaTexto);
-            if(entradaNumero <= datos.getDelegaciones().size() && entradaNumero > 0 ){
-                nuevoProyecto.setDelegacion(datos.getDelegaciones().get(entradaNumero-1));
-            }
-        }
 
         if(!esMOdificacion){
             nuevoProyecto.setEstado(true);

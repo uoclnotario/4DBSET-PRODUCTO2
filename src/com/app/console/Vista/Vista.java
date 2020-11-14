@@ -8,8 +8,8 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface Vista {
-    public String MostrarLIstado(List listado, String salir, Usuario user);
-    public String MostrarUno(Object elemento, String salir, Usuario user);
-    public Object Crear(Ong datos, String PALABRACANCEALR);
-    public Object Modificar(Ong datos,int indice, String PALABRACANCEALR);
+    public String mostrarLIstado(List listado, String salir, Usuario user);
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user);
+    public Object crearElemento(Ong datos, String PALABRACANCEALR);
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR);
 }
