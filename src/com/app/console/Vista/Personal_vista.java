@@ -12,15 +12,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class Personal_vista implements Vista {
+    private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
     @Override
     public String MostrarLIstado(List listado, String salir, Usuario user){
 
-        if(listado == null){
+        System.out.println("***** ***** LISTADO DE PERSONAL ***** *****");
 
+        if(listado == null || listado.size() == 0){
+            System.out.println("No hay ningún personal almacenado.");
+
+            System.out.println("Indique que desea realizar:");
         }else{
             List<Personal> personal = (List<Personal>)listado;
-            System.out.println("Listado de personal:");
+
             System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "DNI","TIPO","DELEGACIÓN");
 
 
@@ -37,10 +42,10 @@ public class Personal_vista implements Vista {
 
             System.out.println("Indique que desea realizar:");
             System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
-            System.out.println("\t- 0 Crear un nuevo.");
-            System.out.println("\t- Escriba "+salir+" para volver al menu");
-
         }
+
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
 
 
         return FuncionesConsola.leerConsola();
@@ -49,7 +54,7 @@ public class Personal_vista implements Vista {
     @Override
     public String MostrarUno(Object elemento, String salir, Usuario user) {
 
-        System.out.println("---MOSTRANDO DATOS DE PERSONA---");
+        System.out.println("***** MOSTRANDO DATOS DE PERSONA *****");
         MostrarDato((Personal)elemento);
 
         System.out.println("Indique que desea realizar:");;
@@ -60,18 +65,20 @@ public class Personal_vista implements Vista {
 
         return FuncionesConsola.leerConsola();
     }
-    public void MostrarDato(Personal persona){
 
-        DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+    private void MostrarDato(Personal persona){
+
+
         System.out.printf("%-5s %-5s\n", "Nombre:", persona.getNombre());
         System.out.printf("%-5s %-5s\n", "NIF:", persona.getNif_dni());
         if(persona.getFechaDeNacimiento() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de nacimiento:", formato.format(persona.getFechaDeNacimiento()));
+            System.out.printf("%-5s %-5s\n", "Fecha de nacimiento:", formatoFecha.format(persona.getFechaDeNacimiento()));
         System.out.printf("%-5s %-5s\n", "Domicilio:", persona.getDomicilio());
         System.out.printf("%-5s %-5s\n", "Tipo:", persona.getTipoString());
 
         if(persona.getFechaAlta() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", formato.format(persona.getFechaAlta()));
+            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", formatoFecha.format(persona.getFechaAlta()));
 
         if(persona.getEstado()){
             System.out.printf("%-5s %-5s\n", "Estado:", "Alta");
@@ -79,13 +86,56 @@ public class Personal_vista implements Vista {
             System.out.printf("%-5s %-5s\n", "Estado:", "Baja");
 
             if(persona.getFechaBaja() != null)
-                System.out.printf("%-5s %-5s\n", "Fecha de Baja:", formato.format(persona.getFechaBaja()));
+                System.out.printf("%-5s %-5s\n", "Fecha de Baja:", formatoFecha.format(persona.getFechaBaja()));
         }
 
         if(persona.getDelegacion() != null){
             System.out.printf("%-5s %-5s\n", "Delegación:", persona.getDelegacion().getNombre());
         }else{
             System.out.printf("%-5s %-5s\n", "Delegación:", "No asignado.");
+        }
+
+
+        switch (persona.getClass().getName()) {
+            case "logicaEmpresarial.Contratados":
+
+                    if(((Contratados)persona).getTipoContrato() != null){
+                        System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", ((Contratados)persona).getTipoContrato());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", "No asignado.");
+                    }
+
+                    if(((Contratados)persona).getSalario() != null){
+                        System.out.printf("%-5s %-5s\n", "Salario:", ((Contratados)persona).getSalario());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Salario:", "No asignado.");
+                    }
+                break;
+
+            case "logicaEmpresarial.Colaboradores":
+                    if(persona.getDelegacion() != null){
+                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", ((Colaboradores)persona).getTipoString());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", "No asignado.");
+                    }
+                break;
+
+            case "logicaEmpresarial.Voluntarios":
+            case "logicaEmpresarial.VoluntariosInternacionales":
+                if(((Voluntarios)persona).getAreaVoluntariado() != null){
+                    System.out.printf("%-5s %-5s\n", "Area:", ((Voluntarios)persona).getAreaVoluntariado());
+                }else{
+                    System.out.printf("%-5s %-5s\n", "Area:", "No asignado.");
+                }
+
+                if(persona.getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
+                    if(((VoluntariosInternacionales)persona).getPais() != null){
+                        System.out.printf("%-5s %-5s\n", "Pais voluntariado:", ((VoluntariosInternacionales)persona).getPais());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Pais voluntariado:", "No asignado.");
+                    }
+                break;
+
         }
 
 
@@ -102,10 +152,12 @@ public class Personal_vista implements Vista {
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Personal nuevoPersonal;
-        String entradaTexto;
-        int entradaNumero;
-        boolean esMOdificacion = indice != -1;
+        Personal viejoPersonal = null;
 
+        String entradaTexto;
+        int entradaNumero = -1;
+        boolean esMOdificacion = indice != -1;
+        int identificarHijo = -1;
 
         System.out.println("Creación de nuevo personal:");
         System.out.println("Seleccione el tipo:");
@@ -118,26 +170,44 @@ public class Personal_vista implements Vista {
 
 
         if(esMOdificacion){
-            String valor = "";
-            switch (datos.getPersonal().get(indice).getClass().getName()) {
-                case "Contratados":valor = "1";break;
-                case "Colaboradores":valor= "2";break;
-                case "Voluntarios":valor = "3";break;
-                case "VoluntariosInternacionales":valor = "4";break;
+            viejoPersonal = datos.getPersonal().get(indice);
+            switch (viejoPersonal.getClass().getName()) {
+                case "logicaEmpresarial.Contratados":   identificarHijo = 1;        break;
+                case "logicaEmpresarial.Colaboradores":identificarHijo= 2;break;
+                case "logicaEmpresarial.Voluntarios":identificarHijo = 3;break;
+                case "logicaEmpresarial.VoluntariosInternacionales":identificarHijo = 4;break;
             }
 
-            System.out.println("Seleccióne el número del tipo de personal:["+valor+"]");
-        }else
+            System.out.println("Seleccióne el número del tipo de personal:["+identificarHijo+"]");
+
+            do {
+                entradaTexto = FuncionesConsola.forzarEntradaNumero(FuncionesConsola.MASCARANUMERO,
+                        FuncionesConsola.comprobaConversion.ENTERO,
+                        PALABRACANCELAR,
+                        1,
+                        4, true);
+
+                if (entradaTexto.equals("(default)")) {
+                    entradaNumero = identificarHijo;
+                }else {
+                    entradaNumero = Integer.parseInt(entradaTexto);
+                }
+            }while(entradaNumero < 1);
+
+        }else{
             System.out.println("Seleccióne el número del tipo de personal:");
 
-        entradaTexto= FuncionesConsola.forzarEntradaNumero(FuncionesConsola.MASCARANUMERO,
-                FuncionesConsola.comprobaConversion.ENTERO,
-                PALABRACANCELAR,
-                1,
-                5);
+            entradaTexto = FuncionesConsola.forzarEntradaNumero(FuncionesConsola.MASCARANUMERO,
+                    FuncionesConsola.comprobaConversion.ENTERO,
+                    PALABRACANCELAR,
+                    1,
+                    4, false);
+
+            entradaNumero = Integer.parseInt(entradaTexto);
 
 
-        entradaNumero = Integer.parseInt(entradaTexto);
+        }
+
 
         switch (entradaNumero) {
             case 1: nuevoPersonal = new Contratados();break;
@@ -151,10 +221,10 @@ public class Personal_vista implements Vista {
         }
 
 
-/*
+
         //dni
         if(esMOdificacion)
-            System.out.println("Inserte el DNI:"+datos.getPersonal().get(indice).getNif_dni()+"]");
+            System.out.println("Inserte el DNI:["+viejoPersonal.getNif_dni()+"]");
         else
             System.out.println("Inserte el DNI:");
 
@@ -170,10 +240,12 @@ public class Personal_vista implements Vista {
         }else{
             return null;
         }
-*/
+
+
+
         //Nombre
         if(esMOdificacion)
-            System.out.println("Inserte Nombre:"+datos.getPersonal().get(indice).getNombre()+"]");
+            System.out.println("Inserte Nombre:["+viejoPersonal.getNombre()+"]");
         else
             System.out.println("Inserte Nombre:");
 
@@ -190,10 +262,10 @@ public class Personal_vista implements Vista {
             return null;
         }
 
-/*
+
         //fecha de nacimiento
         if(esMOdificacion)
-            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+datos.getPersonal().get(indice).getFechaDeNacimiento()+"]");
+            System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:["+formatoFecha.format( viejoPersonal.getFechaDeNacimiento())+"]");
         else
             System.out.println("Inserte la fecha de nacimiento, formato dd/mm/yyyy:");
 
@@ -214,10 +286,12 @@ public class Personal_vista implements Vista {
         }else{
             return null;
         }
+
+
         //domicilio
 
         if(esMOdificacion)
-            System.out.println("Inserte el domicilio:["+datos.getPersonal().get(indice).getDomicilio()+"]");
+            System.out.println("Inserte el domicilio:["+viejoPersonal.getDomicilio()+"]");
         else
             System.out.println("Inserte el domicilio:");
 
@@ -233,21 +307,69 @@ public class Personal_vista implements Vista {
         }else{
             return null;
         }
-*/
+
+
+
+
+
+        switch (nuevoPersonal.getClass().getName()) {
+            case "logicaEmpresarial.Contratados":
+
+
+                    if(esMOdificacion)
+                        System.out.println("Inserte el tipo de contrato:["+((Contratados)viejoPersonal).getTipoContrato()+"]");
+                    else
+                        System.out.println("Inserte el tipo de contrato:");
+
+                    entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
+                            FuncionesConsola.comprobaConversion.TEXTO,
+                            PALABRACANCELAR,
+                            esMOdificacion);
+                    if(entradaTexto != null) {
+                        if(entradaTexto.equals("(default)"))
+                            ((Contratados)nuevoPersonal).setTipoContrato(((Contratados)datos.getPersonal().get(indice)).getTipoContrato());
+                        else
+                            ((Contratados)nuevoPersonal).setTipoContrato(entradaTexto);
+                    }else{
+                        return null;
+                    }
+                break;
+
+            case "logicaEmpresarial.Colaboradores":
+
+                break;
+
+            case "logicaEmpresarial.Voluntarios":
+            case "logicaEmpresarial.VoluntariosInternacionales":
+
+
+                if(datos.getPersonal().get(indice).getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
+
+                break;
+
+        }
+
+
+
+
+
+
+        //SELECCIONAR UNA DELEGACIÓN.
         if(datos.getDelegaciones().size() > 0){
 
             for(int i = 0; i < datos.getDelegaciones().size();i++)
                 System.out.println(i+1.+"\t"+datos.getDelegaciones().get(i).getNombre());
+
+
             System.out.println("0- No seleccionar nada.");
 
-
-            if(esMOdificacion)
-                if(datos.getPersonal().get(indice).getDelegacion() != null){
-                    System.out.println("Seleccione la delegación en la que está asginado:["+datos.getPersonal().get(indice).getDelegacion().getNombre()+"]");
-                }else{
+            if(esMOdificacion) {
+                if (datos.getPersonal().get(indice).getDelegacion() != null) {
+                    System.out.println("Seleccione la delegación en la que está asginado:[" + datos.getPersonal().get(indice).getDelegacion().getNombre() + "]");
+                } else {
                     System.out.println("Seleccione la delegación en la que está asginado:[Nignuna]");
                 }
-            else{
+            }else{
                 System.out.println("Seleccione la delegación en la que está asginado:");
             }
 
@@ -263,6 +385,8 @@ public class Personal_vista implements Vista {
                 nuevoPersonal.setDelegacion(datos.getDelegaciones().get(entradaNumero-1));
             }
         }
+
+
 
       if(!esMOdificacion){
           nuevoPersonal.setEstado(true);

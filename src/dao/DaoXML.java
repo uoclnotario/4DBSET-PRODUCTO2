@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DaoXML {
+public class DaoXML implements Crud{
     XStream xstream = new XStream(new StaxDriver());
 
 
@@ -105,7 +105,10 @@ public class DaoXML {
             case INGRESOS:  pilaDatosGenerales.getIngresos().set(indice,(Ingresos)item);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
             case SOCIOS:    pilaDatosGenerales.getSocios().set(indice,(Socios) item);break;
-            case PERSONAL:  pilaDatosGenerales.getPersonal().set(indice,(Personal)item);break;
+            case PERSONAL:
+                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);//Ponemos a null la delegación del personal asignado, para quitarlo de la memoria
+                pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
+                break;
             case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);break;
             default: return false;
@@ -126,12 +129,18 @@ public class DaoXML {
             case INGRESOS:  pilaDatosGenerales.getIngresos().remove(indice);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
             case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
-            case PERSONAL:  pilaDatosGenerales.getPersonal().remove(indice);break;
+            case PERSONAL:
+                    pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);
+                    pilaDatosGenerales.getPersonal().remove(indice);
+                break;
             case DELEGACIONES:
-                for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++)
-                    if(pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
-                        pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
-                pilaDatosGenerales.getDelegaciones().remove(indice);
+                    for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++) {
+                        if(pilaDatosGenerales.getPersonal().get(i).getDelegacion()!= null)
+                            if (pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
+                                pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
+                    }
+
+                    pilaDatosGenerales.getDelegaciones().remove(indice);
                 break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().remove(indice);break;
             default: return false;
@@ -166,8 +175,6 @@ public class DaoXML {
 
             FileOutputStream fos = null;
             try{
-                System.out.println(xml);
-
                 BufferedReader reader = new BufferedReader(new StringReader(xml));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(SERIALIZED_FILE_NAME,false));
 
@@ -193,7 +200,6 @@ public class DaoXML {
 
         return true;
     }
-
     private boolean leerXML()  {
         try{
             Path fileName = Path.of(SERIALIZED_FILE_NAME);

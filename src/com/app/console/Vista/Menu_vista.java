@@ -79,7 +79,11 @@ public class Menu_vista {
     public void MostrarBienvenida(Usuario user){
         System.out.println("Bienvenido "+user.getNombre());
     }
-    public void MostrarError(){
+    public void MostrarErrorLoggin(){
         System.out.println("El usuario o la clave introducidos no son correctos");
+    }
+
+    public void MostrarError(String Error){
+            System.out.println(Error);
     }
 }

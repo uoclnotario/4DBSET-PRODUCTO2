@@ -117,11 +117,16 @@ public class FuncionesConsola {
             }
         }while (true);
     }
-    public static  String forzarEntradaNumero(String mascara, comprobaConversion tipo, String PALABRASALIR, int minimo, int maximo){
+    public static  String forzarEntradaNumero(String mascara, comprobaConversion tipo, String PALABRASALIR, int minimo, int maximo, boolean ACEPTARTECLAENTER){
         do{
             String entradaTexto = FuncionesConsola.leerConsola();
+
+            if(ACEPTARTECLAENTER && entradaTexto.length() == 0)
+                return "(default)";
+
             switch (FuncionesConsola.comprobarEntrada(entradaTexto, mascara, PALABRASALIR, tipo)) {
                 case TRUE:
+
                     if(Integer.parseInt(entradaTexto) >= minimo && Integer.parseInt(entradaTexto) <=maximo)
                     {
                         return entradaTexto;
@@ -144,5 +149,6 @@ public class FuncionesConsola {
 
         return retorno;
     }
+
 
 }

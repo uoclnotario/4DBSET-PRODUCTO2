@@ -20,7 +20,13 @@ public class AppConsole {
     public AppConsole(){
         vistaMenu = new Menu_vista();
         modelo = new DaoXML();
-        run();
+
+        try {
+            run();
+        }catch (Exception ex){
+            vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: "+ex.getMessage() + " in="+ex.getLocalizedMessage());
+        }
+
     }
     private void run() {
         boolean userLogueado = false;
@@ -35,7 +41,7 @@ public class AppConsole {
                     userLogueado = true;
                 } else {
                     //Error el usuario o la clave no es correcto.
-                    vistaMenu.MostrarError();
+                    vistaMenu.MostrarErrorLoggin();
                 }
             } while (!userLogueado);//Hasta que el usuario no se haya logueado no continuamos.
 
