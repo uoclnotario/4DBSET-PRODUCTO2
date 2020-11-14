@@ -54,7 +54,7 @@ public class Personal_vista implements Vista {
     @Override
     public String MostrarUno(Object elemento, String salir, Usuario user) {
 
-        System.out.println("---MOSTRANDO DATOS DE PERSONA---");
+        System.out.println("***** MOSTRANDO DATOS DE PERSONA *****");
         MostrarDato((Personal)elemento);
 
         System.out.println("Indique que desea realizar:");;
@@ -91,6 +91,49 @@ public class Personal_vista implements Vista {
             System.out.printf("%-5s %-5s\n", "Delegación:", persona.getDelegacion().getNombre());
         }else{
             System.out.printf("%-5s %-5s\n", "Delegación:", "No asignado.");
+        }
+
+
+        switch (persona.getClass().getName()) {
+            case "logicaEmpresarial.Contratados":
+
+                    if(((Contratados)persona).getSalario() != null){
+                        System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", ((Contratados)persona).getTipoContrato());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", "No asignado.");
+                    }
+
+                    if(((Contratados)persona).getSalario() != null){
+                        System.out.printf("%-5s %-5s\n", "Salario:", ((Contratados)persona).getSalario());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Salario:", "No asignado.");
+                    }
+                break;
+
+            case "logicaEmpresarial.Colaboradores":
+                    if(persona.getDelegacion() != null){
+                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", ((Colaboradores)persona).getTipoString());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", "No asignado.");
+                    }
+                break;
+
+            case "logicaEmpresarial.Voluntarios":
+            case "logicaEmpresarial.VoluntariosInternacionales":
+                if(((Voluntarios)persona).getAreaVoluntariado() != null){
+                    System.out.printf("%-5s %-5s\n", "Area:", ((Voluntarios)persona).getAreaVoluntariado());
+                }else{
+                    System.out.printf("%-5s %-5s\n", "Area:", "No asignado.");
+                }
+
+                if(persona.getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
+                    if(((VoluntariosInternacionales)persona).getPais() != null){
+                        System.out.printf("%-5s %-5s\n", "Pais voluntariado:", ((VoluntariosInternacionales)persona).getPais());
+                    }else{
+                        System.out.printf("%-5s %-5s\n", "Pais voluntariado:", "No asignado.");
+                    }
+                break;
+
         }
 
 

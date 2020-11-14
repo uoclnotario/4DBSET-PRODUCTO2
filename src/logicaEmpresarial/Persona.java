@@ -3,7 +3,7 @@ package logicaEmpresarial;
 import javax.swing.plaf.BorderUIResource;
 import java.util.Date;
 
-public class Persona {
+public abstract class  Persona {
     public  enum  Tipo{FISICA,JURIDICA};
     private String nif_dni;
     private String nombre;

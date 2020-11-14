@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DaoXML {
+public class DaoXML implements Crud{
     XStream xstream = new XStream(new StaxDriver());
 
 
@@ -200,7 +200,6 @@ public class DaoXML {
 
         return true;
     }
-
     private boolean leerXML()  {
         try{
             Path fileName = Path.of(SERIALIZED_FILE_NAME);
