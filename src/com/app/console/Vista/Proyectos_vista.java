@@ -27,8 +27,8 @@ public class Proyectos_vista implements Vista{
                 String del="No asignado";
 
                 if(proyectos.get(i).getDelegacion() != null){
-                    System.out.println("ERROR");
-                    //del = proyectos.get(i).getDelegacion()getNombre();
+                    //System.out.println("ERROR");
+                    del = proyectos.get(i).getDelegacion()getNombre();
                 }
 
                 System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", +(i+1),proyectos.get(i).getNombre(), proyectos.get(i).getId(),proyectos.get(i).getTipo(),del);
@@ -78,8 +78,8 @@ public class Proyectos_vista implements Vista{
         }
 
         if(proyecto.getDelegacion() != null){
-            System.out.println("ERROR");
-            //System.out.printf("%-5s %-5s\n", "Delegación:", proyecto.getDelegacion().getNombre());
+            //System.out.println("ERROR");
+            System.out.printf("%-5s %-5s\n", "Delegación:", proyecto.getDelegacion().getNombre());
         }else{
             System.out.printf("%-5s %-5s\n", "Delegación:", "No asignado.");
         }
@@ -172,8 +172,8 @@ public class Proyectos_vista implements Vista{
 
             if(esMOdificacion)
                 if(datos.getProyectos().get(indice).getDelegacion() != null){
-                    System.out.println("ERROR");
-                    //System.out.println("Seleccione la delegación en la que está asginado:["+datos.getProyectos().get(indice).getDelegacion().getNombre()+"]");
+                    //System.out.println("ERROR");
+                    System.out.println("Seleccione la delegación en la que está asginado:["+datos.getProyectos().get(indice).getDelegacion().getNombre()+"]");
                 }else{
                     System.out.println("Seleccione la delegación en la que está asginado:[Nignuna]");
                 }
