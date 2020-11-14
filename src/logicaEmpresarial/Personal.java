@@ -44,8 +44,14 @@ public  class Personal extends Persona {
     public Delegacion getDelegacion() {
         return delegacion;
     }
-    public void setDelegacion(Delegacion delegacion) {
-        this.delegacion = delegacion;
+    public void setDelegacion(Delegacion nuevaDelegacion) {
+        if(nuevaDelegacion == null){
+            this.delegacion.getPersonal().remove((Personal) this);
+        }else{
+            nuevaDelegacion.getPersonal().add((Personal)this);
+        }
+
+        this.delegacion = nuevaDelegacion;
     }
     public String getTipoString(){
         switch(this.getClass().getName()){

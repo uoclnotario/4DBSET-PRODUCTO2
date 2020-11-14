@@ -126,7 +126,10 @@ public class DaoXML {
             case INGRESOS:  pilaDatosGenerales.getIngresos().remove(indice);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
             case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
-            case PERSONAL:  pilaDatosGenerales.getPersonal().remove(indice);break;
+            case PERSONAL:
+                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);
+                pilaDatosGenerales.getPersonal().remove(indice);
+                break;
             case DELEGACIONES:
                 for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++)
                     if(pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
@@ -166,8 +169,6 @@ public class DaoXML {
 
             FileOutputStream fos = null;
             try{
-                System.out.println(xml);
-
                 BufferedReader reader = new BufferedReader(new StringReader(xml));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(SERIALIZED_FILE_NAME,false));
 

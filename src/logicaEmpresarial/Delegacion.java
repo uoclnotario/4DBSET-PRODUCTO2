@@ -1,5 +1,6 @@
 package logicaEmpresarial;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Delegacion {
@@ -7,15 +8,18 @@ public class Delegacion {
     private String nombre;
     private String direccion;
     private String telefono;
-    private List<Personal> Personal;
+    private List<Personal> listaPersonal;
 
 
-    public Delegacion(){}
+    public Delegacion(){
+        listaPersonal = new ArrayList<Personal>();
+    }
 
     public Delegacion(String nombre, String direccion, String telefono) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
+        listaPersonal = new ArrayList<Personal>();
     }
 
     public String getNombre() {
@@ -30,12 +34,18 @@ public class Delegacion {
         return telefono;
     }
 
+    public List<Personal> getPersonal() {
+        if(listaPersonal == null)listaPersonal = new ArrayList<Personal>();
+        return listaPersonal;
+    }
+
+
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
     public void setPersonal(List<logicaEmpresarial.Personal> personal) {
-        Personal = personal;
+        listaPersonal = personal;
     }
 
     public void setDireccion(String direccion) {
@@ -46,7 +56,7 @@ public class Delegacion {
         this.nombre = nombre;
     }
 
-    public List<Personal> getPersonal() {
-        return Personal;
-    }
+
+
+
 }

@@ -1,8 +1,5 @@
 <component name="libraryTable">
   <library name="Java EE 6-Java EE 6">
-    <ANNOTATIONS>
-      <root url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" />
-    </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/javax.jms.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javax.annotation.jar!/" />
@@ -13,18 +10,13 @@
       <root url="jar://$PROJECT_DIR$/lib/javax.persistence.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar!/" />
-      <root url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" />
+      <root url="file://$PROJECT_DIR$/lib/lib" />
     </CLASSES>
-    <JAVADOC>
-      <root url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" />
-    </JAVADOC>
-    <NATIVE>
-      <root url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" />
-    </NATIVE>
+    <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" />
+      <root url="file://$PROJECT_DIR$/lib/lib" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/../xstream-1.4.13/lib" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lib" recursive="false" type="SOURCES" />
   </library>
 </component>

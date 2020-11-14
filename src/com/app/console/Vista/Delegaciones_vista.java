@@ -27,6 +27,7 @@ public class Delegaciones_vista implements Vista {
 
 
 
+
         System.out.println("Indique que desea realizar:");
         System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
         System.out.println("\t- 0 Crear un nuevo.");
@@ -58,6 +59,23 @@ public class Delegaciones_vista implements Vista {
         System.out.println("Nombre:\t"+ delegacion.getNombre());
         System.out.println("Direccion:\t"+ delegacion.getDireccion());
         System.out.println("Telefono:\t"+ delegacion.getTelefono());
+
+
+        System.out.println("Mostrando Personal Asignado");
+        if(delegacion.getPersonal() != null){
+            System.out.printf("%-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "DNI","TIPO");
+            for(int i = 0; i < delegacion.getPersonal() .size();i++)
+                System.out.printf("%-10s %-10s %-10s %-10s\n", +(i+1),delegacion.getPersonal().get(i).getNombre(),
+                                                                            delegacion.getPersonal().get(i).getNif_dni(),
+                                                                            delegacion.getPersonal().get(i).getTipoString());
+
+        }else{
+            System.out.println("No Hay ningún personal asignado");
+        }
+
+
+
+
     }
 
     @Override
