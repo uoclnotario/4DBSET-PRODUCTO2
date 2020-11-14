@@ -105,7 +105,10 @@ public class DaoXML {
             case INGRESOS:  pilaDatosGenerales.getIngresos().set(indice,(Ingresos)item);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
             case SOCIOS:    pilaDatosGenerales.getSocios().set(indice,(Socios) item);break;
-            case PERSONAL:  pilaDatosGenerales.getPersonal().set(indice,(Personal)item);break;
+            case PERSONAL:
+                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);//Ponemos a null la delegación del personal asignado, para quitarlo de la memoria
+                pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
+                break;
             case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);break;
             default: return false;
@@ -127,14 +130,17 @@ public class DaoXML {
             case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
             case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
             case PERSONAL:
-                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);
-                pilaDatosGenerales.getPersonal().remove(indice);
+                    pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);
+                    pilaDatosGenerales.getPersonal().remove(indice);
                 break;
             case DELEGACIONES:
-                for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++)
-                    if(pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
-                        pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
-                pilaDatosGenerales.getDelegaciones().remove(indice);
+                    for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++) {
+                        if(pilaDatosGenerales.getPersonal().get(i).getDelegacion()!= null)
+                            if (pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
+                                pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
+                    }
+
+                    pilaDatosGenerales.getDelegaciones().remove(indice);
                 break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().remove(indice);break;
             default: return false;

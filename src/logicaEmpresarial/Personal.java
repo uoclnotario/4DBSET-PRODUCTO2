@@ -45,9 +45,16 @@ public  class Personal extends Persona {
         return delegacion;
     }
     public void setDelegacion(Delegacion nuevaDelegacion) {
-        if(nuevaDelegacion == null){
+
+        //Si la delegación que se pretende añadir es la misma que la que tiene asignada el personal no se ejecuta.
+       //if(nuevaDelegacion.equals(delegacion)) return;
+
+        //Elimina de la lista de personal de la delegación que va a ser modificada a este personal.
+        if(delegacion != null)
             this.delegacion.getPersonal().remove((Personal) this);
-        }else{
+
+        //Si la nueva delegación no es null, se añade el personal a la lista.
+        if(nuevaDelegacion != null){
             nuevaDelegacion.getPersonal().add((Personal)this);
         }
 
