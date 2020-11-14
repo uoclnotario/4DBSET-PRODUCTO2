@@ -18,7 +18,7 @@ public class Usuario_vista implements Vista {
         } else {
             List<Usuario> usuarios = (List<Usuario>) listado;
             System.out.println("Listado de los usuarios:");
-            System.out.println("\tINDICE\tNOMBRE\tHASING\tROL");
+            System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "HASING", "ROL");
 
             for (int i = 0; i < usuarios.size(); i++)
                 System.out.println("\t" + (i + 1) + "\t" + usuarios.get(i).getNombre() + "\t" + usuarios.get(i).getHasing());
@@ -30,6 +30,7 @@ public class Usuario_vista implements Vista {
         }
         return FuncionesConsola.leerConsola();
     }
+
     @Override
     public String MostrarUno(Object elemento, String salir, Usuario user) {
         System.out.println("---MOSTRANDO DATOS DEL USUARIO---");

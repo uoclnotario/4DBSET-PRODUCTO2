@@ -27,7 +27,6 @@ public class Usuario {
     public void setPassword(String nombre){ }
 
 
-
     public String getHasing() {
         return hasing;
     }

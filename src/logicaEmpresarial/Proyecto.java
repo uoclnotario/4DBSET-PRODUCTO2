@@ -77,7 +77,7 @@ public  class Proyecto {
         this.nombre = nombre;
     }
 
-    public void setDelegacion(String delegacion) {
+    public void setDelegacion(Delegacion delegacion) {
         this.delegacion = delegacion;
     }
 
