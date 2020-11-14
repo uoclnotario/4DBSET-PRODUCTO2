@@ -10,14 +10,12 @@ public class Menu_vista {
 
         int valorRecogido = 0;
         System.out.println("---SELECCIONE UN APARTADO ---");
-        System.out.println("\t-1\t INGRESOS ");
-        System.out.println("\t-2\t PROYECTOS ");
-        System.out.println("\t-3\t SOCIOS ");
-        System.out.println("\t-4\t PERSONAL ");
-        System.out.println("\t-5\t DELEGACIONES ");
+        System.out.println("\t-1\t PROYECTOS ");
+        System.out.println("\t-2\t PERSONAL ");
+        System.out.println("\t-3\t DELEGACIONES ");
 
         if(user.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR)
-            System.out.println("\t-6\t USUARIOS ");
+            System.out.println("\t-4\t USUARIOS ");
 
         System.out.println("Escriba el indice del apartado o "+ salir + " para cerrar sesión:");
         return FuncionesConsola.leerConsola();

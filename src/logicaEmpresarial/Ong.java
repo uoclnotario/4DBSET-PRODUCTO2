@@ -20,8 +20,12 @@ public  class Ong {
 
 
     public Ong(){
-        personal = new ArrayList<Personal>();
-        delegaciones = new ArrayList<Delegacion>();
+        personal = new ArrayList<>();
+        proyectos = new ArrayList<>();
+        delegaciones = new ArrayList<>();
+        ingresos = new ArrayList<>();
+        socios = new ArrayList<>();
+        usuarios = new ArrayList<>();
     }
 
 

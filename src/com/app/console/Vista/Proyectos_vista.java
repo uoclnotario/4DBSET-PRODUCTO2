@@ -16,7 +16,7 @@ public class Proyectos_vista implements Vista{
     @Override
     public String mostrarLIstado(List listado, String salir, Usuario user){
 
-        FuncionesConsola.mostrarEncabezado("LISTADO DE PERSONAL");
+        FuncionesConsola.mostrarEncabezado("LISTADO DE PROYECTOS");
 
         if(listado == null || listado.size() == 0){
             System.out.println("No hay ningún personal almacenado.");
@@ -29,7 +29,7 @@ public class Proyectos_vista implements Vista{
 
 
             for(int i = 0; i < proyectos.size();i++){
-                System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", +(i+1),
+                System.out.printf("%-10s %-10s %-10s\n", +(i+1),
                                                                      proyectos.get(i).getNombre(),
                                                                      proyectos.get(i).getTipoString());
             }
@@ -44,9 +44,6 @@ public class Proyectos_vista implements Vista{
 
         return FuncionesConsola.leerConsola();
     }
-
-
-
 
     @Override
     public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
@@ -70,7 +67,7 @@ public class Proyectos_vista implements Vista{
         if(proyecto.getFechaDeInicio() != null)
             System.out.printf("%-5s %-5s\n", "Fecha de inicio:", formato.format(proyecto.getFechaDeInicio()));
 
-        System.out.printf("%-5s %-5s\n", "Tipo:", proyecto.getTipo());
+        System.out.printf("%-5s %-5s\n", "Tipo:", proyecto.getTipoString());
 
         if(proyecto.getFechaDeInicio() != null)
             System.out.printf("%-5s %-5s\n", "Fecha de Alta:", formato.format(proyecto.getFechaDeInicio()));
@@ -98,22 +95,18 @@ public class Proyectos_vista implements Vista{
         String entradaTexto;
         int entradaNumero;
         boolean esMOdificacion = indice != -1;
+        String valor = "";
 
         System.out.println("Creacion de nuevo proyecto:");
         System.out.println("Seleccione el tipo:");
         System.out.println("\t 1-Nacional");
         System.out.println("\t 2-Internacional");
 
-
-
-
-
         if(esMOdificacion){
-            String valor = "";
-            switch (datos.getProyectos().get(indice).getClass().getName()) {
-                case "Nacional":valor = "1";break;
-                case "Internacional":valor= "2";break;
 
+            switch (datos.getProyectos().get(indice).getClass().getName()) {
+                case "logicaEmpresarial.Nacional":valor = "1";break;
+                case "logicaEmpresarial.Internacional":valor= "2";break;
             }
 
             System.out.println("Seleccione el numero del tipo de proyecto:["+valor+"]");
@@ -124,7 +117,8 @@ public class Proyectos_vista implements Vista{
                 FuncionesConsola.comprobaConversion.ENTERO,
                 PALABRACANCELAR,
                 1,
-                2, true);
+                2,
+                false);
 
 
         entradaNumero = Integer.parseInt(entradaTexto);
@@ -158,8 +152,6 @@ public class Proyectos_vista implements Vista{
         }else{
             return null;
         }
-
-
 
 
         if(!esMOdificacion){

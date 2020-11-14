@@ -8,16 +8,12 @@ public  class Proyecto {
 
     public  enum  Tipo{NACIONAL,INTERNACIONAL};
 
+    private String id;
     private Date fechaAlta;
     private Date fechaBaja;
-
-    private String id;
     private String nombre;
     private Date fechaDeInicio;
-
-    private Tipo tipo;
     private boolean estado;
-
     public Proyecto(){
 
     }
@@ -28,7 +24,6 @@ public  class Proyecto {
         this.id = id;
         this.nombre = nombre;
         this.fechaDeInicio = fechaDeInicio;
-        this.tipo = tipo;
         this.estado = estado;
     }
 
@@ -36,15 +31,13 @@ public  class Proyecto {
         return nombre;
     }
 
-    public Tipo getTipo() {
-        return tipo;
-    }
     public String getTipoString(){
-        switch (tipo){
-            case NACIONAL:return "NACIONAL";
-            case INTERNACIONAL:return "INTERNACIONAL";
-            default:return "No especificado";
-        }
+
+        if(this.getClass().getName() == "logicaEmpresarial.Nacional")
+            return "Nacional";
+        else
+            return "Internacional";
+
     }
 
 
@@ -86,9 +79,8 @@ public  class Proyecto {
     public void setId(String id) {
         this.id = id;
     }
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
+
+
     public void setEstado(boolean estado) { this.estado = estado; }
 
 

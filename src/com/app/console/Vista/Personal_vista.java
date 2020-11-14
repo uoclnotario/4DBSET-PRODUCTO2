@@ -113,8 +113,8 @@ public class Personal_vista implements Vista {
                 break;
 
             case "logicaEmpresarial.Colaboradores":
-                    if(persona.getDelegacion() != null){
-                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", ((Colaboradores)persona).getTipoString());
+                    if(persona.getTipoString() != null){
+                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", persona.getTipoString());
                     }else{
                         System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", "No asignado.");
                     }
@@ -137,7 +137,11 @@ public class Personal_vista implements Vista {
                 break;
 
         }
-
+        if(persona.getProyecto() != null){
+            System.out.printf("%-5s %-5s\n", "Proyecto:", persona.getProyecto().getNombre());
+        }else{
+            System.out.printf("%-5s %-5s\n", "Proyecto:", "No asignado.");
+        }
 
     }
 
@@ -150,6 +154,7 @@ public class Personal_vista implements Vista {
     public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR){
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
+
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Personal nuevoPersonal;
         Personal viejoPersonal = null;
@@ -311,12 +316,18 @@ public class Personal_vista implements Vista {
 
 
 
+        //El personal que quiere ser creado es del mismo tipo que el anterior?
+        boolean permiteDefault = false;
+
+
+        if(esMOdificacion && nuevoPersonal.getClass() == datos.getPersonal().get(indice).getClass())
+            permiteDefault = true;
 
         switch (nuevoPersonal.getClass().getName()) {
             case "logicaEmpresarial.Contratados":
 
-
-                    if(esMOdificacion)
+                //TIPO DE CONTRATO
+                    if(permiteDefault)
                         System.out.println("Inserte el tipo de contrato:["+((Contratados)viejoPersonal).getTipoContrato()+"]");
                     else
                         System.out.println("Inserte el tipo de contrato:");
@@ -324,26 +335,125 @@ public class Personal_vista implements Vista {
                     entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
                             FuncionesConsola.comprobaConversion.TEXTO,
                             PALABRACANCELAR,
-                            esMOdificacion);
+                            permiteDefault);
+
                     if(entradaTexto != null) {
                         if(entradaTexto.equals("(default)"))
-                            ((Contratados)nuevoPersonal).setTipoContrato(((Contratados)datos.getPersonal().get(indice)).getTipoContrato());
+                            if(permiteDefault)
+                                ((Contratados)nuevoPersonal).setTipoContrato(((Contratados)datos.getPersonal().get(indice)).getTipoContrato());
+                            else
+                                ((Contratados)nuevoPersonal).setTipoContrato("");
                         else
                             ((Contratados)nuevoPersonal).setTipoContrato(entradaTexto);
                     }else{
                         return null;
                     }
+
+                //SALARIO.
+                if(permiteDefault)
+                    System.out.println("Inserte Salario:["+((Contratados)viejoPersonal).getSalario()+"]");
+                else
+                    System.out.println("Inserte Salario:");
+
+                entradaTexto= FuncionesConsola.forzarEntradaReal(FuncionesConsola. MASCARADECIMAL,
+                        FuncionesConsola.comprobaConversion.REAL,
+                        PALABRACANCELAR,
+                        permiteDefault);
+
+                if(entradaTexto != null) {
+                    if(entradaTexto.equals("(default)"))
+                        if(permiteDefault)
+                            ((Contratados)nuevoPersonal).setSalario(((Contratados)datos.getPersonal().get(indice)).getSalario());
+                        else
+                            ((Contratados)nuevoPersonal).setSalario((float)0);
+                    else
+                        ((Contratados)nuevoPersonal).setSalario(Float.parseFloat(entradaTexto));
+                }else{
+                    return null;
+                }
                 break;
 
             case "logicaEmpresarial.Colaboradores":
 
+                    if(permiteDefault)
+                        System.out.println("Inserte tipo de colaboración:["+((Colaboradores)datos.getPersonal().get(indice)).getTipoString()+"]");
+                    else
+                        System.out.println("Inserte tipo de colaboración:");
+
+                    System.out.println("\t\t -1 ECONOMICA");
+                    System.out.println("\t\t -2 MANO DE OBRA ");
+                    System.out.println("\t\t -3 SOCIAL");
+                    System.out.println("Inserte el id:");
+
+                    entradaTexto= FuncionesConsola.forzarEntradaNumero(FuncionesConsola.MASCARANUMERO,
+                            FuncionesConsola.comprobaConversion.ENTERO,
+                            PALABRACANCELAR,
+                            1,3,
+                            permiteDefault);
+
+                    if(entradaTexto != null) {
+                        if(entradaTexto.equals("(default)")) {
+                            if (permiteDefault)
+                                ((Colaboradores) nuevoPersonal).setTipoColaboracion(((Colaboradores) datos.getPersonal().get(indice)).getTipoColaboracion());
+                        }else{
+                            ((Colaboradores) nuevoPersonal).setIntTipoColaboracion(Integer.parseInt(entradaTexto));
+                        }
+                    }else{
+                        return null;
+                    }
                 break;
 
             case "logicaEmpresarial.Voluntarios":
             case "logicaEmpresarial.VoluntariosInternacionales":
 
+                //TIPO DE CONTRATO
+                if(permiteDefault)
+                    System.out.println("Inserte el tipo de voluntariado:["+((Voluntarios)viejoPersonal).getTipoString()+"]");
+                else
+                    System.out.println("Inserte el tipo de voluntariado:");
 
-                if(datos.getPersonal().get(indice).getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
+                entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
+                        FuncionesConsola.comprobaConversion.TEXTO,
+                        PALABRACANCELAR,
+                        permiteDefault);
+
+                if(entradaTexto != null) {
+                    if(entradaTexto.equals("(default)"))
+                        if(permiteDefault)
+                            ((Voluntarios)nuevoPersonal).setAreaVoluntariado(((Voluntarios)datos.getPersonal().get(indice)).getAreaVoluntariado());
+                        else
+                            ((Voluntarios)nuevoPersonal).setAreaVoluntariado("");
+                    else
+                        ((Voluntarios)nuevoPersonal).setAreaVoluntariado(entradaTexto);
+                }else{
+                    return null;
+                }
+
+                if(nuevoPersonal.getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
+                {
+                        //TIPO DE CONTRATO
+                        if(permiteDefault)
+                            System.out.println("Inserte el pais:["+((VoluntariosInternacionales)viejoPersonal).getPais()+"]");
+                        else
+                            System.out.println("Inserte el pais:");
+
+                        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
+                                FuncionesConsola.comprobaConversion.TEXTO,
+                                PALABRACANCELAR,
+                                permiteDefault);
+
+                        if(entradaTexto != null) {
+                            if(entradaTexto.equals("(default)"))
+                                if(permiteDefault)
+                                    ((VoluntariosInternacionales)nuevoPersonal).setPais(((VoluntariosInternacionales)datos.getPersonal().get(indice)).getPais());
+                                else
+                                    ((VoluntariosInternacionales)nuevoPersonal).setPais("");
+                            else
+                                ((VoluntariosInternacionales)nuevoPersonal).setPais(entradaTexto);
+                        }else{
+                            return null;
+                        }
+                }
 
                 break;
 
@@ -387,7 +497,40 @@ public class Personal_vista implements Vista {
         }
 
 
+        //SELECCIONAR UN proyecto.
+        if(datos.getProyectos().size() > 0){
 
+            for(int i = 0; i < datos.getProyectos().size();i++)
+                System.out.println(i+1.+"\t"+datos.getProyectos().get(i).getNombre());
+
+
+            System.out.println("0- No seleccionar nada.");
+
+            if(esMOdificacion) {
+                if (datos.getPersonal().get(indice).getProyecto() != null) {
+                    System.out.println("Seleccione el proyecto asignado:[" + datos.getPersonal().get(indice).getProyecto().getNombre() + "]");
+                } else {
+                    System.out.println("Seleccione el proyecto asignado:[Nignuna]");
+                }
+            }else{
+                System.out.println("Seleccione el proyecto asignado:");
+            }
+
+
+            entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARANUMERO,
+                    FuncionesConsola.comprobaConversion.ENTERO,
+                    PALABRACANCELAR,
+                    esMOdificacion);
+
+
+
+            entradaNumero = Integer.parseInt(entradaTexto);
+            if(entradaNumero <= datos.getProyectos().size() && entradaNumero > 0 ){
+                nuevoPersonal.setProyecto(datos.getProyectos().get(entradaNumero-1));
+            }
+
+
+        }
       if(!esMOdificacion){
           nuevoPersonal.setEstado(true);
           nuevoPersonal.setFechaAlta(new Date(System.currentTimeMillis()));

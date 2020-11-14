@@ -57,10 +57,12 @@ public class AppConsole {
         int accesoApartado,minimo,maximo;
 
                     minimo=1;
+                    maximo=Apartados.values().length;
                     if(usuarioAutentificado.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR){
-                        maximo=1;
+                        maximo-=1;
                     }else{
-                        maximo=Apartados.values().length-1;
+
+                        maximo -=2;
                     }
 
                     switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
@@ -70,19 +72,13 @@ public class AppConsole {
                         case TRUE:
                             accesoApartado = Integer.parseInt(entradaUsuario);
                             //Comprobar que el usuario ha marcado un valor valido
-                            if(accesoApartado <=0 || accesoApartado>Apartados.values().length -1)
+                            if(accesoApartado <=0 || accesoApartado>maximo)
                             {
                                 vistaMenu.MostrarErrorEntrada(minimo,maximo,PALABRAPARAVOLVER);
                                 return true;//Retorna true y se volverá a abrir el menu de nuevo
                 }
 
-                //Comprobar que si el usuario no tiene permiso para entrar en este apartado
-              /*  if(accesoApartado == 2)
-                {
-                    vistaMenu.MostrarErrorEntrada(minimo,maximo,PALABRAPARAVOLVER);
-                    return true;//Retorna true y se volvera a repetir el menu.
-                }
-            */
+
                 while(abrirApartado(Apartados.intToApartados(accesoApartado)));
                 return true;//Cuando el usuario quiera volver al menu desde apartado, lanzamos true para volver a mostrar el menu.
 
@@ -98,7 +94,6 @@ public class AppConsole {
     }
     private boolean  abrirApartado(Apartados apartados){
 
-
         //Cargar modelo factory y llamar a visualizar
          vista = getVista(apartados);
          if(vista == null){
@@ -108,11 +103,15 @@ public class AppConsole {
 
          //Descargamos los datos del apartado y verificamos errores.
          if(!modelo.descargaDatos(apartados)){
+
+             //Si no se descargan los datos
+
              if(modelo.existeUnError())
                 vistaMenu.mensajeError(modelo.getMensajeError());
              else
                  vistaMenu.mensajeError("Error desconocido");
-             return false; //para que salga y no vuelva a intentar entrar en el bucle
+
+             //Si se produce un error continua la aplicacion.
          }
 
 
@@ -150,6 +149,7 @@ public class AppConsole {
         }
         return true;
     }
+
     private boolean MostarUno(int elemento,Apartados apartado){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
         String entradaUsuario = vista.mostrarUnElemento(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
@@ -214,17 +214,15 @@ public class AppConsole {
         }
         return true;
     }
+
     private Vista getVista(Apartados apartado){
         switch (apartado){
             case PERSONAL: return new Personal_vista();
-            case INGRESOS: return (Vista) new Ingresos_vista();
-            case SOCIOS: return (Vista) new Socios_vista();
             case PROYECTOS: return new Proyectos_vista();
             case DELEGACIONES: return new Delegaciones_vista();
             case USUARIOS: return new Usuario_vista();
             default:return  null;
         }
     }
-
 
 }

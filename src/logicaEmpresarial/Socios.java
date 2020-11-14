@@ -2,8 +2,10 @@ package logicaEmpresarial;
 
 
 import java.util.Date;
+import java.util.List;
 
 public class Socios extends Persona {
+    private List<Cuotas> cuotas;
 
     public Socios(){
 

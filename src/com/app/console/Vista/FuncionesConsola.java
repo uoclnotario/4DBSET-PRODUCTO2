@@ -141,6 +141,23 @@ public class FuncionesConsola {
             }
         }while (true);
     }
+    public static  String forzarEntradaReal(String mascara, comprobaConversion tipo, String PALABRASALIR, boolean ACEPTARTECLAENTER){
+        do{
+            String entradaTexto = FuncionesConsola.leerConsola();
+
+            if(ACEPTARTECLAENTER && entradaTexto.length() == 0)
+                return "(default)";
+
+            switch (FuncionesConsola.comprobarEntrada(entradaTexto, mascara, PALABRASALIR, tipo)) {
+                case TRUE:
+                        return entradaTexto;
+                case EXIT:
+                    return null;
+            }
+        }while (true);
+    }
+
+
     public static Date convertirAFEcha(String fecha) throws ParseException {
         Date retorno;
         try{
@@ -153,7 +170,7 @@ public class FuncionesConsola {
     }
 
     public static void mostrarEncabezado(String TextoTitulo){
-        System.out.println("***** ***** ***"+TextoTitulo+"*** ***** ***** *****");
+        System.out.println("***** ***** *** "+TextoTitulo+" *** ***** ***** *****");
     }
 
 }

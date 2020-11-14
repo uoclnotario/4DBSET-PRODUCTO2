@@ -9,6 +9,7 @@ public  class Personal extends Persona {
     private Date fechaBaja;
     private boolean estado;
     private Delegacion delegacion;
+    private Proyecto proyecto;
 
     //falta añadir delegacion.
     public Personal(){
@@ -44,6 +45,8 @@ public  class Personal extends Persona {
     public Delegacion getDelegacion() {
         return delegacion;
     }
+    public Proyecto getProyecto(){return proyecto;}
+
     public void setDelegacion(Delegacion nuevaDelegacion) {
 
         //Si la delegación que se pretende añadir es la misma que la que tiene asignada el personal no se ejecuta.
@@ -60,6 +63,11 @@ public  class Personal extends Persona {
 
         this.delegacion = nuevaDelegacion;
     }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
     public String getTipoString(){
         switch(this.getClass().getName()){
             case "logicaEmpresarial.Colaboradores":return "Colaborador";

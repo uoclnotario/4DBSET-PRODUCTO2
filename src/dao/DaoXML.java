@@ -49,15 +49,13 @@ public class DaoXML implements Crud{
     }
 
     public boolean descargaDatos(Apartados apartados) {
-        leerXML();
-        return true;
+        return leerXML();
     }
+
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
-            case INGRESOS:return  pilaDatosGenerales.getIngresos();
             case PROYECTOS:return pilaDatosGenerales.getProyectos();
-            case SOCIOS:return pilaDatosGenerales.getSocios();
             case PERSONAL:return pilaDatosGenerales.getPersonal();
             case DELEGACIONES:return pilaDatosGenerales.getDelegaciones();
             case USUARIOS:return pilaDatosGenerales.getUsuarios();
@@ -70,14 +68,8 @@ public class DaoXML implements Crud{
 
         switch (apartado){
             case NINGUNO: return false;
-            case INGRESOS:
-                    pilaDatosGenerales.getIngresos().add((Ingresos)item);
-                    break;
             case PROYECTOS:
                     pilaDatosGenerales.getProyectos().add((Proyecto) item);
-                    break;
-            case SOCIOS:
-                    pilaDatosGenerales.getSocios().add((Socios) item);
                     break;
             case PERSONAL:
                     pilaDatosGenerales.getPersonal().add((Personal) item);
@@ -102,9 +94,7 @@ public class DaoXML implements Crud{
         //Modificar el item.
         switch (apartado){
             case NINGUNO: return false;
-            case INGRESOS:  pilaDatosGenerales.getIngresos().set(indice,(Ingresos)item);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
-            case SOCIOS:    pilaDatosGenerales.getSocios().set(indice,(Socios) item);break;
             case PERSONAL:
                 pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);//Ponemos a null la delegación del personal asignado, para quitarlo de la memoria
                 pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
@@ -126,9 +116,7 @@ public class DaoXML implements Crud{
         //Modificar el item.
         switch (apartado){
             case NINGUNO: return false;
-            case INGRESOS:  pilaDatosGenerales.getIngresos().remove(indice);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
-            case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
             case PERSONAL:
                     pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);
                     pilaDatosGenerales.getPersonal().remove(indice);
@@ -166,7 +154,6 @@ public class DaoXML implements Crud{
 
         return true;
     }
-
 
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
     //convertirlos a xml para leerlos y guardarlos.
@@ -210,7 +197,7 @@ public class DaoXML implements Crud{
 
         }catch(Exception e){
             System.out.println(e.getMessage());
-            mensajeError="Se ha producido un error al guardar el archivo";
+            mensajeError="No se ha podido leer, es posible que sea la primera vez que se ejecute la aplicación.";
             error = true;
             return false;
         }

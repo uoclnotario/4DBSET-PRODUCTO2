@@ -5,6 +5,8 @@ public  class Contratados extends Personal {
     private Float salario;
 
     public String getTipoContrato() {
+        if(tipoContrato  == null)
+            return "";
         return tipoContrato;
     }
 
