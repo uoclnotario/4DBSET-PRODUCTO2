@@ -5,6 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Socios extends Persona {
+    private int id;
+
+
+
+
     private List<Cuotas> cuotas;
 
     public Socios(){
@@ -14,7 +19,13 @@ public class Socios extends Persona {
     public Socios(String nif_dni, String nombre, Date fechaDeNacimiento, String domicilio, Tipo tipo){
         super( nif_dni,  nombre,  fechaDeNacimiento,  domicilio,  tipo);
     }
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public String getNombre() {

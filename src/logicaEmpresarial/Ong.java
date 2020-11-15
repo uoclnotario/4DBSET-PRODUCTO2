@@ -17,8 +17,6 @@ public  class Ong {
     private List<Proyecto> proyectos;
     private List<Delegacion> delegaciones;
 
-
-
     public Ong(){
         personal = new ArrayList<>();
         proyectos = new ArrayList<>();

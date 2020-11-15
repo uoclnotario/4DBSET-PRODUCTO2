@@ -6,16 +6,17 @@ import java.security.MessageDigest;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Usuario {
-    public Usuario() {
-
-    }
-
     public  enum tipoUsuarios{USUARIO,ADMINISTRADOR};
     private String nombre;
     private String hasing;
     private tipoUsuarios rol;
+    private int id;
 
 
+
+    public Usuario() {
+
+    }
     public Usuario(String nombre,String pass, tipoUsuarios tipo){
         this.nombre = nombre;
         this.rol = tipo;
@@ -41,6 +42,7 @@ public class Usuario {
     }
     public void setRol(tipoUsuarios rol) { this.rol = rol; }
     public void setHasing(String hasing) { this.hasing = hasing;}
+    public void setId(int id) { this.id = id; }
 
     public String getHasing() {
         if(hasing == null)
@@ -55,6 +57,8 @@ public class Usuario {
             default:return "USUARIO";
         }
     }
+    public int getId() {return id;}
+
 
     public void setIntRol(int e){
         switch (e){

@@ -15,8 +15,10 @@ public interface IDao {
 
     //Crear elemento en un apartado.
     public boolean crear(Object item, Apartados apartado);
+
     //Modificar elemento en apartado
     public boolean modificar(Object item, int indice,Apartados apartado);
+
     //Eliminar Elemento en apartado
     public boolean borrar(int indice,Apartados apartado);
 

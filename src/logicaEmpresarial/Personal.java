@@ -4,7 +4,7 @@ import java.sql.Struct;
 import java.util.Date;
 
 public  class Personal extends Persona {
-
+    private int id;
     private Date fechaAlta;
     private Date fechaBaja;
     private boolean estado;
@@ -30,6 +30,9 @@ public  class Personal extends Persona {
     }
     public boolean getEstado(){return estado;}
 
+    public int getId() {
+        return id;
+    }
 
     public void setEstado(boolean estado) {
         this.estado = estado;

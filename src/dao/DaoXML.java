@@ -10,8 +10,6 @@ import logicaEmpresarial.*;
 
 
 import java.io.*;
-
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -221,7 +219,6 @@ public class DaoXML implements IDao {
 
     public void setFilePath(String file){
         SERIALIZED_FILE_NAME = file;
-
     }
 
 }

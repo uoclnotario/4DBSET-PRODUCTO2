@@ -4,7 +4,8 @@ import java.util.Date;
 
 public  class Ingresos  extends  Persona {
 
-    private int indice;
+    private int id;
+
     private Float importe;
     private Date fecha;
 
@@ -15,14 +16,16 @@ public  class Ingresos  extends  Persona {
     public Float getImporte() {
         return importe;
     }
-    public int getIndice() {
-        return indice;
+    public int getId() {
+        return id;
     }
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
     public void setImporte(Float importe) { this.importe = importe;}
-
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Delegacion {
+    private int id;
 
     private String nombre;
     private String direccion;
@@ -39,7 +40,9 @@ public class Delegacion {
         if(personal == null)personal = new ArrayList<Personal>();
         return personal;
     }
-
+    public int getId() {
+        return id;
+    }
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
@@ -63,5 +66,9 @@ public class Delegacion {
 
     public List<Proyecto> getProyecto() {
         return proyecto;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

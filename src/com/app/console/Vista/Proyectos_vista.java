@@ -63,7 +63,6 @@ public class Proyectos_vista implements Vista{
 
         DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         System.out.printf("%-5s %-5s\n", "Nombre:", proyecto.getNombre());
-        System.out.printf("%-5s %-5s\n", "Identificador:", proyecto.getId());
         if(proyecto.getFechaDeInicio() != null)
             System.out.printf("%-5s %-5s\n", "Fecha de inicio:", formato.format(proyecto.getFechaDeInicio()));
 
