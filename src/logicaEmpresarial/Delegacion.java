@@ -1,22 +1,27 @@
 package logicaEmpresarial;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Delegacion {
+    private int id;
 
     private String nombre;
     private String direccion;
     private String telefono;
-    private List<Personal> Personal;
-    private List<Proyecto> Proyecto;
+    private List<Proyecto> proyecto;
+    private List<Personal> personal;
 
 
-    public Delegacion(){}
+    public Delegacion(){
+        personal = new ArrayList<Personal>();
+    }
 
     public Delegacion(String nombre, String direccion, String telefono) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
+        personal = new ArrayList<Personal>();
     }
 
     public String getNombre() {
@@ -31,16 +36,24 @@ public class Delegacion {
         return telefono;
     }
 
+    public List<Personal> getPersonal() {
+        if(personal == null)personal = new ArrayList<Personal>();
+        return personal;
+    }
+    public int getId() {
+        return id;
+    }
+
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
     public void setPersonal(List<logicaEmpresarial.Personal> personal) {
-        Personal = personal;
+        personal = personal;
     }
 
     public void setProyecto(List<logicaEmpresarial.Proyecto> proyecto) {
-        Proyecto = proyecto;
+        proyecto = proyecto;
     }
 
     public void setDireccion(String direccion) {
@@ -51,11 +64,11 @@ public class Delegacion {
         this.nombre = nombre;
     }
 
-    public List<Personal> getPersonal() {
-        return Personal;
+    public List<Proyecto> getProyecto() {
+        return proyecto;
     }
 
-    public List<Proyecto> getProyecto() {
-        return Proyecto;
+    public void setId(int id) {
+        this.id = id;
     }
 }

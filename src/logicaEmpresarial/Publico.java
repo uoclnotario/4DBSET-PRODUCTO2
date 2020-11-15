@@ -2,9 +2,9 @@ package logicaEmpresarial;
 
 public class Publico extends Ingresos {
     public  enum TipoPublico{ESTATAL,AUTONOMICA,LOCAL,UE};
-    private TipoPublico Tipo;
+    private TipoPublico tipoIngreso;
 
-    public TipoPublico getTipo() {
-        return Tipo;
+    public TipoPublico get() {
+        return tipoIngreso;
     }
 }

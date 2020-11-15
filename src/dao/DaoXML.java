@@ -9,29 +9,23 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import logicaEmpresarial.*;
 
 
-import java.beans.ExceptionListener;
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.*;
-
-
-import java.net.NetworkInterface;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DaoXML {
+public class DaoXML implements IDao {
     XStream xstream = new XStream(new StaxDriver());
 
 
-    private  String SERIALIZED_FILE_NAME = "dataONG.xml";
+    private  String SERIALIZED_FILE_NAME;
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
 
-    public DaoXML() {
+    public DaoXML(String filePhat) {
+        SERIALIZED_FILE_NAME = filePhat;
         xstream.setMode(XStream.ID_REFERENCES);
         xstream.addPermission(NoTypePermission.NONE);
         xstream.addPermission(NullPermission.NULL);
@@ -47,17 +41,13 @@ public class DaoXML {
     public Ong getPilaDatosGenerales() {
         return pilaDatosGenerales;
     }
-
     public boolean descargaDatos(Apartados apartados) {
-        leerXML();
-        return true;
+        return leerXML();
     }
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
-            case INGRESOS:return  pilaDatosGenerales.getPersonal();
             case PROYECTOS:return pilaDatosGenerales.getProyectos();
-            case SOCIOS:return pilaDatosGenerales.getSocios();
             case PERSONAL:return pilaDatosGenerales.getPersonal();
             case DELEGACIONES:return pilaDatosGenerales.getDelegaciones();
             case USUARIOS:return pilaDatosGenerales.getUsuarios();
@@ -65,19 +55,14 @@ public class DaoXML {
         }
 
     }
+
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
         switch (apartado){
             case NINGUNO: return false;
-            case INGRESOS:
-                    pilaDatosGenerales.getIngresos().add((Ingresos)item);
-                    break;
             case PROYECTOS:
                     pilaDatosGenerales.getProyectos().add((Proyecto) item);
-                    break;
-            case SOCIOS:
-                    pilaDatosGenerales.getSocios().add((Socios) item);
                     break;
             case PERSONAL:
                     pilaDatosGenerales.getPersonal().add((Personal) item);
@@ -85,9 +70,8 @@ public class DaoXML {
             case DELEGACIONES:
                     pilaDatosGenerales.getDelegaciones().add((Delegacion) item);
                     break;
-
             case USUARIOS:
-                pilaDatosGenerales.getDelegaciones().add((Delegacion) item);
+                    pilaDatosGenerales.getUsuarios().add((Usuario) item);
                 break;
             default: return false;
         }
@@ -102,10 +86,11 @@ public class DaoXML {
         //Modificar el item.
         switch (apartado){
             case NINGUNO: return false;
-            case INGRESOS:  pilaDatosGenerales.getIngresos().set(indice,(Ingresos)item);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
-            case SOCIOS:    pilaDatosGenerales.getSocios().set(indice,(Socios) item);break;
-            case PERSONAL:  pilaDatosGenerales.getPersonal().set(indice,(Personal)item);break;
+            case PERSONAL:
+                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);//Ponemos a null la delegación del personal asignado, para quitarlo de la memoria
+                pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
+                break;
             case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);break;
             default: return false;
@@ -123,15 +108,19 @@ public class DaoXML {
         //Modificar el item.
         switch (apartado){
             case NINGUNO: return false;
-            case INGRESOS:  pilaDatosGenerales.getIngresos().remove(indice);break;
             case PROYECTOS: pilaDatosGenerales.getProyectos().remove(indice);break;
-            case SOCIOS:    pilaDatosGenerales.getSocios().remove(indice);break;
-            case PERSONAL:  pilaDatosGenerales.getPersonal().remove(indice);break;
+            case PERSONAL:
+                    pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);
+                    pilaDatosGenerales.getPersonal().remove(indice);
+                break;
             case DELEGACIONES:
-                for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++)
-                    if(pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
-                        pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
-                pilaDatosGenerales.getDelegaciones().remove(indice);
+                    for(int i = 0; i<pilaDatosGenerales.getPersonal().size();i++) {
+                        if(pilaDatosGenerales.getPersonal().get(i).getDelegacion()!= null)
+                            if (pilaDatosGenerales.getPersonal().get(i).getDelegacion().equals(pilaDatosGenerales.getDelegaciones().get(indice)))
+                                pilaDatosGenerales.getPersonal().get(i).setDelegacion(null);
+                    }
+
+                    pilaDatosGenerales.getDelegaciones().remove(indice);
                 break;
             case USUARIOS: pilaDatosGenerales.getUsuarios().remove(indice);break;
             default: return false;
@@ -155,9 +144,29 @@ public class DaoXML {
     }
     public boolean Login(Usuario user){
 
-        return true;
-    }
+        //intentamos descargar los datos.
+        descargaDatos(Apartados.USUARIOS);
 
+        //En el caso de que se recien abra el programa y no hayas usuarios insertados permitimos que se compruebe el has con
+        //usuario por defecto.
+        if(pilaDatosGenerales.getUsuarios().size() <= 0 ){
+            user.setNombre("DefaultAdmin");
+            user.setPassword("");
+            user.setRol(Usuario.tipoUsuarios.ADMINISTRADOR);
+
+            return true;
+        }else{
+            for(Usuario us:pilaDatosGenerales.getUsuarios()){
+                if(us.getHasing().length() > 0 && us.getHasing().equals(user.getHasing()))
+                {
+                    user.setRol(us.getRol());
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
 
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y
     //convertirlos a xml para leerlos y guardarlos.
@@ -166,8 +175,6 @@ public class DaoXML {
 
             FileOutputStream fos = null;
             try{
-                System.out.println(xml);
-
                 BufferedReader reader = new BufferedReader(new StringReader(xml));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(SERIALIZED_FILE_NAME,false));
 
@@ -193,7 +200,6 @@ public class DaoXML {
 
         return true;
     }
-
     private boolean leerXML()  {
         try{
             Path fileName = Path.of(SERIALIZED_FILE_NAME);
@@ -204,12 +210,16 @@ public class DaoXML {
 
         }catch(Exception e){
             System.out.println(e.getMessage());
-            mensajeError="Se ha producido un error al guardar el archivo";
+            mensajeError="No se ha podido leer, es posible que sea la primera vez que se ejecute la aplicación.";
             error = true;
             return false;
         }
 
         return true;
+    }
+
+    public void setFilePath(String file){
+        SERIALIZED_FILE_NAME = file;
     }
 
 }

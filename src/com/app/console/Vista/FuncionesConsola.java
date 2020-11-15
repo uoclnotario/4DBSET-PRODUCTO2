@@ -5,6 +5,7 @@ import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FuncionesConsola {
+    public static DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
     public static final String MASCARATEXTO ="^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$";
     public static final String MASCARANUMERO="^([0-9])*$";
     public static final String MASCARADECIMAL="^([0-9.,])*$";
@@ -89,7 +91,7 @@ public class FuncionesConsola {
             return retornoConversion.TRUE;
         } else {
             //Compruebo si lo que el usuario ha puesto ha sido la palabra para cancelar.
-            if (entrada.equals(cadenaCancelar))
+            if (entrada.toUpperCase().equals(cadenaCancelar.toUpperCase()))
                 return retornoConversion.EXIT;
 
             System.out.println("El valor introducido no es correcto, vuelva a intentarlo o escriba " + cadenaCancelar);
@@ -117,11 +119,16 @@ public class FuncionesConsola {
             }
         }while (true);
     }
-    public static  String forzarEntradaNumero(String mascara, comprobaConversion tipo, String PALABRASALIR, int minimo, int maximo){
+    public static  String forzarEntradaNumero(String mascara, comprobaConversion tipo, String PALABRASALIR, int minimo, int maximo, boolean ACEPTARTECLAENTER){
         do{
             String entradaTexto = FuncionesConsola.leerConsola();
+
+            if(ACEPTARTECLAENTER && entradaTexto.length() == 0)
+                return "(default)";
+
             switch (FuncionesConsola.comprobarEntrada(entradaTexto, mascara, PALABRASALIR, tipo)) {
                 case TRUE:
+
                     if(Integer.parseInt(entradaTexto) >= minimo && Integer.parseInt(entradaTexto) <=maximo)
                     {
                         return entradaTexto;
@@ -134,6 +141,23 @@ public class FuncionesConsola {
             }
         }while (true);
     }
+    public static  String forzarEntradaReal(String mascara, comprobaConversion tipo, String PALABRASALIR, boolean ACEPTARTECLAENTER){
+        do{
+            String entradaTexto = FuncionesConsola.leerConsola();
+
+            if(ACEPTARTECLAENTER && entradaTexto.length() == 0)
+                return "(default)";
+
+            switch (FuncionesConsola.comprobarEntrada(entradaTexto, mascara, PALABRASALIR, tipo)) {
+                case TRUE:
+                        return entradaTexto;
+                case EXIT:
+                    return null;
+            }
+        }while (true);
+    }
+
+
     public static Date convertirAFEcha(String fecha) throws ParseException {
         Date retorno;
         try{
@@ -143,6 +167,10 @@ public class FuncionesConsola {
         }
 
         return retorno;
+    }
+
+    public static void mostrarEncabezado(String TextoTitulo){
+        System.out.println("***** ***** *** "+TextoTitulo+" *** ***** ***** *****");
     }
 
 }

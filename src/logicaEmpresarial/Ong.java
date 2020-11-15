@@ -9,16 +9,21 @@ public  class Ong {
     private String Telefono;
     private String usuarioAutentificado;
 
-    public List<Ingresos> ingresos;
-    public List<Socios> socios;
-    public List<Personal> personal;
-    public List<Usuario> usuarios;
-    public List<Proyecto> proyectos;
-    public List<Delegacion> delegaciones;
+
+    private List<Ingresos> ingresos;
+    private List<Socios> socios;
+    private List<Personal> personal;
+    private List<Usuario> usuarios;
+    private List<Proyecto> proyectos;
+    private List<Delegacion> delegaciones;
 
     public Ong(){
-        personal = new ArrayList<Personal>();
-        delegaciones = new ArrayList<Delegacion>();
+        personal = new ArrayList<>();
+        proyectos = new ArrayList<>();
+        delegaciones = new ArrayList<>();
+        ingresos = new ArrayList<>();
+        socios = new ArrayList<>();
+        usuarios = new ArrayList<>();
     }
 
 

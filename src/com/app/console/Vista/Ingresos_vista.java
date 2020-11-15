@@ -7,39 +7,50 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class Ingresos_vista {
+public class Ingresos_vista implements Vista {
 
-    public String MostrarLIstado(List listado, String salir, Usuario user)
-    {
-        if(listado == null)
-        {
+    @Override
+    public String mostrarLIstado(List listado, String salir, Usuario user) {
+        FuncionesConsola.mostrarEncabezado("LISTADO DE INGRESOS");
 
-        }
-        else
-        {
+        if(listado == null || listado.size() == 0){
+            System.out.println("No hay ningún ingreso almacenado.");
+
+            System.out.println("Indique que desea realizar:");
+        }else{
             List<Ingresos> ingresos = (List<Ingresos>)listado;
-            System.out.println("Ingresos:");
-            System.out.println("\tINDICE\tCIF/NIF\tNOMBRE\tDOMICILIO\tIMPORTE\tFECHA\t");
 
-            for(int i = 0; i < ingresos.size(); i++)
-                System.out.println("\t"+(i+1)+"\t"+ingresos.get(i).getIndice()+ "\t"+ingresos.get(i).getCifOnif()+ "\t"+ingresos.get(i).getNombre()+
-                        "\t"+ingresos.get(i).getDomicilo()+ "\t"+ingresos.get(i).getImporte()+ "\t"+ingresos.get(i).getFecha());
+            System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", "INDICE", "CIF/NIF", "NOMBRE","DOMICILIO","FECHA");
+
+
+            for(int i = 0; i < ingresos.size();i++){
+                String del="No asignado";
+
+                System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", +(i+1),
+                                                                    ingresos.get(i).getNif_dni(),
+                                                                    ingresos.get(i).getNombre(),
+                                                                    ingresos.get(i).getDomicilio(),
+                                                                    ingresos.get(i).getImporte(),
+                                                                    FuncionesConsola.formatoFecha.format(ingresos.get(i).getFecha()));
+            }
+
 
             System.out.println("Indique que desea realizar:");
             System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
-            System.out.println("\t- 0 Crear un nuevo.");
-            System.out.println("\t- Escriba "+salir+" para volver al menu");
         }
+
+        System.out.println("\t- 0 Crear un nuevo.");
+        System.out.println("\t- Escriba "+salir+" para volver al menu");
+
 
 
         return FuncionesConsola.leerConsola();
-
     }
 
-
-    public String MostrarUno(Object elemento, String salir, Usuario user) {
+    @Override
+    public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
         System.out.println("---MOSTRANDO DATOS DE INGRESO---");
-        MostrarDato((Ingresos)elemento);
+        mostrarDato((Ingresos)elemento);
 
         System.out.println("Indique que desea realizar:");;
         System.out.println("\t- 0 Modificar este ingreso.");
@@ -49,39 +60,35 @@ public class Ingresos_vista {
 
         return FuncionesConsola.leerConsola();
     }
-
-    public void MostrarDato(Ingresos ingreso){
+    private  void mostrarDato(Ingresos ingreso){
         System.out.println("");
-        System.out.println("CIF/NIF:\t"+ ingreso.getCifOnif());
+        System.out.println("CIF/NIF:\t"+ ingreso.getNif_dni());
         System.out.println("Nombre:\t"+ ingreso.getNombre());
-        System.out.println("Domicilio:\t"+ ingreso.getDomicilo());
+        System.out.println("Domicilio:\t"+ ingreso.getDomicilio());
         System.out.println("Importe:\t"+ ingreso.getImporte());
         System.out.println("Fecha:\t"+ ingreso.getFecha());
     }
-
-
-    public Object Crear(Ingresos datos, String PALABRACANCEALR) {
+    @Override
+    public Object crearElemento(Ong datos, String PALABRACANCEALR) {
         return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
-
-
-    public Object Modificar(Ingresos datos, int indice, String PALABRACANCEALR) {
+    @Override
+    public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR) {
         return solicitarNuevo(datos,-1, PALABRACANCEALR);
     }
-
-    private Object solicitarNuevo(Ingresos datos, int indice, String PALABRACANCELAR){
+    private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Ingresos nuevoIngreso = new Ingresos();
         String entradaTexto;
         int entradaNumero;
         boolean esMOdificacion = indice != -1;
 
-
+/*
         System.out.println("Creación de nuevo ingreso:");
 
         //CIForNIF
 
         if(esMOdificacion)
-            System.out.println("Inserte el CIF/NIF:"+datos.getCifOnif()+"]");
+            System.out.println("Inserte el CIF/NIF:"+datos.getIngresos().get(indice).getNif_dni()+"]");
         else
             System.out.println("Inserte el CIF/NIF:");
 
@@ -90,14 +97,14 @@ public class Ingresos_vista {
                 PALABRACANCELAR,
                 esMOdificacion);
         if(entradaTexto != null) {
-                nuevoIngreso.setCifOnif(entradaTexto);
+            nuevoIngreso.setNif_dni(entradaTexto);
         }else{
             return null;
         }
 
         //Nombre
         if(esMOdificacion)
-            System.out.println("Inserte el nombre:"+datos.getNombre()+"]");
+            System.out.println("Inserte el nombre:"+datos.getIngresos().get(indice).getNombre()+"]");
         else
             System.out.println("Inserte el nombre:");
 
@@ -106,14 +113,14 @@ public class Ingresos_vista {
                 PALABRACANCELAR,
                 esMOdificacion);
         if(entradaTexto != null) {
-            nuevoIngreso.setNombreIngreso(entradaTexto);
+           // nuevoIngreso.setNombreIngreso(entradaTexto);
         }else{
             return null;
         }
 
         //Domicilio
         if(esMOdificacion)
-            System.out.println("Inserte el domicilio:"+datos.getDomicilo()+"]");
+            System.out.println("Inserte el domicilio:"+datos.getIngresos().get(indice).getDomicilo()+"]");
         else
             System.out.println("Inserte el domicilio:");
 
@@ -130,7 +137,7 @@ public class Ingresos_vista {
         //Importe
 
         if(esMOdificacion)
-            System.out.println("Inserte el importe:"+datos.getImporte()+"]");
+            System.out.println("Inserte el importe:"+datos.getIngresos().get(indice).getImporte()+"]");
         else
             System.out.println("Inserte el importe:");
 
@@ -148,7 +155,7 @@ public class Ingresos_vista {
         //Fecha
 
         if(esMOdificacion)
-            System.out.println("Inserte el fecha:"+datos.getFecha()+"]");
+            System.out.println("Inserte el fecha:"+datos.getIngresos().get(indice).getFecha()+"]");
         else
             System.out.println("Inserte el fecha:");
 
@@ -168,9 +175,7 @@ public class Ingresos_vista {
         }else{
             return null;
         }
-
+*/
         return nuevoIngreso;
     }
-
-
 }

@@ -9,15 +9,13 @@ public class Menu_vista {
     public String MostrarMenu(Usuario user, String salir) {
 
         int valorRecogido = 0;
-        System.out.println("---SELECCIONE LA ACCION A SELECCIONAR---");
-        System.out.println("\t-1\t INGRESOS ");
-        System.out.println("\t-2\t PROYECTOS ");
-        System.out.println("\t-3\t SOCIOS ");
-        System.out.println("\t-4\t PERSONAL ");
-        System.out.println("\t-5\t DELEGACIONES ");
+        System.out.println("---SELECCIONE UN APARTADO ---");
+        System.out.println("\t-1\t PROYECTOS ");
+        System.out.println("\t-2\t PERSONAL ");
+        System.out.println("\t-3\t DELEGACIONES ");
 
         if(user.getRol() == Usuario.tipoUsuarios.ADMINISTRADOR)
-            System.out.println("--6\t USUARIOS ");
+            System.out.println("\t-4\t USUARIOS ");
 
         System.out.println("Escriba el indice del apartado o "+ salir + " para cerrar sesión:");
         return FuncionesConsola.leerConsola();
@@ -26,6 +24,9 @@ public class Menu_vista {
         System.out.println("El valor introducido no es correcto, debe de introducir de "+minimo+" A "+ maximo);
         System.out.println("o escriba" + salir +" para cerrar la sesión.");
     }
+
+
+
     public void DespedirUsuario(Usuario user){
         System.out.println("Adios "+user.getNombre());
     }
@@ -68,18 +69,27 @@ public class Menu_vista {
     public Object PedirCredenciales(){
         String entradaUser,entradaPass;
         System.out.println("Introduce el nombre de usuario:");
-        entradaUser="prueba";
+        entradaUser = FuncionesConsola.leerConsola();
 
         System.out.println("Introduzca la contraseña:");
-        entradaPass="pass";
+        entradaPass= FuncionesConsola.leerConsola();
 
 
         return new Usuario(entradaUser,entradaPass, Usuario.tipoUsuarios.USUARIO);
     }
+
     public void MostrarBienvenida(Usuario user){
         System.out.println("Bienvenido "+user.getNombre());
+        if(user.getNombre().equals("DefaultAdmin")){
+            System.out.println("Este usuario es el de por defecto, tiene privilegios de administrador");
+            System.out.println("Cree un usuario con privilegios de administrador para gestionar la apliación");
+        }
     }
-    public void MostrarError(){
+    public void MostrarErrorLoggin(){
         System.out.println("El usuario o la clave introducidos no son correctos");
+    }
+
+    public void MostrarError(String Error){
+            System.out.println(Error);
     }
 }
