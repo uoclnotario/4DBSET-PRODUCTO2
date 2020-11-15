@@ -26,7 +26,7 @@ public class Personal_vista implements Vista {
         }else{
             List<Personal> personal = (List<Personal>)listado;
 
-            System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "DNI","TIPO","DELEGACIÓN");
+            System.out.printf("%-25s %-25s %-25s %-25s %-10s\n", "INDICE", "NOMBRE", "DNI","TIPO","DELEGACIÓN");
 
 
             for(int i = 0; i < personal.size();i++){
@@ -36,7 +36,7 @@ public class Personal_vista implements Vista {
                     del = personal.get(i).getDelegacion().getNombre();
                 }
 
-                System.out.printf("%-10s %-10s %-10s %-10s %-10s\n", +(i+1),personal.get(i).getNombre(), personal.get(i).getNif_dni(),personal.get(i).getTipoString(),del);
+                System.out.printf("%-25s %-25s %-25s %-25s %-10s\n", +(i+1),personal.get(i).getNombre(), personal.get(i).getNif_dni(),personal.get(i).getTipoString(),del);
             }
 
 
@@ -70,29 +70,29 @@ public class Personal_vista implements Vista {
     private void mostrarDato(Personal persona){
 
 
-        System.out.printf("%-5s %-5s\n", "Nombre:", persona.getNombre());
-        System.out.printf("%-5s %-5s\n", "NIF:", persona.getNif_dni());
+        System.out.printf("%-25s %-5s\n", "Nombre:", persona.getNombre());
+        System.out.printf("%-25s %-5s\n", "NIF:", persona.getNif_dni());
         if(persona.getFechaDeNacimiento() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de nacimiento:", FuncionesConsola.formatoFecha.format(persona.getFechaDeNacimiento()));
-        System.out.printf("%-5s %-5s\n", "Domicilio:", persona.getDomicilio());
-        System.out.printf("%-5s %-5s\n", "Tipo:", persona.getTipoString());
+            System.out.printf("%-25s %-5s\n", "Fecha de nacimiento:", FuncionesConsola.formatoFecha.format(persona.getFechaDeNacimiento()));
+        System.out.printf("%-25s %-5s\n", "Domicilio:", persona.getDomicilio());
+        System.out.printf("%-25s %-5s\n", "Tipo:", persona.getTipoString());
 
         if(persona.getFechaAlta() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", FuncionesConsola.formatoFecha.format(persona.getFechaAlta()));
+            System.out.printf("%-25s %-5s\n", "Fecha de Alta:", FuncionesConsola.formatoFecha.format(persona.getFechaAlta()));
 
         if(persona.getEstado()){
-            System.out.printf("%-5s %-5s\n", "Estado:", "Alta");
+            System.out.printf("%-25s %-5s\n", "Estado:", "Alta");
         }else{
-            System.out.printf("%-5s %-5s\n", "Estado:", "Baja");
+            System.out.printf("%-25s %-5s\n", "Estado:", "Baja");
 
             if(persona.getFechaBaja() != null)
-                System.out.printf("%-5s %-5s\n", "Fecha de Baja:", FuncionesConsola.formatoFecha.format(persona.getFechaBaja()));
+                System.out.printf("%-25s %-5s\n", "Fecha de Baja:", FuncionesConsola.formatoFecha.format(persona.getFechaBaja()));
         }
 
         if(persona.getDelegacion() != null){
-            System.out.printf("%-5s %-5s\n", "Delegación:", persona.getDelegacion().getNombre());
+            System.out.printf("%-25s %-5s\n", "Delegación:", persona.getDelegacion().getNombre());
         }else{
-            System.out.printf("%-5s %-5s\n", "Delegación:", "No asignado.");
+            System.out.printf("%-25s %-5s\n", "Delegación:", "No asignado.");
         }
 
 
@@ -100,47 +100,47 @@ public class Personal_vista implements Vista {
             case "logicaEmpresarial.Contratados":
 
                     if(((Contratados)persona).getTipoContrato() != null){
-                        System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", ((Contratados)persona).getTipoContrato());
+                        System.out.printf("%-25s %-5s\n", "Tipo de Contrato:", ((Contratados)persona).getTipoContrato());
                     }else{
-                        System.out.printf("%-5s %-5s\n", "Tipo de Contrato:", "No asignado.");
+                        System.out.printf("%-25s %-5s\n", "Tipo de Contrato:", "No asignado.");
                     }
 
                     if(((Contratados)persona).getSalario() != null){
-                        System.out.printf("%-5s %-5s\n", "Salario:", ((Contratados)persona).getSalario());
+                        System.out.printf("%-25s %-5s\n", "Salario:", ((Contratados)persona).getSalario());
                     }else{
-                        System.out.printf("%-5s %-5s\n", "Salario:", "No asignado.");
+                        System.out.printf("%-25s %-5s\n", "Salario:", "No asignado.");
                     }
                 break;
 
             case "logicaEmpresarial.Colaboradores":
                     if(persona.getTipoString() != null){
-                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", persona.getTipoString());
+                        System.out.printf("%-25s %-5s\n", "Tipo Colaboración:", persona.getTipoString());
                     }else{
-                        System.out.printf("%-5s %-5s\n", "Tipo Colaboración:", "No asignado.");
+                        System.out.printf("%-25s %-5s\n", "Tipo Colaboración:", "No asignado.");
                     }
                 break;
 
             case "logicaEmpresarial.Voluntarios":
             case "logicaEmpresarial.VoluntariosInternacionales":
                 if(((Voluntarios)persona).getAreaVoluntariado() != null){
-                    System.out.printf("%-5s %-5s\n", "Area:", ((Voluntarios)persona).getAreaVoluntariado());
+                    System.out.printf("%-25s %-5s\n", "Area:", ((Voluntarios)persona).getAreaVoluntariado());
                 }else{
-                    System.out.printf("%-5s %-5s\n", "Area:", "No asignado.");
+                    System.out.printf("%-25s %-5s\n", "Area:", "No asignado.");
                 }
 
                 if(persona.getClass().getName() == "logicaEmpresarial.VoluntariosInternacionales")
                     if(((VoluntariosInternacionales)persona).getPais() != null){
-                        System.out.printf("%-5s %-5s\n", "Pais voluntariado:", ((VoluntariosInternacionales)persona).getPais());
+                        System.out.printf("%-25s %-5s\n", "Pais voluntariado:", ((VoluntariosInternacionales)persona).getPais());
                     }else{
-                        System.out.printf("%-5s %-5s\n", "Pais voluntariado:", "No asignado.");
+                        System.out.printf("%-25s %-5s\n", "Pais voluntariado:", "No asignado.");
                     }
                 break;
 
         }
         if(persona.getProyecto() != null){
-            System.out.printf("%-5s %-5s\n", "Proyecto:", persona.getProyecto().getNombre());
+            System.out.printf("%-25s %-5s\n", "Proyecto:", persona.getProyecto().getNombre());
         }else{
-            System.out.printf("%-5s %-5s\n", "Proyecto:", "No asignado.");
+            System.out.printf("%-25s %-5s\n", "Proyecto:", "No asignado.");
         }
 
     }

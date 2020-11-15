@@ -63,9 +63,9 @@ public class Delegaciones_vista implements Vista {
 
         System.out.println("Mostrando Personal Asignado");
         if(delegacion.getPersonal() != null){
-            System.out.printf("%-10s %-10s %-10s %-10s\n", "INDICE", "NOMBRE", "DNI","TIPO");
+            System.out.printf("%-25s %-25s %-25s %-25s %s\n", "INDICE", "NOMBRE", "DNI","TIPO");
             for(int i = 0; i < delegacion.getPersonal() .size();i++)
-                System.out.printf("%-10s %-10s %-10s %-10s\n", +(i+1),delegacion.getPersonal().get(i).getNombre(),
+                System.out.printf("%-25s %-25s %-25s %-25s %s\n", +(i+1),delegacion.getPersonal().get(i).getNombre(),
                                                                             delegacion.getPersonal().get(i).getNif_dni(),
                                                                             delegacion.getPersonal().get(i).getTipoString());
 

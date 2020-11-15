@@ -25,11 +25,11 @@ public class Proyectos_vista implements Vista{
         }else{
             List<Proyecto> proyectos = (List<Proyecto>)listado;
 
-            System.out.printf("%-10s %-10s %-10s\n", "INDICE", "NOMBRE", "TIPO");
+            System.out.printf("%-10s %-45s %-45s\n", "INDICE", "NOMBRE", "TIPO");
 
 
             for(int i = 0; i < proyectos.size();i++){
-                System.out.printf("%-10s %-10s %-10s\n", +(i+1),
+                System.out.printf("%-10s %-45s %-45s\n", +(i+1),
                                                                      proyectos.get(i).getNombre(),
                                                                      proyectos.get(i).getTipoString());
             }
@@ -62,19 +62,19 @@ public class Proyectos_vista implements Vista{
     public void MostrarDato(Proyecto proyecto){
 
         DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        System.out.printf("%-5s %-5s\n", "Nombre:", proyecto.getNombre());
+        System.out.printf("%-25s %-5s\n", "Nombre:", proyecto.getNombre());
         if(proyecto.getFechaDeInicio() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de inicio:", formato.format(proyecto.getFechaDeInicio()));
+            System.out.printf("%-25s %-5s\n", "Fecha de inicio:", formato.format(proyecto.getFechaDeInicio()));
 
-        System.out.printf("%-5s %-5s\n", "Tipo:", proyecto.getTipoString());
+        System.out.printf("%-25s %-5s\n", "Tipo:", proyecto.getTipoString());
 
         if(proyecto.getFechaDeInicio() != null)
-            System.out.printf("%-5s %-5s\n", "Fecha de Alta:", formato.format(proyecto.getFechaDeInicio()));
+            System.out.printf("%-25s %-5s\n", "Fecha de Alta:", formato.format(proyecto.getFechaDeInicio()));
 
         if(proyecto.getEstado()){
-            System.out.printf("%-5s %-5s\n", "Estado:", "Alta");
+            System.out.printf("%-25s %-5s\n", "Estado:", "Alta");
         }else{
-            System.out.printf("%-5s %-5s\n", "Estado:", "Baja");
+            System.out.printf("%-25s %-5s\n", "Estado:", "Baja");
         }
 
 
