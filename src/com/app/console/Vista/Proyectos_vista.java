@@ -30,8 +30,8 @@ public class Proyectos_vista implements Vista{
 
             for(int i = 0; i < proyectos.size();i++){
                 System.out.printf("%-10s %-10s %-10s\n", +(i+1),
-                                                                     proyectos.get(i).getNombre(),
-                                                                     proyectos.get(i).getTipoString());
+                         proyectos.get(i).getNombre(),
+                         proyectos.get(i).getTipoString());
             }
 
 
@@ -132,7 +132,6 @@ public class Proyectos_vista implements Vista{
 
         }
 
-
         //Nombre
         if(esMOdificacion)
             System.out.println("Inserte Nombre:"+datos.getProyectos().get(indice).getNombre()+"]");
@@ -151,7 +150,6 @@ public class Proyectos_vista implements Vista{
         }else{
             return null;
         }
-
 
         if(!esMOdificacion){
             nuevoProyecto.setEstado(true);
