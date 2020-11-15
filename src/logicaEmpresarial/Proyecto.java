@@ -3,8 +3,11 @@ package logicaEmpresarial;
 import java.util.Date;
 import javax.swing.plaf.BorderUIResource;
 
-public  class Proyecto {
+public  class Proyecto extends Personal {
 
+
+    public void setDelegacion(Delegacion delegacion) {
+    }
 
     public  enum  Tipo{NACIONAL,INTERNACIONAL};
 
