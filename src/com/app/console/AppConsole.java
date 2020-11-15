@@ -101,6 +101,7 @@ public class AppConsole {
         }
 
     }
+
     private boolean abrirApartado(Apartados apartados){
 
         //Cargar modelo factory y llamar a visualizar

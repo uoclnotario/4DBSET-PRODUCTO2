@@ -7,8 +7,7 @@ public class FactoryDAO {
         switch (tipoPersistencia){
             case XML:
                     //Configurar los datos de configuración del dao.
-                    DaoXML dao = new DaoXML();
-                    dao.setFilePath("dataONG.xml");
+                    DaoXML dao = new DaoXML("dataONG.xml");
                     return dao;
             case SQL:
                     return  null;

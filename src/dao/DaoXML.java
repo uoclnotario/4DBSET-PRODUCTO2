@@ -24,7 +24,8 @@ public class DaoXML implements IDao {
     private String mensajeError;
     private boolean error;
 
-    public DaoXML() {
+    public DaoXML(String filePhat) {
+        SERIALIZED_FILE_NAME = filePhat;
         xstream.setMode(XStream.ID_REFERENCES);
         xstream.addPermission(NoTypePermission.NONE);
         xstream.addPermission(NullPermission.NULL);
