@@ -3,14 +3,11 @@ package com.app.console.TestingTTD;
 import com.app.console.Apartados;
 import dao.DaoXML;
 import logicaEmpresarial.Delegacion;
-import logicaEmpresarial.Persona;
 import logicaEmpresarial.Personal;
-import logicaEmpresarial.Proyecto;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Date;
 
 public class PersonalTest  {
 

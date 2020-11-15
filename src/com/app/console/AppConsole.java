@@ -5,7 +5,9 @@ import com.thoughtworks.xstream.core.util.Pool;
 import dao.FactoryDAO;
 import dao.IDao;
 import dao.DaoXML;
-import logicaEmpresarial.*;
+import logicaEmpresarial.Ong;
+import logicaEmpresarial.Usuario;
+
 
 public class AppConsole {
 

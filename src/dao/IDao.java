@@ -1,7 +1,11 @@
 package dao;
 
-import com.app.console.Apartados;
-import logicaEmpresarial.*;
+
+
+
+import com.app.console.*;
+import logicaEmpresarial.Ong;
+import logicaEmpresarial.Usuario;
 
 import java.util.List;
 
