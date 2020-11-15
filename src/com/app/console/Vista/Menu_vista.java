@@ -69,17 +69,21 @@ public class Menu_vista {
     public Object PedirCredenciales(){
         String entradaUser,entradaPass;
         System.out.println("Introduce el nombre de usuario:");
-        entradaUser="prueba";
+        entradaUser = FuncionesConsola.leerConsola();
 
         System.out.println("Introduzca la contraseña:");
-        entradaPass="pass";
+        entradaPass= FuncionesConsola.leerConsola();
 
 
-        return new Usuario(entradaUser,entradaPass, Usuario.tipoUsuarios.ADMINISTRADOR);
+        return new Usuario(entradaUser,entradaPass, Usuario.tipoUsuarios.USUARIO);
     }
 
     public void MostrarBienvenida(Usuario user){
         System.out.println("Bienvenido "+user.getNombre());
+        if(user.getNombre().equals("DefaultAdmin")){
+            System.out.println("Este usuario es el de por defecto, tiene privilegios de administrador");
+            System.out.println("Cree un usuario con privilegios de administrador para gestionar la apliación");
+        }
     }
     public void MostrarErrorLoggin(){
         System.out.println("El usuario o la clave introducidos no son correctos");

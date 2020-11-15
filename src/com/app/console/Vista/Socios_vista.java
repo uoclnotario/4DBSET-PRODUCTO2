@@ -56,7 +56,6 @@ public class Socios_vista implements Vista{
     public void MostrarDato(Socios socios){
         System.out.println("");
 
-
     }
     @Override
     public Object crearElemento(Ong datos, String PALABRACANCEALR) {
@@ -76,25 +75,6 @@ public class Socios_vista implements Vista{
 
 
         System.out.println("Creación de nuevo socios:");
-/*
-        //CIForNIF
-
-        if(esMOdificacion)
-           // System.out.println("Inserte el identificacion:"+datos.getSocios().get(indice).getIdentificacion()+"]");
-        else
-            System.out.println("Inserte el identificacion:");
-
-        entradaTexto= FuncionesConsola.forzarEntradaTexto(FuncionesConsola.MASCARATEXTO,
-                FuncionesConsola.comprobaConversion.TEXTO,
-                PALABRACANCELAR,
-                esMOdificacion);
-        if(entradaTexto != null) {
-
-           // nuevoIngreso.setIdentificacion(entradaTexto);
-        }else{
-            return null;
-        }*/
-
         return nuevoIngreso;
     }
 }

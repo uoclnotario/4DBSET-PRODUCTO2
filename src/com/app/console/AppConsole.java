@@ -1,6 +1,7 @@
 package com.app.console;
 
 import com.app.console.Vista.*;
+import dao.Crud;
 import dao.DaoXML;
 import logicaEmpresarial.*;
 
@@ -10,21 +11,22 @@ public class AppConsole {
     private Usuario usuarioAutentificado;
     private Menu_vista vistaMenu;
 
-    private DaoXML modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
+    private Crud modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
     private Vista vista;//Vista seleccionada por el usuario en el que se encuenta actualmente al acpliacion.
     private Ong pilaDatos;
 
 
     public AppConsole(){
-        vistaMenu = new Menu_vista();
-        modelo = new DaoXML();
 
-     //   try {
-            run();
-    /*    }catch (Exception ex){
-            vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: "+ex.getMessage() + " in="+ex.getLocalizedMessage());
+        while (true) {
+            vistaMenu = new Menu_vista();
+            modelo = new DaoXML();
+            try {
+                run();
+            } catch (Exception ex) {
+                vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: " + ex.getMessage() + " in=" + ex.getLocalizedMessage());
+            }
         }
-*/
     }
     private void run() {
         boolean userLogueado = false;
@@ -149,7 +151,6 @@ public class AppConsole {
         }
         return true;
     }
-
     private boolean MostarUno(int elemento,Apartados apartado){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
         String entradaUsuario = vista.mostrarUnElemento(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
@@ -214,7 +215,6 @@ public class AppConsole {
         }
         return true;
     }
-
     private Vista getVista(Apartados apartado){
         switch (apartado){
             case PERSONAL: return new Personal_vista();

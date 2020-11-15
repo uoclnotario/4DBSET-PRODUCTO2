@@ -91,7 +91,7 @@ public class FuncionesConsola {
             return retornoConversion.TRUE;
         } else {
             //Compruebo si lo que el usuario ha puesto ha sido la palabra para cancelar.
-            if (entrada.equals(cadenaCancelar))
+            if (entrada.toUpperCase().equals(cadenaCancelar.toUpperCase()))
                 return retornoConversion.EXIT;
 
             System.out.println("El valor introducido no es correcto, vuelva a intentarlo o escriba " + cadenaCancelar);

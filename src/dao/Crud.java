@@ -20,4 +20,15 @@ public interface Crud {
     //Eliminar Elemento en apartado
     public boolean borrar(int indice,Apartados apartado);
 
+    //Realiza opreación de login
+    public boolean Login(Usuario user);
+
+    //Resuelve si el dao ha entrado en estado de error.
+    public boolean existeUnError();
+
+    //Devuelve el mensaje del error.
+    public String getMensajeError();
+
+    //Devuelve todos los datos
+    public Ong getPilaDatosGenerales();
 }

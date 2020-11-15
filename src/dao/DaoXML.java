@@ -47,11 +47,9 @@ public class DaoXML implements Crud{
     public Ong getPilaDatosGenerales() {
         return pilaDatosGenerales;
     }
-
     public boolean descargaDatos(Apartados apartados) {
         return leerXML();
     }
-
     public List recogerLIstado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
@@ -63,6 +61,7 @@ public class DaoXML implements Crud{
         }
 
     }
+
     public boolean crear(Object item, Apartados apartado) {
         if(item == null)return false;
 
@@ -77,9 +76,8 @@ public class DaoXML implements Crud{
             case DELEGACIONES:
                     pilaDatosGenerales.getDelegaciones().add((Delegacion) item);
                     break;
-
             case USUARIOS:
-                pilaDatosGenerales.getDelegaciones().add((Delegacion) item);
+                    pilaDatosGenerales.getUsuarios().add((Usuario) item);
                 break;
             default: return false;
         }
@@ -152,7 +150,28 @@ public class DaoXML implements Crud{
     }
     public boolean Login(Usuario user){
 
-        return true;
+        //intentamos descargar los datos.
+        descargaDatos(Apartados.USUARIOS);
+
+        //En el caso de que se recien abra el programa y no hayas usuarios insertados permitimos que se compruebe el has con
+        //usuario por defecto.
+        if(pilaDatosGenerales.getUsuarios().size() <= 0 ){
+            user.setNombre("DefaultAdmin");
+            user.setPassword("");
+            user.setRol(Usuario.tipoUsuarios.ADMINISTRADOR);
+
+            return true;
+        }else{
+            for(Usuario us:pilaDatosGenerales.getUsuarios()){
+                if(us.getHasing().length() > 0 && us.getHasing().equals(user.getHasing()))
+                {
+                    user.setRol(us.getRol());
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     //Operaciones de acceso a xml, debera de realizarse de forma serializada, es decir hay que serializar los objetos y

@@ -72,15 +72,49 @@ public class Usuario_vista implements Vista {
         return solicitarNuevo(datos, indice, PALABRACANCELAR);
     }
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR) {
-        Usuario nuevoUsuario;
-        String entradaTexto;
-        int entradaNumero;
+        Usuario nuevoUsuario = new Usuario();
+        String entradaTexto="";
+
+
+
         boolean esMOdificacion = indice != -1;
+
         if (esMOdificacion) {
-            System.out.println("Antes fallo=" + datos.getUsuarios().size());
-            nuevoUsuario = datos.getUsuarios().get(indice);
-        } else nuevoUsuario = new Usuario();
-        System.out.println("Creación de un nuevo usuario:");
+            System.out.println("Modificación de Usuario:");
+            System.out.println("Inserte el nombre de usuario["+datos.getUsuarios().get(indice)+"]:");
+        }else{
+            System.out.println("Creación de Usuario:");
+            System.out.println("Inserte el nombre de usuario:");
+        }
+        nuevoUsuario.setNombre(FuncionesConsola.leerConsola());
+
+
+        System.out.println("Inserte la contraseña:");
+        nuevoUsuario.setPassword(FuncionesConsola.leerConsola());
+
+
+        System.out.println("Privelegiós:");
+        System.out.println("\t -1 USUARIO");
+        System.out.println("\t -2 ADMINISTRADOR");
+
+
+        if(esMOdificacion){
+            System.out.println("Indique los privilegios del usuario["+datos.getUsuarios().get(indice).getRolString()+"]");
+        }
+
+
+        entradaTexto= FuncionesConsola.forzarEntradaNumero(FuncionesConsola.MASCARANUMERO,
+                FuncionesConsola.comprobaConversion.ENTERO,
+                PALABRACANCELAR,
+                1,2,
+                esMOdificacion);
+
+        if(entradaTexto.equals("(default)")){
+            nuevoUsuario.setRol(datos.getUsuarios().get(indice).getRol());
+        }else{
+            nuevoUsuario.setIntRol(Integer.parseInt(entradaTexto));
+        }
+
         return nuevoUsuario;
     }
 }
