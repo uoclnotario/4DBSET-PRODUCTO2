@@ -5,7 +5,7 @@ import logicaEmpresarial.*;
 
 import java.util.List;
 
-public interface Crud {
+public interface IDao {
 
     //Descarga los datos desde el origen de datos.
     public boolean descargaDatos(Apartados apartados);

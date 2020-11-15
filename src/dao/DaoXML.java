@@ -9,24 +9,19 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import logicaEmpresarial.*;
 
 
-import java.beans.ExceptionListener;
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.*;
 
 
-import java.net.NetworkInterface;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DaoXML implements Crud{
+public class DaoXML implements IDao {
     XStream xstream = new XStream(new StaxDriver());
 
 
-    private  String SERIALIZED_FILE_NAME = "dataONG.xml";
+    private  String SERIALIZED_FILE_NAME;
     private Ong pilaDatosGenerales;
     private String mensajeError;
     private boolean error;
@@ -222,6 +217,11 @@ public class DaoXML implements Crud{
         }
 
         return true;
+    }
+
+    public void setFilePath(String file){
+        SERIALIZED_FILE_NAME = file;
+
     }
 
 }

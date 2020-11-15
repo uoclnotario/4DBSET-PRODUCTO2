@@ -1,7 +1,9 @@
 package com.app.console;
 
 import com.app.console.Vista.*;
-import dao.Crud;
+import com.thoughtworks.xstream.core.util.Pool;
+import dao.FactoryDAO;
+import dao.IDao;
 import dao.DaoXML;
 import logicaEmpresarial.*;
 
@@ -11,7 +13,7 @@ public class AppConsole {
     private Usuario usuarioAutentificado;
     private Menu_vista vistaMenu;
 
-    private Crud modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
+    private IDao modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
     private Vista vista;//Vista seleccionada por el usuario en el que se encuenta actualmente al acpliacion.
     private Ong pilaDatos;
 
@@ -20,11 +22,16 @@ public class AppConsole {
 
         while (true) {
             vistaMenu = new Menu_vista();
-            modelo = new DaoXML();
-            try {
-                run();
-            } catch (Exception ex) {
-                vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: " + ex.getMessage() + " in=" + ex.getLocalizedMessage());
+            modelo = FactoryDAO.lodaModel(FactoryDAO.typeDao.XML);
+            if(modelo !=null){
+                try {
+                    run();
+                } catch (Exception ex) {
+                    vistaMenu.mensajeError("Se produjo un grave fallo, ningún dato fue guardado: " + ex.getMessage() + " in=" + ex.getLocalizedMessage());
+                }
+            }else{
+                vistaMenu.mensajeError("El modelo seleccionado no es correcto.");
+                break;
             }
         }
     }
@@ -47,13 +54,13 @@ public class AppConsole {
 
 
             //Mostrar menu
-            while (MostrarMenu()) ;
+            while (mostrarMenu()) ;
             userLogueado = false;
             usuarioAutentificado = null;
         }while(true);//Bucle infinito, la aplicación si el usuario quiere salir, debera de cerrar la ventana.
 
     }
-    private boolean  MostrarMenu(){
+    private boolean mostrarMenu(){
 
         String entradaUsuario = vistaMenu.MostrarMenu(usuarioAutentificado,PALABRAPARAVOLVER);
         int accesoApartado,minimo,maximo;
@@ -94,7 +101,7 @@ public class AppConsole {
         }
 
     }
-    private boolean  abrirApartado(Apartados apartados){
+    private boolean abrirApartado(Apartados apartados){
 
         //Cargar modelo factory y llamar a visualizar
          vista = getVista(apartados);
@@ -140,7 +147,7 @@ public class AppConsole {
                     vistaMenu.mensajeElementoCreado(modelo.crear(vista.crearElemento(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
 
                 }else{//De lo contrario llama a mostrar uno.
-                    while(MostarUno(indiceSeleccionado-1,apartados));//Abirmos mostrar uno pasandole el apartado seleccionado -1.
+                    while(mostarUno(indiceSeleccionado-1,apartados));//Abirmos mostrar uno pasandole el apartado seleccionado -1.
                 }
                 break;
             case FALSE:
@@ -151,7 +158,7 @@ public class AppConsole {
         }
         return true;
     }
-    private boolean MostarUno(int elemento,Apartados apartado){
+    private boolean mostarUno(int elemento, Apartados apartado){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
         String entradaUsuario = vista.mostrarUnElemento(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
         int apartadoSeleccionado;

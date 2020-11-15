@@ -8,7 +8,7 @@ public  class Proyecto {
 
     public  enum  Tipo{NACIONAL,INTERNACIONAL};
 
-    private String id;
+    private int id;
     private Date fechaAlta;
     private Date fechaBaja;
     private String nombre;
@@ -18,10 +18,9 @@ public  class Proyecto {
 
     }
 
-    public Proyecto(Date fechaAlta, Date fechaBaja,String id, String nombre, Date fechaDeInicio, String delegacion, Tipo tipo, Boolean estado){
+    public Proyecto(Date fechaAlta, Date fechaBaja,String nombre, Date fechaDeInicio, String delegacion, Tipo tipo, Boolean estado){
         this.fechaAlta = fechaAlta;
         this.fechaBaja = fechaBaja;
-        this.id = id;
         this.nombre = nombre;
         this.fechaDeInicio = fechaDeInicio;
         this.estado = estado;
@@ -30,7 +29,6 @@ public  class Proyecto {
     public String getNombre() {
         return nombre;
     }
-
     public String getTipoString(){
 
         if(this.getClass().getName() == "logicaEmpresarial.Nacional")
@@ -39,8 +37,6 @@ public  class Proyecto {
             return "Internacional";
 
     }
-
-
     public Date getFechaDeInicio() {
         return fechaDeInicio;
     }
@@ -50,16 +46,7 @@ public  class Proyecto {
     public Date getFechaBaja() {
         return fechaBaja;
     }
-
-
-
-    public String getId() {
-        return id;
-    }
-
-
     public boolean getEstado() { return estado;   }
-
 
 
     public void setFechaAlta(Date fechaAlta) {
@@ -71,16 +58,9 @@ public  class Proyecto {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-
     public void setFechaDeInicio(Date fechaDeInicio) {
         this.fechaDeInicio = fechaDeInicio;
     }
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
     public void setEstado(boolean estado) { this.estado = estado; }
 
 
