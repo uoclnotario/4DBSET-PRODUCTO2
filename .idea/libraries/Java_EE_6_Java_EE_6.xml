@@ -11,6 +11,7 @@
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar!/" />
       <root url="file://$PROJECT_DIR$/lib/xStreamLib" />
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-5.1.49.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

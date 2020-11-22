@@ -34,6 +34,10 @@ public  class Personal extends Persona {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
@@ -43,7 +47,6 @@ public  class Personal extends Persona {
     public void setFechaBaja(Date fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
-
 
     public Delegacion getDelegacion() {
         return delegacion;
