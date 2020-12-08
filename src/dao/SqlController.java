@@ -62,13 +62,51 @@ public class SqlController {
         return false;
     }
 
-    //Retorna -1 en caso de que ocurra un error o no se genere la cadena.
-    public int ejecutar(String sqlString){
+    public  PreparedStatement getPrepare(String sqlString){
         try{
             Class.forName(driverMysql);
             conn = DriverManager.getConnection(cadenaConexion,user,pass);
+
             if(!conn.isClosed()){
-                    try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
+                try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
+                  return stmt;
+
+                }catch (Exception e){
+                    errores = e;
+                    return  null;
+                }
+            }
+        }catch ( Exception e){
+            //Error de conexión
+            System.out.println(e);
+            errores = e;
+            return null;
+        }finally{
+            try {
+                if (conn != null)
+                    conn.close();
+
+            }catch (SQLException e){
+                //Fallo al cerrar la conexión.
+                System.out.println(e.getMessage());
+                errores = e;
+                return null;
+            }
+        }
+        return null;
+
+
+    }
+
+
+    //Retorna -1 en caso de que ocurra un error o no se genere la cadena.
+    public int ejecutar(PreparedStatement prepare){
+        try{
+            Class.forName(driverMysql);
+            conn = DriverManager.getConnection(cadenaConexion,user,pass);
+
+            if(!conn.isClosed()){
+                    try (PreparedStatement stmt = prepare) {
                         if(stmt.executeUpdate() > 0 ){
                             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                                 if (generatedKeys.next()) {

@@ -22,7 +22,7 @@ public class SqlControllerTest {
         DaoSql sqlDao = new DaoSql(conexion);
         sqlDao.descargaDatos(Apartados.PERSONAL);
 
-
+        sqlDao.crear(new Personal(),Apartados.PERSONAL);
 
 
         /*

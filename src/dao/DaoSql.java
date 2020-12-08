@@ -34,12 +34,41 @@ public class DaoSql implements IDao{
     }
 
     @Override
-    public List recogerLIstado(Apartados apartado) {
+    public List recogerListado(Apartados apartado) {
         return null;
     }
 
     @Override
-    public boolean crear(Object item, Apartados apartado) {
+    public boolean crear(Object item, Apartados apartado) throws SQLException {
+
+        Personal nuevoItem = (Personal)item;
+
+        PreparedStatement cadenaCreacion= controlerSql.getPrepare("INSERT INTO `4dbset`.`persona`\n" +
+                                                                            "(`idPersona`,\n" +
+                                                                            "`TipoPersona`,\n" +
+                                                                            "`NIF_DNI`,\n" +
+                                                                            "`Nombre`,\n" +
+                                                                            "`FechaNacimiento`,\n" +
+                                                                            "`Domicilio`)\n" +
+                                                                            "VALUES\n" +
+                                                                            "(?,\n" +
+                                                                            "?,\n" +
+                                                                            "?,\n" +
+                                                                            "?,\n" +
+                                                                            "?,\n" +
+                                                                            "?);");
+        try {
+            if (cadenaCreacion != null) {
+                cadenaCreacion.setInt(1, nuevoItem.getId());
+
+                controlerSql.ejecutar(cadenaCreacion);
+            } else {
+                //Muestra el error del perpare vacio
+            }
+
+        }catch (Exception ex){
+            return false;
+        }
         return false;
     }
 
@@ -115,7 +144,7 @@ public class DaoSql implements IDao{
         }
     }
 
-
+    //Crea un objeto partiendo de los datos recogidos de la BD.
     private Object create(ResultSet rs, Apartados apartado) throws SQLException {
         Object element;
 

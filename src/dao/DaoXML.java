@@ -44,7 +44,7 @@ public class DaoXML implements IDao {
     public boolean descargaDatos(Apartados apartados) {
         return leerXML();
     }
-    public List recogerLIstado(Apartados apartado){
+    public List recogerListado(Apartados apartado){
         switch (apartado){
             case NINGUNO: return null;
             case PROYECTOS:return pilaDatosGenerales.getProyectos();

@@ -1,10 +1,8 @@
 package com.app.console;
 
 import com.app.console.Vista.*;
-import com.thoughtworks.xstream.core.util.Pool;
 import dao.FactoryDAO;
 import dao.IDao;
-import dao.DaoXML;
 import logicaEmpresarial.Ong;
 import logicaEmpresarial.Usuario;
 
@@ -128,7 +126,7 @@ public class AppConsole {
 
 
         //Mostramos el listado y recibimos que desea hacer el usuario.
-         String entradaUsuario = vista.mostrarLIstado(modelo.recogerLIstado(apartados),PALABRAPARAVOLVER,usuarioAutentificado);
+         String entradaUsuario = vista.mostrarLIstado(modelo.recogerListado(apartados),PALABRAPARAVOLVER,usuarioAutentificado);
          int indiceSeleccionado;
 
         //Mientras el usuario quiera permanecer dentro del item repetimos.
@@ -139,9 +137,9 @@ public class AppConsole {
         {
             case TRUE:
                 indiceSeleccionado = Integer.parseInt(entradaUsuario);
-                if(indiceSeleccionado < 0 || indiceSeleccionado > modelo.recogerLIstado(apartados).size())
+                if(indiceSeleccionado < 0 || indiceSeleccionado > modelo.recogerListado(apartados).size())
                 {
-                    vistaMenu.MostrarErrorEntrada(0,modelo.recogerLIstado(apartados).size(),PALABRAPARAVOLVER);
+                    vistaMenu.MostrarErrorEntrada(0,modelo.recogerListado(apartados).size(),PALABRAPARAVOLVER);
                     return true;
                 }
 
@@ -154,7 +152,7 @@ public class AppConsole {
                 }
                 break;
             case FALSE:
-                vistaMenu.MostrarErrorEntrada(0,modelo.recogerLIstado(apartados).size(),PALABRAPARAVOLVER);
+                vistaMenu.MostrarErrorEntrada(0,modelo.recogerListado(apartados).size(),PALABRAPARAVOLVER);
                 return true;
             case EXIT:
                 return false;
@@ -163,7 +161,7 @@ public class AppConsole {
     }
     private boolean mostarUno(int elemento, Apartados apartado){
         //Mostramos el elemento y recogemos que desea hacer el usuario.
-        String entradaUsuario = vista.mostrarUnElemento(modelo.recogerLIstado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
+        String entradaUsuario = vista.mostrarUnElemento(modelo.recogerListado(apartado).get(elemento),PALABRAPARAVOLVER,usuarioAutentificado);
         int apartadoSeleccionado;
 
         switch (FuncionesConsola.comprobarEntrada(entradaUsuario,
@@ -175,7 +173,7 @@ public class AppConsole {
                     apartadoSeleccionado = Integer.parseInt(entradaUsuario);
                     if(apartadoSeleccionado < 0 || apartadoSeleccionado >1)
                     {
-                        vistaMenu.MostrarErrorEntrada(0,modelo.recogerLIstado(apartado).size(),PALABRAPARAVOLVER);
+                        vistaMenu.MostrarErrorEntrada(0,modelo.recogerListado(apartado).size(),PALABRAPARAVOLVER);
                         return true;
                     }
 
@@ -218,7 +216,7 @@ public class AppConsole {
                     }
                 break;
             case FALSE:
-                    vistaMenu.MostrarErrorEntrada(0,modelo.recogerLIstado(apartado).size(),PALABRAPARAVOLVER);
+                    vistaMenu.MostrarErrorEntrada(0,modelo.recogerListado(apartado).size(),PALABRAPARAVOLVER);
                 return true;
             case EXIT:
                 return false;

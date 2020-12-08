@@ -7,6 +7,7 @@ import com.app.console.*;
 import logicaEmpresarial.Ong;
 import logicaEmpresarial.Usuario;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IDao {
@@ -15,10 +16,10 @@ public interface IDao {
     public boolean descargaDatos(Apartados apartados);
 
     //Metodo que devuelve los datos del apartado seleccionado.
-    public List recogerLIstado(Apartados apartado);
+    public List recogerListado(Apartados apartado);
 
     //Crear elemento en un apartado.
-    public boolean crear(Object item, Apartados apartado);
+    public boolean crear(Object item, Apartados apartado) throws SQLException;
 
     //Modificar elemento en apartado
     public boolean modificar(Object item, int indice,Apartados apartado);
