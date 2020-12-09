@@ -79,9 +79,21 @@ public class DaoSql implements IDao{
 
     @Override
     public boolean borrar(int indice, Apartados apartado) {
+        String idPersona = String.valueOf(indice);
+        PreparedStatement st = controlerSql.getPrepare("DELETE FROM `4dbset`.`persona` WHERE idPersona = '" + idPersona + "';");
+
+
+        try {
+            st.setString(1,idPersona);
+            st.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
         return false;
     }
 
+    
     @Override
     public boolean Login(Usuario user) {
         return false;
