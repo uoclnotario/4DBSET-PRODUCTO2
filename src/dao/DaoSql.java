@@ -40,42 +40,103 @@ public class DaoSql implements IDao{
 
     @Override
     public boolean crear(Object item, Apartados apartado) throws SQLException {
+        switch (apartado) {
+            case PERSONAL:
+            Personal nuevoItem = (Personal) item;
 
-        Personal nuevoItem = (Personal)item;
+            PreparedStatement cadenaCreacion = controlerSql.getPrepare("INSERT INTO `4dbset`.`persona`\n" +
+                    "(`idPersona`,\n" +
+                    "`TipoPersona`,\n" +
+                    "`NIF_DNI`,\n" +
+                    "`Nombre`,\n" +
+                    "`FechaNacimiento`,\n" +
+                    "`Domicilio`)\n" +
+                    "VALUES\n" +
+                    "(?,\n" +
+                    "?,\n" +
+                    "?,\n" +
+                    "?,\n" +
+                    "?,\n" +
+                    "?);");
+            try {
+                if (cadenaCreacion != null) {
+                    cadenaCreacion.setInt(1, nuevoItem.getId());
 
-        PreparedStatement cadenaCreacion= controlerSql.getPrepare("INSERT INTO `4dbset`.`persona`\n" +
-                                                                            "(`idPersona`,\n" +
-                                                                            "`TipoPersona`,\n" +
-                                                                            "`NIF_DNI`,\n" +
-                                                                            "`Nombre`,\n" +
-                                                                            "`FechaNacimiento`,\n" +
-                                                                            "`Domicilio`)\n" +
-                                                                            "VALUES\n" +
-                                                                            "(?,\n" +
-                                                                            "?,\n" +
-                                                                            "?,\n" +
-                                                                            "?,\n" +
-                                                                            "?,\n" +
-                                                                            "?);");
-        try {
-            if (cadenaCreacion != null) {
-                cadenaCreacion.setInt(1, nuevoItem.getId());
+                    controlerSql.ejecutar(cadenaCreacion);
+                } else {
+                    //Muestra el error del prepare vacio
+                }
 
-                controlerSql.ejecutar(cadenaCreacion);
-            } else {
-                //Muestra el error del perpare vacio
+            } catch (Exception ex) {
+                return false;
             }
+            case DELEGACIONES:
+                Delegacion nuevoItem = (Delegacion) item;
 
-        }catch (Exception ex){
-            return false;
+                PreparedStatement cadenaCreacion = controlerSql.getPrepare("INSERT INTO `4dbset`.`delegacion`\n" +
+                        "(`id`,\n" +
+                        "`nombre`,\n" +
+                        "`direccion`,\n" +
+                        "`telefono`,\n" +
+                        "VALUES\n" +
+                        "(?,\n" +
+                        "?,\n" +
+                        "?,\n" +
+                        "?,\n" +
+                        "?,\n" +
+                        "?);");
+                try {
+                    if (cadenaCreacion != null) {
+                        cadenaCreacion.setInt(1, nuevoItem.getId());
+
+                        controlerSql.ejecutar(cadenaCreacion);
+                    } else {
+                        //Muestra el error del prepare vacio
+                    }
+
+                } catch (Exception ex) {
+                    return false;
+                }
+            case PROYECTOS:
+                Proyecto nuevoItem = (Proyecto) item;
+
+                PreparedStatement cadenaCreacion = controlerSql.getPrepare("INSERT INTO `4dbset`.`proyecto`\n" +
+                        "(`id`,\n" +
+                        "`fechaAlta`,\n" +
+                        "`fechaBaja`,\n" +
+                        "`nombre`,\n" +
+                        "`fechaInicio`,\n" +
+                        "`estado`)\n" +
+                        "VALUES\n" +
+                        "(?,\n" +
+                        "?,\n" +
+                        "?,\n" +
+                        "?,\n" +
+                        "?,\n" +
+                        "?);");
+                try {
+                    if (cadenaCreacion != null) {
+                        cadenaCreacion.setInt(1, nuevoItem.getId());
+
+                        controlerSql.ejecutar(cadenaCreacion);
+                    } else {
+                        //Muestra el error del prepare vacio
+                    }
+
+                } catch (Exception ex) {
+                    return false;
+                }
         }
+
         return false;
     }
 
     @Override
     public boolean modificar(Object item, int indice, Apartados apartado) {
+
         return false;
     }
+
 
     @Override
     public boolean borrar(int indice, Apartados apartado) {
@@ -93,7 +154,7 @@ public class DaoSql implements IDao{
         return false;
     }
 
-    
+
     @Override
     public boolean Login(Usuario user) {
         return false;
