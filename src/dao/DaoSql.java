@@ -46,10 +46,11 @@ public class DaoSql implements IDao{
 
 
         final String  SQL_INSERT_PERSONAL = "INSERT INTO `persona` (`idPersona`,`TipoPersona`,`NIF_DNI`,`Nombre`,`FechaNacimiento``Domicilio`)VALUES(?,?,?,?,?,?)";
-                                            //*a La tabla le falta un id Delegación.
-
-        final String  SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`id`,`nombre`,`direccion`,`telefono`,VALUES(?,?,?,?,?,?);";
+                                            //*a La tabla Personal le falta un id Delegación.
+        final String  SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`id`,`nombre`,`direccion`,`telefono`)VALUES(?,?,?,?);";
         final String  SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`id`,`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
+        final String  SQL_INSERT_USUARIO = "INSERT INTO `usuario(`tipoUsuarios`,`nombre`,`hasing`,`rol`,`id`)VALUES(?,?,?,?,?);";
+
 
         //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
         //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
@@ -62,14 +63,12 @@ public class DaoSql implements IDao{
             case PERSONAL:      cadenaSql=SQL_INSERT_PERSONAL;break;
             case PROYECTOS:     cadenaSql=SQL_INSERT_DELEGACION;break;
             case DELEGACIONES:  cadenaSql=SQL_INSERT_PROYECTO;break;
-            case USUARIOS:break;//falta la de usuarios.
+            case USUARIOS:      cadenaSql=SQL_INSERT_USUARIO;break;
             default:
                 return false;
         }
 
-
-
-        //Ahora se crea el statmen
+        //Ahora se crea el statment
         PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
 
         try {
@@ -83,13 +82,16 @@ public class DaoSql implements IDao{
                         break;
                     case PROYECTOS:
                             //TODO
+                            cadenaCreacion.setInt(1, ((Proyecto)item).getId());
                         break;
                     case DELEGACIONES:
                             //TODO
+                            cadenaCreacion.setInt(1, ((Delegacion)item).getId());
                         break;
                     case USUARIOS:
                             //TODO
-                        break;//falta la de usuarios.
+                            cadenaCreacion.setInt(1, ((Usuario)item).getId());
+                        break;
                     default:
                         return false;
                 }
@@ -203,7 +205,82 @@ public class DaoSql implements IDao{
     }
 
     @Override
-    public boolean modificar(Object item, int indice, Apartados apartado) {
+    public boolean modificar(Object item, int indice, Apartados apartado){
+
+        String idPersona = String.valueOf(indice);
+        
+        final String  SQL_INSERT_PERSONAL = "UPDATE `persona` WHERE idPersona = '" + idPersona + "';")";
+        //*a La tabla Personal le falta un id Delegación.
+        final String  SQL_INSERT_DELEGACION = "UPDATE `delegacion` WHERE idPersona = '" + idPersona + "';");";
+        final String  SQL_INSERT_PROYECTO = "UPDATE `proyecto WHERE idPersona = '" + idPersona + "';");";
+        final String  SQL_INSERT_USUARIO = "UPDATE `usuario WHERE idPersona = '" + idPersona + "';");";
+
+
+        //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
+        //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
+
+
+        //Creación de variables dependiendo del apartado:
+        String cadenaSql="";
+
+        switch (apartado) {
+            case PERSONAL:      cadenaSql=SQL_INSERT_PERSONAL;break;
+            case PROYECTOS:     cadenaSql=SQL_INSERT_DELEGACION;break;
+            case DELEGACIONES:  cadenaSql=SQL_INSERT_PROYECTO;break;
+            case USUARIOS:      cadenaSql=SQL_INSERT_USUARIO;break;
+            default:
+                return false;
+        }
+
+        //Ahora se crea el statment
+        PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
+
+        try {
+            if (cadenaCreacion != null) {
+
+                //Seteamos los valores
+                switch (apartado) {
+                    case PERSONAL:
+                        //TODO
+                        cadenaCreacion.setInt(1, ((Personal)item).getId());
+                        break;
+                    case PROYECTOS:
+                        //TODO
+                        cadenaCreacion.setInt(1, ((Proyecto)item).getId());
+                        break;
+                    case DELEGACIONES:
+                        //TODO
+                        cadenaCreacion.setInt(1, ((Delegacion)item).getId());
+                        break;
+                    case USUARIOS:
+                        //TODO
+                        cadenaCreacion.setInt(1, ((Usuario)item).getId());
+                        break;
+                    default:
+                        return false;
+                }
+
+                //Ejecugamos la sentencia
+                if(controlerSql.ejecutar(cadenaCreacion) > 0)
+                    return true;
+                else
+                    return false;
+
+            } else {
+                //Muestra el error del prepare vacio
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
+
+
+
+
+
+
+
+
 
         return false;
     }
