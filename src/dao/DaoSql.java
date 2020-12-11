@@ -39,7 +39,78 @@ public class DaoSql implements IDao{
     }
 
     @Override
-    public boolean crear(Object item, Apartados apartado) throws SQLException {
+    public boolean crear(Object item, Apartados apartado) {
+        //Asi es como se deberia de hacer para escribir en limpio:
+
+        //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
+
+
+        final String  SQL_INSERT_PERSONAL = "INSERT INTO `persona` (`idPersona`,`TipoPersona`,`NIF_DNI`,`Nombre`,`FechaNacimiento``Domicilio`)VALUES(?,?,?,?,?,?)";
+                                            //*a La tabla le falta un id Delegación.
+
+        final String  SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`id`,`nombre`,`direccion`,`telefono`,VALUES(?,?,?,?,?,?);";
+        final String  SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`id`,`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
+
+        //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
+        //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
+
+
+        //Creación de variables dependiendo del apartado:
+        String cadenaSql="";
+
+        switch (apartado) {
+            case PERSONAL:      cadenaSql=SQL_INSERT_PERSONAL;break;
+            case PROYECTOS:     cadenaSql=SQL_INSERT_DELEGACION;break;
+            case DELEGACIONES:  cadenaSql=SQL_INSERT_PROYECTO;break;
+            case USUARIOS:break;//falta la de usuarios.
+            default:
+                return false;
+        }
+
+
+
+        //Ahora se crea el statmen
+        PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
+
+        try {
+            if (cadenaCreacion != null) {
+
+                //Seteamos los valores
+                switch (apartado) {
+                    case PERSONAL:
+                            //TODO
+                            cadenaCreacion.setInt(1, ((Personal)item).getId());
+                        break;
+                    case PROYECTOS:
+                            //TODO
+                        break;
+                    case DELEGACIONES:
+                            //TODO
+                        break;
+                    case USUARIOS:
+                            //TODO
+                        break;//falta la de usuarios.
+                    default:
+                        return false;
+                }
+
+                //Ejecugamos la sentencia
+                if(controlerSql.ejecutar(cadenaCreacion) > 0)
+                    return true;
+                else
+                    return false;
+
+            } else {
+                //Muestra el error del prepare vacio
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
+
+
+
+        /* PARTE VUESTRAS.
         switch (apartado) {
             case PERSONAL:
             Personal nuevoItem = (Personal) item;
@@ -126,7 +197,7 @@ public class DaoSql implements IDao{
                 } catch (Exception ex) {
                     return false;
                 }
-        }
+        }*/
 
         return false;
     }
