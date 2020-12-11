@@ -22,8 +22,9 @@ public class DaoSql implements IDao{
 
         if( recoger(Apartados.DELEGACIONES) &&
             recoger(Apartados.PROYECTOS) &&
-            recoger(Apartados.PERSONAL)){
-
+            recoger(Apartados.PERSONAL) &&
+            recoger(Apartados.USUARIOS))
+        {
 
             //TODO RECORRER PERSONAL Y ANIDAR RELACIONES.
 
@@ -57,7 +58,7 @@ public class DaoSql implements IDao{
 
 
         //Creación de variables dependiendo del apartado:
-        String cadenaSql="";
+        String cadenaSql;
 
         switch (apartado) {
             case PERSONAL:      cadenaSql=SQL_INSERT_PERSONAL;break;
@@ -109,7 +110,6 @@ public class DaoSql implements IDao{
         } catch (Exception ex) {
             return false;
         }
-
 
 
         /* PARTE VUESTRAS.
@@ -207,27 +207,25 @@ public class DaoSql implements IDao{
     @Override
     public boolean modificar(Object item, int indice, Apartados apartado){
 
-        String idPersona = String.valueOf(indice);
-        
-        final String  SQL_INSERT_PERSONAL = "UPDATE `persona` WHERE idPersona = '" + idPersona + "';")";
-        //*a La tabla Personal le falta un id Delegación.
-        final String  SQL_INSERT_DELEGACION = "UPDATE `delegacion` WHERE idPersona = '" + idPersona + "';");";
-        final String  SQL_INSERT_PROYECTO = "UPDATE `proyecto WHERE idPersona = '" + idPersona + "';");";
-        final String  SQL_INSERT_USUARIO = "UPDATE `usuario WHERE idPersona = '" + idPersona + "';");";
+        String ident = String.valueOf(indice);
 
+        final String  SQL_UPDATE_PERSONAL = "UPDATE `persona` WHERE idPersona = '" + ident + "';";
+        //*a La tabla Personal le falta un id Delegación.
+        final String  SQL_UPDATE_DELEGACION = "UPDATE `delegacion` WHERE id = '" + ident + "';";
+        final String  SQL_UPDATE_PROYECTO = "UPDATE `proyecto WHERE id = '" + ident + "';";
+        final String  SQL_UPDATE_USUARIO = "UPDATE `usuario WHERE id = '" + ident + "';";
 
         //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
         //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
 
-
         //Creación de variables dependiendo del apartado:
-        String cadenaSql="";
+        String cadenaSql;
 
         switch (apartado) {
-            case PERSONAL:      cadenaSql=SQL_INSERT_PERSONAL;break;
-            case PROYECTOS:     cadenaSql=SQL_INSERT_DELEGACION;break;
-            case DELEGACIONES:  cadenaSql=SQL_INSERT_PROYECTO;break;
-            case USUARIOS:      cadenaSql=SQL_INSERT_USUARIO;break;
+            case PERSONAL:      cadenaSql=SQL_UPDATE_PERSONAL;break;
+            case PROYECTOS:     cadenaSql=SQL_UPDATE_DELEGACION;break;
+            case DELEGACIONES:  cadenaSql=SQL_UPDATE_PROYECTO;break;
+            case USUARIOS:      cadenaSql=SQL_UPDATE_USUARIO;break;
             default:
                 return false;
         }
@@ -274,23 +272,36 @@ public class DaoSql implements IDao{
             return false;
         }
 
-
-
-
-
-
-
-
-
         return false;
     }
 
 
     @Override
     public boolean borrar(int indice, Apartados apartado) {
-        String idPersona = String.valueOf(indice);
-        PreparedStatement st = controlerSql.getPrepare("DELETE FROM `4dbset`.`persona` WHERE idPersona = '" + idPersona + "';");
 
+        String ident = String.valueOf(indice);
+
+        final String  SQL_DELETE_PERSONAL = "DELETE `persona` WHERE idPersona = '" + ident + "';";
+        //*a La tabla Personal le falta un id Delegación.
+        final String  SQL_DELETE_DELEGACION = "DELETE `delegacion` WHERE id = '" + ident + "';";
+        final String  SQL_DELETE_PROYECTO = "DELETE `proyecto WHERE id = '" + ident + "';";
+        final String  SQL_DELETE_USUARIO = "DELETE `usuario WHERE id = '" + ident + "';";
+
+        //Creación de variables dependiendo del apartado:
+        String cadenaSql;
+
+        switch (apartado) {
+            case PERSONAL:      cadenaSql=SQL_DELETE_PERSONAL;break;
+            case PROYECTOS:     cadenaSql=SQL_DELETE_DELEGACION;break;
+            case DELEGACIONES:  cadenaSql=SQL_DELETE_PROYECTO;break;
+            case USUARIOS:      cadenaSql=SQL_DELETE_USUARIO;break;
+            default:
+                return false;
+        }
+
+        // TODO
+
+        PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
 
         try {
             st.setString(1,idPersona);
@@ -320,6 +331,7 @@ public class DaoSql implements IDao{
 
     @Override
     public Ong getPilaDatosGenerales() {
+
         return null;
     }
 
@@ -330,6 +342,7 @@ public class DaoSql implements IDao{
             case PERSONAL:      sql="SELECT * FROM 4dbset.personal";    break;
             case DELEGACIONES:  sql="SELECT * FROM 4dbset.delegacion";    break;
             case PROYECTOS:     sql="SELECT * FROM 4dbset.proyectos;";    break;
+            case USUARIOS:      sql="SELECT * FROM 4dbset.usuarios;";    break;
             default:return false;
         }
 
@@ -352,6 +365,7 @@ public class DaoSql implements IDao{
                         case PERSONAL:       pilaDatosGenerales.getPersonal().add((Personal)create(rs,apartados));         break;
                         case DELEGACIONES:   pilaDatosGenerales.getDelegaciones().add((Delegacion) create(rs,apartados));  break;
                         case PROYECTOS:      pilaDatosGenerales.getProyectos().add((Proyecto) create(rs,apartados));       break;
+                        case USUARIOS:       pilaDatosGenerales.getUsuarios().add((Usuario) create(rs,apartados));         break;
                         default:return false;
                     }
             return true;
