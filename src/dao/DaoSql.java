@@ -303,13 +303,13 @@ public class DaoSql implements IDao{
 
         PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
 
-        try {
+ /*       try {
             st.setString(1,idPersona);
             st.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
+*/
         return false;
     }
 
@@ -331,8 +331,8 @@ public class DaoSql implements IDao{
 
     @Override
     public Ong getPilaDatosGenerales() {
-
-        return null;
+        getPilaDatosGenerales();
+        return pilaDatosGenerales;
     }
 
     private boolean recoger(Apartados apartados){
