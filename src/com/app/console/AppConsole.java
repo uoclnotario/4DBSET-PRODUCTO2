@@ -22,7 +22,7 @@ public class AppConsole {
 
         while (true) {
             vistaMenu = new Menu_vista();
-            modelo = FactoryDAO.lodaModel(FactoryDAO.typeDao.XML);
+            modelo = FactoryDAO.lodaModel(FactoryDAO.typeDao.SQL);
             if(modelo !=null){
                 try {
                     run();
@@ -35,9 +35,9 @@ public class AppConsole {
             }
         }
     }
+
     private void run() {
         boolean userLogueado = false;
-
 
         do {
             do {
@@ -145,7 +145,7 @@ public class AppConsole {
 
                 if(indiceSeleccionado == 0){//Si es cero se Creara un nuevo elemento, por lo que llamamos a Crear.
                    //Aqui se podria añadir una restricción para que si el elemento ya existe de une error y no se cree.
-                    vistaMenu.mensajeElementoCreado(modelo.crear(vista.crearElemento(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
+                    // vistaMenu.mensajeElementoCreado(modelo.crear(vista.crearElemento(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
 
                 }else{//De lo contrario llama a mostrar uno.
                     while(mostarUno(indiceSeleccionado-1,apartados));//Abirmos mostrar uno pasandole el apartado seleccionado -1.

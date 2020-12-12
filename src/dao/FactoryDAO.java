@@ -10,7 +10,7 @@ public class FactoryDAO {
                     DaoXML dao = new DaoXML("dataONG.xml");
                     return dao;
             case SQL:
-                    DaoSql daoSql = new DaoSql(new SqlController("localhost","3306","4DBSET","root","1021"));
+                    DaoSql daoSql = new DaoSql(new SqlController("localhost","3306","4DBSET","root",""));
                     return  daoSql;
 
         }
