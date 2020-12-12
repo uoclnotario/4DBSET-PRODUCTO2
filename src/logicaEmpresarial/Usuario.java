@@ -12,8 +12,6 @@ public class Usuario {
     private tipoUsuarios rol;
     private int id;
 
-
-
     public Usuario() {
 
     }
