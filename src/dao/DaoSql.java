@@ -19,25 +19,38 @@ public class DaoSql implements IDao {
 
     public DaoSql(SqlController controller) {
         this.controlerSql = controller;
+        pilaDatosGenerales = new Ong();
     }
 
     @Override
     public boolean descargaDatos(Apartados apartados) {
+
+
         return recoger(apartados);
-/*        if (recoger(Apartados.DELEGACIONES) &&
+    /*
+
+        if (recoger(Apartados.DELEGACIONES) &&
                 recoger(Apartados.PROYECTOS) &&
                 recoger(Apartados.PERSONAL) &&
                 recoger(Apartados.USUARIOS)) {
             //TODO RECORRER PERSONAL Y ANIDAR RELACIONES.
             return true;
         }
-        return false;
- */   }
+
+     */
+
+    }
 
     @Override
     public List recogerListado(Apartados apartado) {
-
-        return null;
+        switch (apartado){
+            case NINGUNO: return null;
+            case PROYECTOS:return pilaDatosGenerales.getProyectos();
+            case PERSONAL:return pilaDatosGenerales.getPersonal();
+            case DELEGACIONES:return pilaDatosGenerales.getDelegaciones();
+            case USUARIOS:return pilaDatosGenerales.getUsuarios();
+            default: return null;
+        }
     }
 
     @Override
@@ -233,10 +246,13 @@ public class DaoSql implements IDao {
     public boolean borrar(int indice, Apartados apartado) {
 
         String ident = String.valueOf(indice);
-        final String SQL_DELETE_PERSONAL    = "DELETE `persona` WHERE idPersona = '" + ident + "';";
-        final String SQL_DELETE_DELEGACION  = "DELETE `delegacion` WHERE id = '" + ident + "';";
-        final String SQL_DELETE_PROYECTO    = "DELETE `proyecto WHERE id = '" + ident + "';";
-        final String SQL_DELETE_USUARIO     = "DELETE `usuario WHERE id = '" + ident + "';";
+        final String SQL_DELETE_PERSONAL    = "DELETE FROM persona WHERE idPersona = " + ident ;
+        final String SQL_DELETE_DELEGACION  = "DELETE FROM delegacion WHERE idDelegacion = " + ident ;
+        final String SQL_DELETE_PROYECTO    = "DELETE FROM proyecto WHERE id = " + ident ;
+        final String SQL_DELETE_USUARIO     = "DELETE FROM usuario WHERE id = " + ident ;
+
+
+        System.out.println(SQL_DELETE_DELEGACION);
 
         //Creación de variables dependiendo del apartado:
         String cadenaSql;
@@ -245,10 +261,10 @@ public class DaoSql implements IDao {
             case PERSONAL:
                 cadenaSql = SQL_DELETE_PERSONAL;
                 break;
-            case PROYECTOS:
+            case DELEGACIONES:
                 cadenaSql = SQL_DELETE_DELEGACION;
                 break;
-            case DELEGACIONES:
+            case  PROYECTOS:
                 cadenaSql = SQL_DELETE_PROYECTO;
                 break;
             case USUARIOS:
@@ -257,16 +273,15 @@ public class DaoSql implements IDao {
             default:
                 return false;
         }
-        // TODO
-        PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
- /*       try {
-            st.setString(1,idPersona);
-            st.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+
+        if(controlerSql.update(cadenaSql)){
+            return  true;
+        }else{
+            mensajeError = controlerSql.getErrores();
+            System.out.println(mensajeError);
+            existeError = true;
+            return false;
         }
-*/
-        return false;
     }
 
 
@@ -321,7 +336,7 @@ public class DaoSql implements IDao {
                 sql = "SELECT * FROM 4dbset.personal";
                 break;
             case DELEGACIONES:
-                sql = "SELECT * FROM 4dbset.delegacion";
+                sql = "SELECT * FROM delegacion";
                 break;
             case PROYECTOS:
                 sql = "SELECT * FROM 4dbset.proyectos;";
@@ -365,6 +380,7 @@ public class DaoSql implements IDao {
             return true;
 
         } catch (Exception e) {
+            System.out.println("Error"+e.getMessage());
             mensajeError = e;
             existeError = true;
             return false;
