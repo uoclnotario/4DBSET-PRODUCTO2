@@ -35,7 +35,6 @@ public class AppConsole {
             }
         }
     }
-
     private void run() {
         boolean userLogueado = false;
 
@@ -101,7 +100,6 @@ public class AppConsole {
         }
 
     }
-
     private boolean abrirApartado(Apartados apartados){
 
         //Cargar modelo factory y llamar a visualizar

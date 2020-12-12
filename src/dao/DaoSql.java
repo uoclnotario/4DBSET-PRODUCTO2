@@ -242,21 +242,26 @@ public class DaoSql implements IDao {
 
        PreparedStatement ps = null;
        ResultSet rs = null;
-       String sql = "SELECT * FROM usuarios WHERE hashing = ?";
+       String sql = "SELECT * FROM usuario WHERE hashing = ?";
 
        try{
            ps = controlerSql.getConecction().prepareStatement(sql);
-           ps.setString(0, user.getHasing());
+           ps.setString(1, user.getHasing());
            rs = ps.executeQuery();
            if(rs.next()) {
-               user = (Usuario) create(rs, Apartados.USUARIOS);
+               Usuario readSqlUser = (Usuario) create(rs, Apartados.USUARIOS);
+               user.setId(readSqlUser.getId());
+               user.setRol(readSqlUser.getRol());
                return true;
            }
            return false;
        }
        catch (SQLException ex){
+           mensajeError = controlerSql.getErrores();
+           System.out.println(mensajeError);
+           existeError = true;
+           return false;
        }
-       return false;
     }
 
     @Override
