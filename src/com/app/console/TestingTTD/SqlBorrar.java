@@ -14,6 +14,7 @@ public class SqlBorrar {
 
     @Test
     public void testCrear() throws Exception{
+
         SqlController conexion = new SqlController("localhost","3306","4DBSET","root","1021");
 
         DaoSql sqlDao = new DaoSql(conexion);
