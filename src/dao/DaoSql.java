@@ -18,10 +18,15 @@ public class DaoSql implements IDao {
 
     public DaoSql(SqlController controller) {
         this.controlerSql = controller;
+        pilaDatosGenerales = new Ong();
     }
 
     @Override
     public boolean descargaDatos(Apartados apartados) {
+
+
+        return recoger(apartados);
+    /*
 
         if (recoger(Apartados.DELEGACIONES) &&
                 recoger(Apartados.PROYECTOS) &&
@@ -30,13 +35,21 @@ public class DaoSql implements IDao {
             //TODO RECORRER PERSONAL Y ANIDAR RELACIONES.
             return true;
         }
-        return false;
+
+     */
+
     }
 
     @Override
     public List recogerListado(Apartados apartado) {
-
-        return null;
+        switch (apartado){
+            case NINGUNO: return null;
+            case PROYECTOS:return pilaDatosGenerales.getProyectos();
+            case PERSONAL:return pilaDatosGenerales.getPersonal();
+            case DELEGACIONES:return pilaDatosGenerales.getDelegaciones();
+            case USUARIOS:return pilaDatosGenerales.getUsuarios();
+            default: return null;
+        }
     }
 
     @Override
@@ -297,7 +310,7 @@ public class DaoSql implements IDao {
                 sql = "SELECT * FROM 4dbset.personal";
                 break;
             case DELEGACIONES:
-                sql = "SELECT * FROM 4dbset.delegacion";
+                sql = "SELECT * FROM delegacion";
                 break;
             case PROYECTOS:
                 sql = "SELECT * FROM 4dbset.proyectos;";
@@ -341,6 +354,7 @@ public class DaoSql implements IDao {
             return true;
 
         } catch (Exception e) {
+            System.out.println("Error"+e.getMessage());
             mensajeError = e;
             existeError = true;
             return false;
