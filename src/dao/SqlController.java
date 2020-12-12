@@ -2,6 +2,7 @@ package dao;
 
 import javax.xml.transform.Result;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class SqlController {
     private String cadenaConexion = "";
@@ -100,13 +101,36 @@ public class SqlController {
 
 
     //Retorna -1 en caso de que ocurra un error o no se genere la cadena.
-    public int ejecutar(PreparedStatement prepare){
+    public int ejecutar(String sqlString, ArrayList<Object> valores){
         try{
             Class.forName(driverMysql);
             conn = DriverManager.getConnection(cadenaConexion,user,pass);
+            Class.forName(driverMysql);
+            conn = DriverManager.getConnection(cadenaConexion,user,pass);
+
 
             if(!conn.isClosed()){
-                    try (PreparedStatement stmt = prepare) {
+                    try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
+
+                        //Se recorre el bucle y se inserta el tipo de valor.
+                        int index = 1;
+                        for(Object e:valores){
+                            if(e instanceof Integer){
+                                stmt.setInt(index,(Integer)e);
+                            }else if(e instanceof String){
+                                stmt.setString(index,(String)e);
+                            }else if(e instanceof Boolean){
+                                stmt.setBoolean(index,(Boolean)e);
+                            }else if(e instanceof Float){
+                                stmt.setFloat(index,(Float)e);
+                            }else{
+                                //Deberiamos de tirar errro por que algo falla;
+                                stmt.setNull(index,0);
+                            }
+                            index++;
+                        }
+
+
                         if(stmt.executeUpdate() > 0 ){
                             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                                 if (generatedKeys.next()) {

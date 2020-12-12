@@ -4,10 +4,13 @@ import com.app.console.Apartados;
 import logicaEmpresarial.*;
 
 import javax.print.DocFlavor;
+import java.lang.invoke.SwitchPoint;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DaoSql implements IDao {
+    private  enum Operacion{SELECT, UPDATE,DELETE, INSERT}
     private SqlController controlerSql;
     private Exception mensajeError;
     private boolean existeError;
@@ -41,9 +44,9 @@ public class DaoSql implements IDao {
         //Asi es como se deberia de hacer para escribir en limpio:
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO `persona` (`TipoPersona`,`NIF_DNI`,`Nombre`,`FechaNacimiento``Domicilio`)VALUES(?,?,?,?,?,?)";
+        final String SQL_INSERT_PERSONAL ="INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
         //*a La tabla Personal le falta un id Delegación.
-        final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?,?);";
+        final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
         final String SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
         final String SQL_INSERT_USUARIO = "INSERT INTO `usuario(`tipoUsuarios`,`nombre`,`hasing`,`rol`)VALUES(?,?,?,?,?);";
 
@@ -57,10 +60,10 @@ public class DaoSql implements IDao {
             case PERSONAL:
                 cadenaSql = SQL_INSERT_PERSONAL;
                 break;
-            case PROYECTOS:
+            case DELEGACIONES:
                 cadenaSql = SQL_INSERT_DELEGACION;
                 break;
-            case DELEGACIONES:
+            case PROYECTOS:
                 cadenaSql = SQL_INSERT_PROYECTO;
                 break;
             case USUARIOS:
@@ -70,55 +73,61 @@ public class DaoSql implements IDao {
                 return false;
         }
 
-        //Ahora se crea el statment
-        PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
 
-        try {
-            if (cadenaCreacion != null) {
+        //Seteamos los valores
+        ArrayList<Object> valores = new ArrayList<>();
 
-                //Seteamos los valores
-                switch (apartado) {
-                    case PERSONAL:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Personal) item).getId());
-                        break;
-                    case PROYECTOS:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Proyecto) item).getId());
-                        break;
-                    case DELEGACIONES:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Delegacion) item).getId());
-                        break;
-                    case USUARIOS:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Usuario) item).getId());
-                        break;
-                    default:
-                        return false;
+        switch (apartado) {
+            case PERSONAL:
+                //TODO
 
+                break;
+            case PROYECTOS:
+                //TODO
+
+                break;
+            case DELEGACIONES:
+                //TODO
+                valores.add(((Delegacion)item).getNombre());//Nombre
+                valores.add(((Delegacion)item).getDireccion());//Dirección
+                valores.add(((Delegacion)item).getTelefono());//Telefono
+                break;
+            case USUARIOS:
+                //TODO
+
+                break;
+            default:
+                return false;
+
+        }
+
+
+
+        if(valores.size()>0) {
+            int ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
+
+
+            //Ejecugamos la sentencia
+            if ( ejecucion > 0)
+                return true;
+            else{
+                if(ejecucion == -1){
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    System.out.println(mensajeError);
                 }
 
-                //Ejecugamos la sentencia
-                if (controlerSql.ejecutar(cadenaCreacion) > 0)
-                    return true;
-                else
-                    return false;
-
-            } else {
-                //Muestra el error del prepare vacio
+                return false;
             }
-
-        } catch (Exception ex) {
+        }else{
             return false;
         }
 
-        return false;
     }
 
     @Override
     public boolean modificar(Object item, int indice, Apartados apartado) {
-
+/*
         String ident = String.valueOf(indice);
 
         final String SQL_UPDATE_PERSONAL = "UPDATE `persona` WHERE idPersona = '" + ident + "';";
@@ -191,7 +200,7 @@ public class DaoSql implements IDao {
 
         } catch (Exception ex) {
             return false;
-        }
+        }*/
         return false;
     }
 
@@ -200,10 +209,10 @@ public class DaoSql implements IDao {
     public boolean borrar(int indice, Apartados apartado) {
 
         String ident = String.valueOf(indice);
-        final String SQL_DELETE_PERSONAL = "DELETE `persona` WHERE idPersona = '" + ident + "';";
-        final String SQL_DELETE_DELEGACION = "DELETE `delegacion` WHERE id = '" + ident + "';";
-        final String SQL_DELETE_PROYECTO = "DELETE `proyecto WHERE id = '" + ident + "';";
-        final String SQL_DELETE_USUARIO = "DELETE `usuario WHERE id = '" + ident + "';";
+        final String SQL_DELETE_PERSONAL    = "DELETE `persona` WHERE idPersona = '" + ident + "';";
+        final String SQL_DELETE_DELEGACION  = "DELETE `delegacion` WHERE id = '" + ident + "';";
+        final String SQL_DELETE_PROYECTO    = "DELETE `proyecto WHERE id = '" + ident + "';";
+        final String SQL_DELETE_USUARIO     = "DELETE `usuario WHERE id = '" + ident + "';";
 
         //Creación de variables dependiendo del apartado:
         String cadenaSql;
@@ -354,9 +363,9 @@ public class DaoSql implements IDao {
             case DELEGACIONES:
                 element = new Delegacion();
                 ((Delegacion) element).setId(rs.getInt("idDelegacion"));
-                ((Delegacion) element).setNombre(rs.getString("Nombre"));
-                ((Delegacion) element).setDireccion(rs.getString("Dirección"));
-                ((Delegacion) element).setTelefono(rs.getString("Telefono"));
+                ((Delegacion) element).setNombre(rs.getString("nombre"));
+                ((Delegacion) element).setDireccion(rs.getString("direccion"));
+                ((Delegacion) element).setTelefono(rs.getString("telefono"));
                 break;
 
             case PROYECTOS:
@@ -380,4 +389,64 @@ public class DaoSql implements IDao {
         return element;
     }
 
+
+
+/*  ESTO PARA CUANDO VEAMOS QUE TODO FUNCIONA
+    private String factorySqlQuery(Apartados apartado, Operacion op){
+
+        switch (apartado){
+            case PERSONAL:
+                switch (op){
+                    case SELECT:
+                        return "";
+                    break;
+                    case INSERT:
+                        return "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
+                    break;
+                    case UPDATE:
+                        return "";
+                    break;
+                    case DELETE:
+                        return "DELETE `persona` WHERE idPersona = ?";
+                    break;
+                }
+            break;
+            case DELEGACIONES:
+                switch (op){
+                    case SELECT:
+                        return "";
+                    break;
+                    case INSERT:
+                        return "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
+                    break;
+                    case UPDATE:
+                        return "";
+                    break;
+                    case DELETE:
+                        return "DELETE `persona` WHERE idPersona = ?";
+                    break;
+                }
+                break;
+            case PROYECTOS:
+                switch (op){
+                    case SELECT:
+                        return "";
+                    break;
+                    case INSERT:
+                        return "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
+                    break;
+                    case UPDATE:
+                        return "";
+                    break;
+                    case DELETE:
+                        return "DELETE `persona` WHERE idPersona = ?";
+                    break;
+                }
+                break;
+
+        }
+    }
+
+
+ */
 }
