@@ -4,10 +4,7 @@ import com.app.console.Apartados;
 import dao.DaoSql;
 import dao.DaoXML;
 import dao.SqlController;
-import logicaEmpresarial.Delegacion;
-import logicaEmpresarial.Persona;
-import logicaEmpresarial.Personal;
-import logicaEmpresarial.Usuario;
+import logicaEmpresarial.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,47 +39,42 @@ public class SqlControllerTest {
         Assert.assertThat(sqlDao.Login(user), CoreMatchers.is(false));
 
         //Test de creación DELEGACION.
-/*        Delegacion nuevoDelegacion = new Delegacion();
+          Delegacion nuevoDelegacion = new Delegacion();
         nuevoDelegacion.setNombre("PruebaDelegacion");
         nuevoDelegacion.setDireccion("EnAlgunLugar");
         nuevoDelegacion.setTelefono(null);
         Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
-*/
+
         // Parametros
         Date fecha = new Date(System.currentTimeMillis());
         Delegacion delegacion = new Delegacion();
 
         //Test de creación PERSONAL.
         Personal nuevoPersonal = new Personal();
-
         // de PERSONA
-        nuevoPersonal.setNif_dni("12312312A");
+       nuevoPersonal.setNif_dni("12312312A");
         nuevoPersonal.setNombre("NombreDePersona");
         nuevoPersonal.setFechaDeNacimiento(fecha);
         nuevoPersonal.setDomicilio("c/Calle nº1");
-
         nuevoPersonal.setFechaAlta(fecha);
         nuevoPersonal.setFechaBaja(null);
         nuevoPersonal.setEstado(true);
         Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
 
-        
-
-
-
         //Test de creación PROYECTO.
-/*        Delegacion nuevoDelegacion = new Delegacion();
-        nuevoDelegacion.setNombre("PruebaDelegacion");
-        nuevoDelegacion.setDireccion("EnAlgunLugar");
-        nuevoDelegacion.setTelefono(null);
-        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
-*/
+        Proyecto nuevoProyecto = new Proyecto();
+        nuevoProyecto.setFechaAlta(fecha);
+        nuevoProyecto.setFechaBaja(fecha);
+        nuevoProyecto.setNombre("ProyectoTest");
+        nuevoProyecto.setFechaDeInicio(fecha);
+        nuevoProyecto.setEstado(true);
+        Assert.assertThat(sqlDao.crear(nuevoProyecto,Apartados.PROYECTOS), CoreMatchers.is(true));
 
         //Test de creación USUARIO.
-/*        Delegacion nuevoDelegacion = new Delegacion();
-        nuevoDelegacion.setNombre("PruebaDelegacion");
-        nuevoDelegacion.setDireccion("EnAlgunLugar");
-        nuevoDelegacion.setTelefono(null);
-        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
-*/    }
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setIntRol(1);
+        nuevoUsuario.setNombre("PruebaUsuario");
+        nuevoUsuario.setPassword("1234");
+        Assert.assertThat(sqlDao.crear(nuevoUsuario,Apartados.USUARIOS), CoreMatchers.is(true));
+    }
 }

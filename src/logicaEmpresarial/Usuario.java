@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Usuario {
+
+
     public  enum tipoUsuarios{USUARIO,ADMINISTRADOR};
     private String nombre;
     private String hasing;
@@ -42,13 +44,14 @@ public class Usuario {
     public void setHasing(String hasing) { this.hasing = hasing;}
     public void setId(int id) { this.id = id; }
 
-    public String getHasing() {
+    public String getHashing() {
         if(hasing == null)
             return "";
         else
             return hasing;
     }
     public tipoUsuarios getRol() {return rol;}
+
     public String getRolString(){
         switch (rol){
             case ADMINISTRADOR:return "ADMINISTRADOR";
@@ -57,7 +60,6 @@ public class Usuario {
     }
     public int getId() {return id;}
 
-
     public void setIntRol(int e){
         switch (e){
             case 1: this.rol = tipoUsuarios.USUARIO;break;
@@ -65,6 +67,11 @@ public class Usuario {
         }
     }
 
-
+    public int getIntRol(){
+        switch (rol){
+            case ADMINISTRADOR: return 2;
+            default: return 1;
+        }
+    }
 
 }

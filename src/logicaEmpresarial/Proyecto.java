@@ -17,9 +17,8 @@ public  class Proyecto extends Personal {
     private String nombre;
     private Date fechaDeInicio;
     private boolean estado;
-    public Proyecto(){
 
-    }
+    public Proyecto(){ }
 
     public Proyecto(Date fechaAlta, Date fechaBaja,String nombre, Date fechaDeInicio, String delegacion, Tipo tipo, Boolean estado){
         this.fechaAlta = fechaAlta;
@@ -38,7 +37,6 @@ public  class Proyecto extends Personal {
             return "Nacional";
         else
             return "Internacional";
-
     }
     public Date getFechaDeInicio() {
         return fechaDeInicio;
@@ -50,7 +48,6 @@ public  class Proyecto extends Personal {
         return fechaBaja;
     }
     public boolean getEstado() { return estado;   }
-
 
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
@@ -65,6 +62,5 @@ public  class Proyecto extends Personal {
         this.fechaDeInicio = fechaDeInicio;
     }
     public void setEstado(boolean estado) { this.estado = estado; }
-
 
 }

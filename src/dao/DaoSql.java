@@ -2,6 +2,7 @@ package dao;
 
 import com.app.console.Apartados;
 import logicaEmpresarial.*;
+import dao.SqlController.*;
 
 import javax.print.DocFlavor;
 import java.lang.invoke.SwitchPoint;
@@ -20,6 +21,15 @@ public class DaoSql implements IDao {
     public DaoSql(SqlController controller) {
         this.controlerSql = controller;
         pilaDatosGenerales = new Ong();
+    }
+
+    public void XMLaSQL(){
+        
+        // accede a la ruta sql
+        // si no se encuentra BBDD SQL...
+        if (true){
+            // la importa desde el XML
+        }
     }
 
     @Override
@@ -59,11 +69,11 @@ public class DaoSql implements IDao {
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
         final String SQL_INSERT_PERSONAL = "INSERT INTO personal (fechaAlta,fechaBaja,estado)VALUES(?,?,?)";
-        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre`,`FechaNacimiento`,`Domicilio`)VALUES(?,?,?,?,?)";
+        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?)";
         //*a La tabla Personal le falta un id Delegación.
-        final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
-        final String SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
-        final String SQL_INSERT_USUARIO = "INSERT INTO `usuario(`tipoUsuarios`,`nombre`,`hasing`,`rol`)VALUES(?,?,?,?,?);";
+        final String SQL_INSERT_DELEGACION = "INSERT INTO delegacion(nombre,direccion,telefono)VALUES(?,?,?)";
+        final String SQL_INSERT_PROYECTOS = "INSERT INTO proyecto(fechaAlta,fechaBaja,nombre,fechaInicio,estado)VALUES(?,?,?,?,?)";
+        final String SQL_INSERT_USUARIO = "INSERT INTO usuario(tipoUsuario,nombre,hashing)VALUES(?,?,?)";
 
         //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
         //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
@@ -82,7 +92,7 @@ public class DaoSql implements IDao {
                 cadenaSql = SQL_INSERT_DELEGACION;
                 break;
             case PROYECTOS:
-                cadenaSql = SQL_INSERT_PROYECTO;
+                cadenaSql = SQL_INSERT_PROYECTOS;
                 break;
             case USUARIOS:
                 cadenaSql = SQL_INSERT_USUARIO;
@@ -90,7 +100,6 @@ public class DaoSql implements IDao {
             default:
                 return false;
         }
-
 
         //Seteamos los valores
         ArrayList<Object> valores = new ArrayList<>();
@@ -110,7 +119,6 @@ public class DaoSql implements IDao {
                 break;
             case PROYECTOS:
                 //TODO
-                valores.add(((Proyecto)item).getId());
                 valores.add(((Proyecto)item).getFechaAlta());
                 valores.add(((Proyecto)item).getFechaBaja());
                 valores.add(((Proyecto)item).getNombre());
@@ -125,10 +133,10 @@ public class DaoSql implements IDao {
                 break;
             case USUARIOS:
                 //TODO
+                valores.add(((Usuario)item).getIntRol());
                 valores.add(((Usuario)item).getNombre());
-                valores.add(((Usuario)item).getHasing());
-                valores.add(((Usuario)item).getRol());
-                valores.add(((Usuario)item).getId());
+                valores.add(((Usuario)item).getHashing());
+
                 break;
             default:
                 return false;
@@ -294,7 +302,7 @@ public class DaoSql implements IDao {
 
        try{
            ps = controlerSql.getConecction().prepareStatement(sql);
-           ps.setString(1, user.getHasing());
+           ps.setString(1, user.getHashing());
            rs = ps.executeQuery();
            if(rs.next()) {
                Usuario readSqlUser = (Usuario) create(rs, Apartados.USUARIOS);

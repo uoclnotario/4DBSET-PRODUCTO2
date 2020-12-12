@@ -157,7 +157,7 @@ public class DaoXML implements IDao {
             return true;
         }else{
             for(Usuario us:pilaDatosGenerales.getUsuarios()){
-                if(us.getHasing().length() > 0 && us.getHasing().equals(user.getHasing()))
+                if(us.getHashing().length() > 0 && us.getHashing().equals(user.getHashing()))
                 {
                     user.setRol(us.getRol());
                     return true;

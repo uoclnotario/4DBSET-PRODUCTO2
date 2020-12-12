@@ -60,7 +60,7 @@ public class Usuario_vista implements Vista {
     public void MostrarDato(Usuario usuario) {
         System.out.println("");
         System.out.println("Nombre:\t" + usuario.getNombre());
-        System.out.println("Hasing:\t" + usuario.getHasing());
+        System.out.println("Hasing:\t" + usuario.getHashing());
         System.out.println("Rol:\t" + usuario.getRol());
     }
     @Override
