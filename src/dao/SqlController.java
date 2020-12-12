@@ -4,6 +4,7 @@ import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.List;
 
 
 public class SqlController {
@@ -20,6 +21,8 @@ public class SqlController {
         this.user= user;
         this.pass= pass;
         this.dbName = dbName;
+        compobarDBname();
+
     }
 
     public Exception getErrores() {
@@ -103,30 +106,27 @@ public class SqlController {
 
 
     //Retorna -1 en caso de que ocurra un error o no se genere la cadena.
-    public int ejecutar(String sqlString, ArrayList<Object> valores){
+    public int ejecutar(String sqlString, List<Object> valores){
         try{
             Class.forName(driverMysql);
             conn = DriverManager.getConnection(cadenaConexion,user,pass);
-            Class.forName(driverMysql);
-            conn = DriverManager.getConnection(cadenaConexion,user,pass);
-
 
             if(!conn.isClosed()){
                     try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
 
                         //Se recorre el bucle y se inserta el tipo de valor.
                         int index = 1;
-                        for(Object e:valores){
-                            if(e instanceof Integer){
-                                stmt.setInt(index,(Integer)e);
-                            }else if(e instanceof String){
-                                stmt.setString(index,(String)e);
-                            }else if(e instanceof Boolean){
-                                stmt.setBoolean(index,(Boolean)e);
-                            }else if(e instanceof Float) {
-                                stmt.setFloat(index, (Float) e);
-                            }else if(e instanceof Date) {
-                                stmt.setDate(index,(Date) e);
+                        for(Integer i = 0; i<valores.size();i++){
+                            if(valores.get(i) instanceof Integer){
+                                stmt.setInt(index,(Integer)valores.get(i));
+                            }else if(valores.get(i) instanceof String){
+                                stmt.setString(index,(String)valores.get(i));
+                            }else if(valores.get(i) instanceof Boolean){
+                                stmt.setBoolean(index,(Boolean)valores.get(i));
+                            }else if(valores.get(i) instanceof Float) {
+                                stmt.setFloat(index, (Float) valores.get(i));
+                            }else if(valores.get(i) instanceof java.sql.Date) {
+                                stmt.setDate(index,(Date) valores.get(i));
                             }else{
                                 //Deberiamos de tirar errro por que algo falla;
                                 stmt.setNull(index,0);
@@ -201,6 +201,22 @@ public class SqlController {
         }
     }
 
-
-
+    public boolean compobarDBname(){
+        try{
+            Class.forName(driverMysql);
+            conn = DriverManager.getConnection(cadenaConexion,user,pass);
+            if(!conn.isClosed()){
+                return  true;
+            }else {
+                return false;
+            }
+        } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (SQLException throwables)
+                {
+                       System.out.println(throwables.getErrorCode() + " mensaje:" + throwables.getMessage());
+                        return false;
+                }
+    }
 }
