@@ -57,7 +57,8 @@ public class DaoSql implements IDao {
         //Asi es como se deberia de hacer para escribir en limpio:
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL ="INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (id,fechaAlta,fechaBaja,estado,delegacion,proyecto)VALUES(?,?,?,?,?,?)";
+        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre`,`FechaNacimiento`,`Domicilio`)VALUES(?,?,?,?,?)";
         //*a La tabla Personal le falta un id Delegación.
         final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
         final String SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
@@ -69,9 +70,12 @@ public class DaoSql implements IDao {
         //Creación de variables dependiendo del apartado:
         String cadenaSql;
 
+        String cadenaSql2 = "";
+
         switch (apartado) {
             case PERSONAL:
                 cadenaSql = SQL_INSERT_PERSONAL;
+                cadenaSql2 = SQL_INSERT_PERSONA;
                 break;
             case DELEGACIONES:
                 cadenaSql = SQL_INSERT_DELEGACION;
@@ -89,15 +93,31 @@ public class DaoSql implements IDao {
 
         //Seteamos los valores
         ArrayList<Object> valores = new ArrayList<>();
+        ArrayList<Object> valores2 = new ArrayList<>(); // PERSONA
 
         switch (apartado) {
             case PERSONAL:
-                //TODO
-
+                valores.add(((Personal)item).getId());
+                valores.add(((Personal)item).getFechaAlta());
+                valores.add(((Personal)item).getFechaBaja());
+                valores.add(((Personal)item).getEstado());
+                valores.add(((Personal)item).getDelegacion());
+                valores.add(((Personal)item).getProyecto());
+                // PERSONA
+                valores2.add(((Persona)item).getNif_dni());
+                valores2.add(((Persona)item).getNombre());
+                valores2.add(((Persona)item).getFechaDeNacimiento());
+                valores2.add(((Persona)item).getDomicilio());
+                valores2.add(((Persona)item).getTipo());
                 break;
             case PROYECTOS:
                 //TODO
-
+                valores.add(((Proyecto)item).getId());
+                valores.add(((Proyecto)item).getFechaAlta());
+                valores.add(((Proyecto)item).getFechaBaja());
+                valores.add(((Proyecto)item).getNombre());
+                valores.add(((Proyecto)item).getFechaDeInicio());
+                valores.add(((Proyecto)item).getEstado());
                 break;
             case DELEGACIONES:
                 //TODO
@@ -107,18 +127,24 @@ public class DaoSql implements IDao {
                 break;
             case USUARIOS:
                 //TODO
-
+                valores.add(((Usuario)item).getNombre());
+                valores.add(((Usuario)item).getHasing());
+                valores.add(((Usuario)item).getRol());
+                valores.add(((Usuario)item).getId());
                 break;
             default:
                 return false;
-
         }
 
-
-
         if(valores.size()>0) {
-            int ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
-
+            int ejecucion;
+            if(apartado == Apartados.PERSONAL){
+                ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
+                ejecucion =  controlerSql.ejecutar(cadenaSql2, valores2);
+            }
+            else{
+                ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
+            }
 
             //Ejecugamos la sentencia
             if ( ejecucion > 0)
