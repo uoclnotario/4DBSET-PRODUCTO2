@@ -3,6 +3,8 @@ package dao;
 import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
+import java.sql.Date;
+
 
 public class SqlController {
     private String cadenaConexion = "";
@@ -121,8 +123,10 @@ public class SqlController {
                                 stmt.setString(index,(String)e);
                             }else if(e instanceof Boolean){
                                 stmt.setBoolean(index,(Boolean)e);
-                            }else if(e instanceof Float){
-                                stmt.setFloat(index,(Float)e);
+                            }else if(e instanceof Float) {
+                                stmt.setFloat(index, (Float) e);
+                            }else if(e instanceof Date) {
+                                stmt.setDate(index,(Date) e);
                             }else{
                                 //Deberiamos de tirar errro por que algo falla;
                                 stmt.setNull(index,0);

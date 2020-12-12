@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DaoSql implements IDao {
     private  enum Operacion{SELECT, UPDATE,DELETE, INSERT}
     private SqlController controlerSql;
@@ -57,7 +58,7 @@ public class DaoSql implements IDao {
         //Asi es como se deberia de hacer para escribir en limpio:
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (id,fechaAlta,fechaBaja,estado,delegacion,proyecto)VALUES(?,?,?,?,?,?)";
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (fechaAlta,fechaBaja,estado)VALUES(?,?,?)";
         final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre`,`FechaNacimiento`,`Domicilio`)VALUES(?,?,?,?,?)";
         //*a La tabla Personal le falta un id Delegación.
         final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
@@ -97,12 +98,9 @@ public class DaoSql implements IDao {
 
         switch (apartado) {
             case PERSONAL:
-                valores.add(((Personal)item).getId());
                 valores.add(((Personal)item).getFechaAlta());
                 valores.add(((Personal)item).getFechaBaja());
                 valores.add(((Personal)item).getEstado());
-                valores.add(((Personal)item).getDelegacion());
-                valores.add(((Personal)item).getProyecto());
                 // PERSONA
                 valores2.add(((Persona)item).getNif_dni());
                 valores2.add(((Persona)item).getNombre());
@@ -140,7 +138,7 @@ public class DaoSql implements IDao {
             int ejecucion;
             if(apartado == Apartados.PERSONAL){
                 ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
-                ejecucion =  controlerSql.ejecutar(cadenaSql2, valores2);
+//                ejecucion =  controlerSql.ejecutar(cadenaSql2, valores2);
             }
             else{
                 ejecucion =  controlerSql.ejecutar(cadenaSql, valores);

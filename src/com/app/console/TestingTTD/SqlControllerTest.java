@@ -14,9 +14,11 @@ import org.junit.Test;
 
 import java.util.Date;
 import java.sql.ResultSet;
+import java.util.Date;
 
 
 public class SqlControllerTest {
+
 
     @Test
     public void testCrear() throws Exception{
@@ -46,15 +48,47 @@ public class SqlControllerTest {
         Assert.assertThat(sqlDao.Login(user), CoreMatchers.is(false));
 
         //Test de creación DELEGACION.
-
-        Delegacion nuevo= new Delegacion();
-
-        nuevo.setNombre("PruebaDelegacion");
-        nuevo.setDireccion("EnAlgunLugar");
-        nuevo.setTelefono(null);
-
-        Assert.assertThat(sqlDao.crear(nuevo,Apartados.DELEGACIONES), CoreMatchers.is(true));
+/*        Delegacion nuevoDelegacion = new Delegacion();
+        nuevoDelegacion.setNombre("PruebaDelegacion");
+        nuevoDelegacion.setDireccion("EnAlgunLugar");
+        nuevoDelegacion.setTelefono(null);
+        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
 */
-    }
+        // Parametros
+        Date fecha = new Date(System.currentTimeMillis());
+        Delegacion delegacion = new Delegacion();
 
+        //Test de creación PERSONAL.
+        Personal nuevoPersonal = new Personal();
+
+        // de PERSONA
+        nuevoPersonal.setNif_dni("12312312A");
+        nuevoPersonal.setNombre("NombreDePersona");
+        nuevoPersonal.setFechaDeNacimiento(fecha);
+        nuevoPersonal.setDomicilio("c/Calle nº1");
+
+        nuevoPersonal.setFechaAlta(fecha);
+        nuevoPersonal.setFechaBaja(null);
+        nuevoPersonal.setEstado(true);
+        Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
+
+        
+
+
+
+        //Test de creación PROYECTO.
+/*        Delegacion nuevoDelegacion = new Delegacion();
+        nuevoDelegacion.setNombre("PruebaDelegacion");
+        nuevoDelegacion.setDireccion("EnAlgunLugar");
+        nuevoDelegacion.setTelefono(null);
+        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
+*/
+
+        //Test de creación USUARIO.
+/*        Delegacion nuevoDelegacion = new Delegacion();
+        nuevoDelegacion.setNombre("PruebaDelegacion");
+        nuevoDelegacion.setDireccion("EnAlgunLugar");
+        nuevoDelegacion.setTelefono(null);
+        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
+*/    }
 }
