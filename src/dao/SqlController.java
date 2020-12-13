@@ -25,14 +25,16 @@ public class SqlController {
 
     }
 
+    public Object getValNull(java.sql.Date val){
+        if(val == null) return "'DATENULL'";
+        return val;
+    }
+
+
+
     public Exception getErrores() {
         return errores;
     }
-
-    /* PARA IMPEDIR EL INJECTION SQL HAY QUE SUSTITUIR LOS STRING DE CADENA POR PREPARESTATMENT.
-    *
-    * */
-
     public boolean update(String sqlString){
         Connection conn = null;
         try{
@@ -55,6 +57,7 @@ public class SqlController {
             return false;
         }finally{
             try {
+
                 if (conn != null)
                     conn.close();
 
@@ -68,67 +71,49 @@ public class SqlController {
         return false;
     }
 
-    public  PreparedStatement getPrepare(String sqlString){
+
+    public int ejecutar(String sqlString, ArrayList<Object> valores, boolean manualCommit, boolean commitFinall){
         try{
-            Class.forName(driverMysql);
-            conn = DriverManager.getConnection(cadenaConexion,user,pass);
 
-            if(!conn.isClosed()){
-                try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
-                  return stmt;
+            if(!manualCommit){
 
-                }catch (Exception e){
-                    errores = e;
-                    return  null;
+                Class.forName(driverMysql);
+                conn = DriverManager.getConnection(cadenaConexion,user,pass);
+            }else{
+                if(conn.isClosed()){
+                    Class.forName(driverMysql);
+                    conn = DriverManager.getConnection(cadenaConexion,user,pass);
+                }
+
+                if(conn.getAutoCommit()){
+                    conn.setAutoCommit(false);
                 }
             }
-        }catch ( Exception e){
-            //Error de conexión
-            System.out.println(e);
-            errores = e;
-            return null;
-        }finally{
-            try {
-                if (conn != null)
-                    conn.close();
 
-            }catch (SQLException e){
-                //Fallo al cerrar la conexión.
-                System.out.println(e.getMessage());
-                errores = e;
-                return null;
-            }
-        }
-        return null;
-
-
-    }
-
-
-    //Retorna -1 en caso de que ocurra un error o no se genere la cadena.
-    public int ejecutar(String sqlString, List<Object> valores){
-        try{
-            Class.forName(driverMysql);
-            conn = DriverManager.getConnection(cadenaConexion,user,pass);
 
             if(!conn.isClosed()){
                     try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
 
                         //Se recorre el bucle y se inserta el tipo de valor.
                         int index = 1;
-                        for(Integer i = 0; i<valores.size();i++){
-                            if(valores.get(i) instanceof Integer){
-                                stmt.setInt(index,(Integer)valores.get(i));
-                            }else if(valores.get(i) instanceof String){
-                                stmt.setString(index,(String)valores.get(i));
-                            }else if(valores.get(i) instanceof Boolean){
-                                stmt.setBoolean(index,(Boolean)valores.get(i));
-                            }else if(valores.get(i) instanceof Float) {
-                                stmt.setFloat(index, (Float) valores.get(i));
-                            }else if(valores.get(i) instanceof java.sql.Date) {
-                                stmt.setDate(index,(Date) valores.get(i));
+
+                        for(Object e:valores){
+                            if(e instanceof Integer){
+                                stmt.setInt(index,(Integer)e);
+                            }else if(e instanceof String){
+                                //Si es DATE NULL
+                                if(e.equals("'DATENULL'"))
+                                    stmt.setNull(index, Types.DATE);
+                                else
+                                    stmt.setString(index,(String)e);
+
+                            }else if(e instanceof Boolean){
+                                stmt.setBoolean(index,(Boolean)e);
+                            }else if(e instanceof Float) {
+                                stmt.setFloat(index, (Float)e);
+                            } else if(e instanceof java.sql.Date) {
+                                stmt.setDate(index,(Date)e);
                             }else{
-                                //Deberiamos de tirar errro por que algo falla;
                                 stmt.setNull(index,0);
                             }
                             index++;
@@ -163,8 +148,15 @@ public class SqlController {
             return -1;
         }finally{
             try {
-                if (conn != null)
-                    conn.close();
+                    if (conn != null){
+
+                        if(commitFinall)
+                            conn.commit();
+
+                        if(!manualCommit ||(manualCommit && commitFinall))
+                            conn.close();
+
+                    }
 
             }catch (SQLException e){
                 //Fallo al cerrar la conexión.
@@ -176,6 +168,42 @@ public class SqlController {
         return -1;
     }
 
+    public int ejecutar(PreparedStatement stmt){
+        try{
+                if(stmt.executeUpdate() > 0 ){
+                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            System.out.println(generatedKeys.getInt(1));
+                            return generatedKeys.getInt(1);
+                        }
+                        else {
+                            throw new SQLException("Creating user failed, no ID obtained.");
+                        }
+                    }
+
+                }else{
+                    errores = new Exception("No se creo ningun elemento");
+                    return -1;
+                }
+
+        }catch ( Exception e){
+            //Error de conexión
+            System.out.println(e);
+            errores = e;
+            return -1;
+        }finally{
+            try {
+                if (conn != null)
+                    conn.close();
+
+            }catch (SQLException e){
+                //Fallo al cerrar la conexión.
+                System.out.println(e.getMessage());
+                errores = e;
+                return -1;
+            }
+        }
+    }
     public Connection getConecction(){
         try{
             Class.forName(driverMysql);
@@ -188,7 +216,6 @@ public class SqlController {
             return null;
         }
     }
-
     public void close(){
         try {
             if (conn != null)
@@ -200,7 +227,6 @@ public class SqlController {
             errores = e;
         }
     }
-
     public boolean compobarDBname(){
         try{
             Class.forName(driverMysql);

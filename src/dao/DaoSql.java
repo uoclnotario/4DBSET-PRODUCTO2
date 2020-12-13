@@ -58,57 +58,57 @@ public class DaoSql implements IDao {
         //Asi es como se deberia de hacer para escribir en limpio:
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (fechaAlta,fechaBaja,estado)VALUES(?,?,?)";
-        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre`,`FechaNacimiento`,`Domicilio`)VALUES(?,?,?,?,?)";
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (fechaAlta,fechaBaja,estado)VALUES(?,?,?);";
+        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
         //*a La tabla Personal le falta un id Delegación.
         final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
         final String SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
         final String SQL_INSERT_USUARIO = "INSERT INTO `usuario(`tipoUsuarios`,`nombre`,`hasing`,`rol`)VALUES(?,?,?,?,?);";
 
-        //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
-        //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
-
-        //Creación de variables dependiendo del apartado:
-        String cadenaSql;
-
-        String cadenaSql2 = "";
+        //Seteamos los valores
+        ArrayList<Object> valores = new ArrayList<>();
+        
 
         switch (apartado) {
             case PERSONAL:
-                cadenaSql = SQL_INSERT_PERSONAL;
-                cadenaSql2 = SQL_INSERT_PERSONA;
-                break;
-            case DELEGACIONES:
-                cadenaSql = SQL_INSERT_DELEGACION;
-                break;
-            case PROYECTOS:
-                cadenaSql = SQL_INSERT_PROYECTO;
-                break;
-            case USUARIOS:
-                cadenaSql = SQL_INSERT_USUARIO;
-                break;
+                //Inicia transaccion
+
+                 // PERSONA
+                valores = new ArrayList<>();
+                valores.add(((Persona)item).getIntTipo());
+                valores.add(((Persona)item).getNif_dni());
+                valores.add(((Persona)item).getNombre());
+                valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaDeNacimiento())));
+                valores.add(((Persona)item).getDomicilio());
+
+
+                if(controlerSql.ejecutar(SQL_INSERT_PERSONA,valores,true,false)<= 0){
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return  false;
+                }
+
+
+                //Crear datos Personal..
+                valores = new ArrayList<>();
+                valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaAlta())));
+                valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaBaja())));
+                valores.add(((Personal)item).getEstado());
+
+                if(controlerSql.ejecutar(SQL_INSERT_PERSONAL,valores,true,true)<= 0){
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return  false;
+                }
+
+                //Si nada fallo Retorna ok.
+                return true;
+
             default:
                 return false;
         }
 
-
-        //Seteamos los valores
-        ArrayList<Object> valores = new ArrayList<>();
-        ArrayList<Object> valores2 = new ArrayList<>(); // PERSONA
-
-        switch (apartado) {
-            case PERSONAL:
-                valores.add(((Personal)item).getFechaAlta());
-                valores.add(((Personal)item).getFechaBaja());
-                valores.add(((Personal)item).getEstado());
-                // PERSONA
-                valores2.add(((Persona)item).getNif_dni());
-                valores2.add(((Persona)item).getNombre());
-                valores2.add(((Persona)item).getFechaDeNacimiento());
-                valores2.add(((Persona)item).getDomicilio());
-                valores2.add(((Persona)item).getTipo());
-                break;
-            case PROYECTOS:
+     /*       case PROYECTOS:
                 //TODO
                 valores.add(((Proyecto)item).getId());
                 valores.add(((Proyecto)item).getFechaAlta());
@@ -129,11 +129,8 @@ public class DaoSql implements IDao {
                 valores.add(((Usuario)item).getHasing());
                 valores.add(((Usuario)item).getRol());
                 valores.add(((Usuario)item).getId());
-                break;
-            default:
-                return false;
-        }
 
+/*
         if(valores.size()>0) {
             int ejecucion;
             if(apartado == Apartados.PERSONAL){
@@ -159,7 +156,7 @@ public class DaoSql implements IDao {
         }else{
             return false;
         }
-
+*/
     }
 
     @Override
@@ -429,7 +426,13 @@ public class DaoSql implements IDao {
         return element;
     }
 
-
+    private static java.sql.Date convertSqlDate(java.util.Date uDate) {
+        if(uDate == null){
+            return null;
+        }
+        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+        return sDate;
+    }
 
 /*  ESTO PARA CUANDO VEAMOS QUE TODO FUNCIONA
     private String factorySqlQuery(Apartados apartado, Operacion op){

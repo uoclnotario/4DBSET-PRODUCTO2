@@ -24,13 +24,13 @@ public class SqlControllerTest {
     public void testCrear() throws Exception{
 
 
-        Assert.assertThat(new Date(System.currentTimeMillis()) instanceof Date, CoreMatchers.is(true));
+      //  Assert.assertThat(new Date(System.currentTimeMillis()) instanceof Date, CoreMatchers.is(true));
 
-        /*
+
         SqlController conexion = new SqlController("localhost","3306","4DBSET","root","1021");
-
         DaoSql sqlDao = new DaoSql(conexion);
-        //Usuario admin de prueba
+
+  /*       //Usuario admin de prueba
 
         Usuario user = new Usuario();
         user.setNombre("admin");
@@ -59,17 +59,8 @@ public class SqlControllerTest {
         Delegacion delegacion = new Delegacion();
 
         //Test de creación PERSONAL.
-        Personal nuevoPersonal = new Personal();
+        Personal nuevoPersonal = new Personal(fecha, fecha, true,"12312312A", "NombreDePersona", fecha, "c/Calle nº1", Persona.Tipo.FISICA);
 
-        // de PERSONA
-        nuevoPersonal.setNif_dni("12312312A");
-        nuevoPersonal.setNombre("NombreDePersona");
-        nuevoPersonal.setFechaDeNacimiento(fecha);
-        nuevoPersonal.setDomicilio("c/Calle nº1");
-
-        nuevoPersonal.setFechaAlta(fecha);
-        nuevoPersonal.setFechaBaja(null);
-        nuevoPersonal.setEstado(true);
         Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
 
         

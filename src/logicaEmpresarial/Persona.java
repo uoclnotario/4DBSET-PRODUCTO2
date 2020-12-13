@@ -45,6 +45,12 @@ public abstract class  Persona {
         return tipo;
     }
 
+    public int getIntTipo(){
+        switch (tipo){
+            case FISICA:return  0;
+            default: return 1;
+        }
+    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -65,4 +71,7 @@ public abstract class  Persona {
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
+
+
+
 }
