@@ -1,5 +1,6 @@
 package logicaEmpresarial;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.plaf.BorderUIResource;
 import java.util.Date;
 
@@ -10,6 +11,8 @@ public abstract class  Persona {
     private Date fechaDeNacimiento;
     private String domicilio;
     private Tipo tipo;
+    private Integer id;
+
 
     public Persona(){
 
@@ -52,6 +55,10 @@ public abstract class  Persona {
         }
     }
 
+    public Integer getPersonaId(){
+        return id;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -73,5 +80,7 @@ public abstract class  Persona {
     }
 
 
-
+    public void setPersonaId(Integer id){
+        this.id= id;
+    }
 }

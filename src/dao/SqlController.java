@@ -17,11 +17,13 @@ public class SqlController {
     private Connection conn = null;
 
     public SqlController(String host,String port,String dbName, String user, String pass){
-        this.cadenaConexion=String.format("jdbc:mysql://%s:%s/%s?useSSL=false", host, port, dbName);
         this.user= user;
         this.pass= pass;
         this.dbName = dbName;
-        compobarDBname();
+
+        this.cadenaConexion=String.format("jdbc:mysql://%s:%s/%s?useSSL=false", host, port, dbName);
+        compobarDBname(host,port);
+
 
     }
 
@@ -45,8 +47,9 @@ public class SqlController {
                         stmt.execute();
                         return true;
                     }catch (Exception e) {
-                    errores = e;
-                    return false;
+                        System.out.println(e);
+                        errores = e;
+                        return false;
                 }
             }
 
@@ -80,6 +83,11 @@ public class SqlController {
                 Class.forName(driverMysql);
                 conn = DriverManager.getConnection(cadenaConexion,user,pass);
             }else{
+                if(conn == null) {
+                    Class.forName(driverMysql);
+                    conn = DriverManager.getConnection(cadenaConexion, user, pass);
+                }
+
                 if(conn.isClosed()){
                     Class.forName(driverMysql);
                     conn = DriverManager.getConnection(cadenaConexion,user,pass);
@@ -227,7 +235,8 @@ public class SqlController {
             errores = e;
         }
     }
-    public boolean compobarDBname(){
+
+    public boolean compobarDBname(String host,String port){
         try{
             Class.forName(driverMysql);
             conn = DriverManager.getConnection(cadenaConexion,user,pass);
@@ -242,7 +251,146 @@ public class SqlController {
             } catch (SQLException throwables)
                 {
                        System.out.println(throwables.getErrorCode() + " mensaje:" + throwables.getMessage());
+                       if(throwables.getErrorCode() == 1049)
+                           return createDBName(host,port);
+
                         return false;
                 }
+    }
+
+
+    private boolean createDBName(String host,String port){
+
+        this.cadenaConexion=String.format("jdbc:mysql://%s:%s/?useSSL=false", host, port);
+        this.user= user;
+        this.pass= pass;
+
+        update("CREATE DATABASE 4DBSET;");
+        this.cadenaConexion=String.format("jdbc:mysql://%s:%s/%s?useSSL=false", host, port, dbName);
+        this.user= user;
+        this.pass= pass;
+        this.dbName = dbName;
+
+        update("CREATE TABLE IF NOT EXISTS `DELEGACION` (\n" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                        "  `nombre` VARCHAR(45) NOT NULL,\n" +
+                        "  `direccion` VARCHAR(150) NULL,\n" +
+                        "  `telefono` VARCHAR(9) NULL,\n" +
+                        "  PRIMARY KEY (`id`))\n" +
+                        "ENGINE = InnoDB;" );
+
+        update("CREATE TABLE IF NOT EXISTS `PERSONA` (\n" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                        "  `tipoPersona` VARCHAR(45) NOT NULL,\n" +
+                        "  `nif_dni` VARCHAR(45) NOT NULL,\n" +
+                        "  `nombre` VARCHAR(45) NOT NULL,\n" +
+                        "  `fechaNacimiento` DATE NULL,\n" +
+                        "  `domicilio` VARCHAR(45) NULL,\n" +
+                        "  PRIMARY KEY (`id`))\n" +
+                        "ENGINE = InnoDB;" );
+
+        update("CREATE TABLE IF NOT EXISTS `PROYECTOS` (\n" +
+                "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                "  `fechaAlta` DATE NOT NULL,\n" +
+                "  `fechaBaja` DATE NOT NULL,\n" +
+                "  `nombre` VARCHAR(45) NOT NULL,\n" +
+                "  `fechaDeInicio` DATE NOT NULL,\n" +
+                "  `estado` BIT(1) NOT NULL,\n" +
+                "  `idDelegacion` INT NULL,\n" +
+                "  PRIMARY KEY (`id`),\n" +
+                "  INDEX `fk_PROYECTOS_DELEGACION1_idx` (`idDelegacion` ASC) VISIBLE,\n" +
+                "  CONSTRAINT `fk_PROYECTOS_DELEGACION1`\n" +
+                "    FOREIGN KEY (`idDelegacion`)\n" +
+                "    REFERENCES `DELEGACION` (`id`)\n" +
+                "    ON DELETE NO ACTION\n" +
+                "    ON UPDATE NO ACTION)\n" +
+                "ENGINE = InnoDB;");
+
+        update( "CREATE TABLE IF NOT EXISTS `PERSONAL` (\n" +
+                "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                "  `fechaAlta` DATE NOT NULL,\n" +
+                "  `fechaBaja` DATE NOT NULL,\n" +
+                "  `estado` TINYINT NOT NULL,\n" +
+                "  `delegacion` INT NULL,\n" +
+                "  `proyecto` INT NULL,\n" +
+                "  `idDelegacion` INT NULL,\n" +
+                "  `idPersona` INT NULL,\n" +
+                "  `idProyecto` INT NULL,\n" +
+                "  PRIMARY KEY (`id`),\n" +
+                "  INDEX `fk_PERSONAL_DELEGACION1_idx` (`idDelegacion` ASC) VISIBLE,\n" +
+                "  INDEX `fk_PERSONAL_PERSONA1_idx` (`idPersona` ASC) VISIBLE,\n" +
+                "  INDEX `fk_PERSONAL_PROYECTOS1_idx` (`idProyecto` ASC) VISIBLE,\n" +
+                "  CONSTRAINT `fk_PERSONAL_DELEGACION1`\n" +
+                "    FOREIGN KEY (`idDelegacion`)\n" +
+                "    REFERENCES `DELEGACION` (`id`)\n" +
+                "    ON DELETE SET NULL\n" +
+                "    ON UPDATE SET NULL,\n" +
+                "  CONSTRAINT `fk_PERSONAL_PERSONA1`\n" +
+                "    FOREIGN KEY (`idPersona`)\n" +
+                "    REFERENCES `PERSONA` (`id`)\n" +
+                "    ON DELETE CASCADE\n" +
+                "    ON UPDATE CASCADE,\n" +
+                "  CONSTRAINT `fk_PERSONAL_PROYECTOS1`\n" +
+                "    FOREIGN KEY (`idProyecto`)\n" +
+                "    REFERENCES `PROYECTOS` (`id`)\n" +
+                "    ON DELETE SET NULL\n" +
+                "    ON UPDATE SET NULL)\n" +
+                "ENGINE = InnoDB;");
+
+        update("CREATE TABLE IF NOT EXISTS `CONTRATADOS` (\n" +
+                "  `idPersonal` INT NOT NULL,\n" +
+                "  `tipoContrato` VARCHAR(45) NOT NULL,\n" +
+                "  `salario` DECIMAL(2) NOT NULL,\n" +
+                "  PRIMARY KEY (`idPersonal`),\n" +
+                "  INDEX `fk_CONTRATADOS_PERSONAL1_idx` (`idPersonal` ASC) VISIBLE,\n" +
+                "  CONSTRAINT `fk_CONTRATADOS_PERSONAL1`\n" +
+                "    FOREIGN KEY (`idPersonal`)\n" +
+                "    REFERENCES `PERSONAL` (`id`)\n" +
+                "    ON DELETE CASCADE\n" +
+                "    ON UPDATE CASCADE)\n" +
+                "ENGINE = InnoDB;\n");
+        update("CREATE TABLE IF NOT EXISTS `COLABORADORES` (\n" +
+                "  `idPersonal` INT NOT NULL,\n" +
+                "  `tipoColaboracion` VARCHAR(45) NOT NULL,\n" +
+                "  PRIMARY KEY (`idPersonal`),\n" +
+                "  CONSTRAINT `fk_COLABORADORES_PERSONAL1`\n" +
+                "    FOREIGN KEY (`idPersonal`)\n" +
+                "    REFERENCES `PERSONAL` (`id`)\n" +
+                "    ON DELETE CASCADE\n" +
+                "    ON UPDATE CASCADE)\n" +
+                "ENGINE = InnoDB;\n");
+
+        update("CREATE TABLE IF NOT EXISTS `VOLUNTARIOS` (\n" +
+                "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                "  `idPersonal` INT NOT NULL,\n" +
+                "  `areaVoluntariado` VARCHAR(45) NOT NULL,\n" +
+                "  PRIMARY KEY (`id`, `idPersonal`),\n" +
+                "  INDEX `fk_VOLUNTARIOS_PERSONAL1_idx` (`idPersonal` ASC) VISIBLE,\n" +
+                "  CONSTRAINT `fk_VOLUNTARIOS_PERSONAL1`\n" +
+                "    FOREIGN KEY (`idPersonal`)\n" +
+                "    REFERENCES `PERSONAL` (`id`)\n" +
+                "    ON DELETE CASCADE\n" +
+                "    ON UPDATE CASCADE)\n" +
+                "ENGINE = InnoDB;");
+
+        update( "CREATE TABLE IF NOT EXISTS `VOLUNTARIOS INTERNACIONALES` (\n" +
+                "  `volunariosId` INT NOT NULL,\n" +
+                "  `pais` VARCHAR(45) NOT NULL,\n" +
+                "  PRIMARY KEY (`volunariosId`),\n" +
+                "  CONSTRAINT `fk_VOLUNTARIOS INTERNACIONALES_VOLUNTARIOS1`\n" +
+                "    FOREIGN KEY (`volunariosId`)\n" +
+                "    REFERENCES `VOLUNTARIOS` (`id`)\n" +
+                "    ON DELETE CASCADE\n" +
+                "    ON UPDATE CASCADE)\n" +
+                "ENGINE = InnoDB;");
+
+        update("CREATE TABLE IF NOT EXISTS `USUARIOS` (\n" +
+                "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                "  `nombre` VARCHAR(45) NOT NULL,\n" +
+                "  `tipoUsuario` INT NOT NULL,\n" +
+                "  `hashing` VARCHAR(20) NOT NULL,\n" +
+                "  PRIMARY KEY (`id`))\n" +
+                "ENGINE = InnoDB;");
+        return true;
     }
 }

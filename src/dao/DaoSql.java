@@ -58,16 +58,16 @@ public class DaoSql implements IDao {
         //Asi es como se deberia de hacer para escribir en limpio:
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (fechaAlta,fechaBaja,estado)VALUES(?,?,?);";
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (idPersona,fechaAlta,fechaBaja,estado)VALUES(?,?,?,?);";
         final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
-        //*a La tabla Personal le falta un id Delegación.
         final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
         final String SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
         final String SQL_INSERT_USUARIO = "INSERT INTO `usuario(`tipoUsuarios`,`nombre`,`hasing`,`rol`)VALUES(?,?,?,?,?);";
 
+
         //Seteamos los valores
         ArrayList<Object> valores = new ArrayList<>();
-        
+        Integer recogidaId;
 
         switch (apartado) {
             case PERSONAL:
@@ -81,16 +81,18 @@ public class DaoSql implements IDao {
                 valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaDeNacimiento())));
                 valores.add(((Persona)item).getDomicilio());
 
-
-                if(controlerSql.ejecutar(SQL_INSERT_PERSONA,valores,true,false)<= 0){
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONA,valores,true,false);
+                if(recogidaId<= 0){
                     existeError = true;
                     mensajeError = controlerSql.getErrores();
                     return  false;
                 }
+                ((Persona)item).setPersonaId(recogidaId);
 
 
                 //Crear datos Personal..
                 valores = new ArrayList<>();
+                valores.add(((Personal)item).getPersonaId());
                 valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaAlta())));
                 valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaBaja())));
                 valores.add(((Personal)item).getEstado());
