@@ -45,7 +45,7 @@ public abstract class  Persona {
         return tipo;
     }
 
-    public int getIntTipo(){
+    public Integer getIntTipo(){
         switch (tipo){
             case FISICA:return  0;
             default: return 1;

@@ -25,7 +25,7 @@ public class SqlController {
 
     }
 
-    public Object getValNull(java.sql.Date val){
+    public Object getValNull(Date val){
         if(val == null) return "'DATENULL'";
         return val;
     }
