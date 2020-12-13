@@ -68,6 +68,16 @@ public class SqlControllerTest {
         nuevoPersonal.setTipoContrato("Temporal");
         nuevoPersonal.setSalario(100f);
 
+
+        Delegacion nuevoDelegacion = new Delegacion();
+        nuevoDelegacion.setNombre("PruebaDelegacion");
+        nuevoDelegacion.setDireccion("EnAlgunLugar");
+        nuevoDelegacion.setTelefono(null);
+
+
+        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
+        nuevoPersonal.setDelegacion(nuevoDelegacion);
+
         Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
 
         

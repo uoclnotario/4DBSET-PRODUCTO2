@@ -58,7 +58,7 @@ public class DaoSql implements IDao {
         //Asi es como se deberia de hacer para escribir en limpio:
         //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (idPersona,fechaAlta,fechaBaja,estado)VALUES(?,?,?,?);";
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (idPersona,fechaAlta,fechaBaja,estado,idDelegacion,idProyecto)VALUES(?,?,?,?,?,?);";
         final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
         final String SQL_INSERT_DELEGACION = "INSERT INTO delegacion(nombre,direccion,telefono)VALUES(?,?,?);";
         final String SQL_INSERT_PROYECTO = "INSERT INTO proyecto(fechaAlta,fechaBaja,nombre,fechaInicio,estado)VALUES(?,?,?,?,?,?);";
@@ -103,6 +103,19 @@ public class DaoSql implements IDao {
                 valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaBaja())));
                 valores.add(((Personal)item).getEstado());
 
+                if(((Personal)item).getDelegacion() != null){
+                    valores.add(((Personal)item).getDelegacion().getId());
+                }else{
+                    valores.add(null);
+                }
+
+                if(((Personal)item).getProyecto() != null){
+                    valores.add(((Personal)item).getProyecto().getId());
+                }else{
+                    valores.add(null);
+                }
+
+
                 Boolean isSubtipo = false;
                 //Verificamos si es de un tipo especifico.
                 if (item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
@@ -110,6 +123,7 @@ public class DaoSql implements IDao {
                         item.getClass().getName().equals("logicaEmpresarial.Voluntarios") ||
                         item.getClass().getName().equals("logicaEmpresarial.VoluntariosInternacionales"))
                     isSubtipo = true;
+
 
 
                 recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONAL,valores,true,!isSubtipo,true);
@@ -175,62 +189,63 @@ public class DaoSql implements IDao {
                         //TODO update idProeycto y id delegacion si tienen
 
                 }
+
                 //Si nada fallo Retorna ok.
                 return true;
+            case USUARIOS:
+                valores.add(((Usuario)item).getNombre());
+                valores.add(((Usuario)item).getHasing());
+                valores.add(((Usuario)item).getRol());
+                valores.add(((Usuario)item).getId());
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO,valores,false,false,false);
+                if(recogidaId<= 0){
+                    controlerSql.realizarRoolback();
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return  false;
+                }else{
+                    ((Usuario)item).setId(recogidaId);
+                    return true;
+                }
 
-            default:
-                return false;
-        }
-
-     /*       case PROYECTOS:
-                //TODO
-                valores.add(((Proyecto)item).getId());
-                valores.add(((Proyecto)item).getFechaAlta());
-                valores.add(((Proyecto)item).getFechaBaja());
-                valores.add(((Proyecto)item).getNombre());
-                valores.add(((Proyecto)item).getFechaDeInicio());
-                valores.add(((Proyecto)item).getEstado());
-                break;
             case DELEGACIONES:
                 //TODO
                 valores.add(((Delegacion)item).getNombre());//Nombre
                 valores.add(((Delegacion)item).getDireccion());//Dirección
                 valores.add(((Delegacion)item).getTelefono());//Telefono
-                break;
-            case USUARIOS:
-                //TODO
-                valores.add(((Usuario)item).getNombre());
-                valores.add(((Usuario)item).getHasing());
-                valores.add(((Usuario)item).getRol());
-                valores.add(((Usuario)item).getId());
-
-/*
-        if(valores.size()>0) {
-            int ejecucion;
-            if(apartado == Apartados.PERSONAL){
-                ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
-//                ejecucion =  controlerSql.ejecutar(cadenaSql2, valores2);
-            }
-            else{
-                ejecucion =  controlerSql.ejecutar(cadenaSql, valores);
-            }
-
-            //Ejecugamos la sentencia
-            if ( ejecucion > 0)
-                return true;
-            else{
-                if(ejecucion == -1){
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION,valores,false,false,false);
+                if(recogidaId<= 0){
+                    controlerSql.realizarRoolback();
                     existeError = true;
                     mensajeError = controlerSql.getErrores();
-                    System.out.println(mensajeError);
+                    return  false;
+                }else{
+                    ((Delegacion)item).setId(recogidaId);
+                    return true;
                 }
 
+            case PROYECTOS:
+                //TODO
+                valores.add(((Proyecto)item).getId());
+                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto)item).getFechaAlta())));
+                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto)item).getFechaBaja())));
+                valores.add(((Proyecto)item).getNombre());
+                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto)item).getFechaDeInicio())));
+                valores.add(((Proyecto)item).getEstado());
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO,valores,false,false,false);
+                if(recogidaId<= 0){
+                    controlerSql.realizarRoolback();
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return  false;
+                }else{
+                    ((Proyecto)item).setId(recogidaId);
+                    return true;
+                }
+            default:
                 return false;
-            }
-        }else{
-            return false;
         }
-*/
+
     }
 
     @Override
@@ -317,10 +332,10 @@ public class DaoSql implements IDao {
     public boolean borrar(int indice, Apartados apartado) {
 
         String ident = String.valueOf(indice);
-        final String SQL_DELETE_PERSONAL    = "DELETE FROM persona WHERE idPersona = " + ident ;
-        final String SQL_DELETE_DELEGACION  = "DELETE FROM delegacion WHERE idDelegacion = " + ident ;
-        final String SQL_DELETE_PROYECTO    = "DELETE FROM proyecto WHERE id = " + ident ;
-        final String SQL_DELETE_USUARIO     = "DELETE FROM usuario WHERE id = " + ident ;
+        final String SQL_DELETE_PERSONAL    = "DELETE personal,persona FROM persona LEFT JOIN personal ON persona.id = personal.idPersona where personal.id = " + ident +";";
+        final String SQL_DELETE_DELEGACION  = "DELETE FROM delegacion WHERE idDelegacion = " + ident +";" ;
+        final String SQL_DELETE_PROYECTO    = "DELETE FROM proyecto WHERE id = " + ident +";";
+        final String SQL_DELETE_USUARIO     = "DELETE FROM usuario WHERE id = " + ident+ ";" ;
 
 
         System.out.println(SQL_DELETE_DELEGACION);
