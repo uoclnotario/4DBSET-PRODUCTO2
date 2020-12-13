@@ -4,10 +4,7 @@ import com.app.console.Apartados;
 import dao.DaoSql;
 import dao.DaoXML;
 import dao.SqlController;
-import logicaEmpresarial.Delegacion;
-import logicaEmpresarial.Persona;
-import logicaEmpresarial.Personal;
-import logicaEmpresarial.Usuario;
+import logicaEmpresarial.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,7 +56,17 @@ public class SqlControllerTest {
         Delegacion delegacion = new Delegacion();
 
         //Test de creación PERSONAL.
-        Personal nuevoPersonal = new Personal(fecha, fecha, true,"12312312A", "NombreDePersona", fecha, "c/Calle nº1", Persona.Tipo.FISICA);
+        Contratados nuevoPersonal = new Contratados();
+        nuevoPersonal.setTipo(Persona.Tipo.FISICA);
+        nuevoPersonal.setEstado(true);
+        nuevoPersonal.setFechaAlta(fecha);
+        nuevoPersonal.setFechaBaja(null);
+        nuevoPersonal.setNombre("prueba");
+        nuevoPersonal.setNif_dni("12345671c");
+        nuevoPersonal.setFechaDeNacimiento(fecha);
+
+        nuevoPersonal.setTipoContrato("Temporal");
+        nuevoPersonal.setSalario(100f);
 
         Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
 

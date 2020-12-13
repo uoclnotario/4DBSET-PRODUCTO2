@@ -75,7 +75,7 @@ public class SqlController {
     }
 
 
-    public int ejecutar(String sqlString, ArrayList<Object> valores, boolean manualCommit, boolean commitFinall){
+    public int ejecutar(String sqlString, ArrayList<Object> valores, boolean manualCommit, boolean commitFinall, boolean obtenerId){
         try{
 
             if(!manualCommit){
@@ -128,21 +128,28 @@ public class SqlController {
                         }
 
 
-                        if(stmt.executeUpdate() > 0 ){
-                            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                                if (generatedKeys.next()) {
-                                    System.out.println(generatedKeys.getInt(1));
-                                    return generatedKeys.getInt(1);
-                                }
-                                else {
-                                    throw new SQLException("Creating user failed, no ID obtained.");
-                                }
-                            }
 
+                        if(obtenerId){
+                            if(stmt.executeUpdate() > 0 ){
+
+                                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                                    if (generatedKeys.next()) {
+                                        System.out.println(generatedKeys.getInt(1));
+                                        return generatedKeys.getInt(1);
+                                    }
+                                    else {
+                                        throw new SQLException("Creating user failed, no ID obtained.");
+                                    }
+                                }
+
+                            }else{
+                                errores = new Exception("No se creo ningun elemento");
+                                return -1;
+                            }
                         }else{
-                            errores = new Exception("No se creo ningun elemento");
-                            return -1;
+                            return stmt.executeUpdate();
                         }
+
 
                     }catch (Exception e){
                         errores = e;
@@ -175,6 +182,8 @@ public class SqlController {
         }
         return -1;
     }
+
+
 
     public int ejecutar(PreparedStatement stmt){
         try{
@@ -210,6 +219,14 @@ public class SqlController {
                 errores = e;
                 return -1;
             }
+        }
+    }
+
+    public  void realizarRoolback(){
+        try{
+            conn.rollback();
+        }catch (Exception ex){
+
         }
     }
     public Connection getConecction(){
@@ -309,7 +326,7 @@ public class SqlController {
         update( "CREATE TABLE IF NOT EXISTS `PERSONAL` (\n" +
                 "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                 "  `fechaAlta` DATE NOT NULL,\n" +
-                "  `fechaBaja` DATE NOT NULL,\n" +
+                "  `fechaBaja` DATE NULL,\n" +
                 "  `estado` TINYINT NOT NULL,\n" +
                 "  `delegacion` INT NULL,\n" +
                 "  `proyecto` INT NULL,\n" +
@@ -339,8 +356,8 @@ public class SqlController {
 
         update("CREATE TABLE IF NOT EXISTS `CONTRATADOS` (\n" +
                 "  `idPersonal` INT NOT NULL,\n" +
-                "  `tipoContrato` VARCHAR(45) NOT NULL,\n" +
-                "  `salario` DECIMAL(2) NOT NULL,\n" +
+                "  `tipoContrato` VARCHAR(45) NULL,\n" +
+                "  `salario` FLOAT NULL,\n" +
                 "  PRIMARY KEY (`idPersonal`),\n" +
                 "  INDEX `fk_CONTRATADOS_PERSONAL1_idx` (`idPersonal` ASC) VISIBLE,\n" +
                 "  CONSTRAINT `fk_CONTRATADOS_PERSONAL1`\n" +
@@ -391,6 +408,8 @@ public class SqlController {
                 "  `hashing` VARCHAR(20) NOT NULL,\n" +
                 "  PRIMARY KEY (`id`))\n" +
                 "ENGINE = InnoDB;");
+
+
         return true;
     }
 }

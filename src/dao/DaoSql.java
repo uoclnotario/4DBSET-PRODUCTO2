@@ -60,10 +60,15 @@ public class DaoSql implements IDao {
 
         final String SQL_INSERT_PERSONAL = "INSERT INTO personal (idPersona,fechaAlta,fechaBaja,estado)VALUES(?,?,?,?);";
         final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
-        final String SQL_INSERT_DELEGACION = "INSERT INTO `delegacion`(`nombre`,`direccion`,`telefono`)VALUES(?,?,?);";
-        final String SQL_INSERT_PROYECTO = "INSERT INTO `proyecto(`fechaAlta`,`fechaBaja`,`nombre`,`fechaInicio`,`estado`)VALUES(?,?,?,?,?,?);";
-        final String SQL_INSERT_USUARIO = "INSERT INTO `usuario(`tipoUsuarios`,`nombre`,`hasing`,`rol`)VALUES(?,?,?,?,?);";
+        final String SQL_INSERT_DELEGACION = "INSERT INTO delegacion(nombre,direccion,telefono)VALUES(?,?,?);";
+        final String SQL_INSERT_PROYECTO = "INSERT INTO proyecto(fechaAlta,fechaBaja,nombre,fechaInicio,estado)VALUES(?,?,?,?,?,?);";
+        final String SQL_INSERT_USUARIO = "INSERT INTO usuario(tipoUsuarios,nombre,hasing,rol)VALUES(?,?,?,?,?);";
 
+        //Subentidades de PERSONAL
+        final String SQL_INSERT_COLABORADORES ="INSERT INTO colaboradores(idPersonal,tipoColaboracion)VALUES(?,?);";
+        final String SQL_INSERT_CONTRATADOS = "INSERT INTO contratados(idPersonal,tipoContrato,salario)VALUES(?,?,?);";
+        final String SQL_INSERT_VOLUNTARIOS=  "INSERT INTO voluntarios(idPersonal,areaVoluntariado)VALUES(?,?);";
+        final String SQL_INSERT_VOLUNTARIOSINTERNACIONALES=  "INSERT INTO `voluntarios internacionales`(`volunariosId`,`pais`)VALUES(?,?);";
 
         //Seteamos los valores
         ArrayList<Object> valores = new ArrayList<>();
@@ -81,8 +86,9 @@ public class DaoSql implements IDao {
                 valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaDeNacimiento())));
                 valores.add(((Persona)item).getDomicilio());
 
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONA,valores,true,false);
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONA,valores,true,false,true);
                 if(recogidaId<= 0){
+                    controlerSql.realizarRoolback();
                     existeError = true;
                     mensajeError = controlerSql.getErrores();
                     return  false;
@@ -97,12 +103,78 @@ public class DaoSql implements IDao {
                 valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaBaja())));
                 valores.add(((Personal)item).getEstado());
 
-                if(controlerSql.ejecutar(SQL_INSERT_PERSONAL,valores,true,true)<= 0){
+                Boolean isSubtipo = false;
+                //Verificamos si es de un tipo especifico.
+                if (item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
+                        item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
+                        item.getClass().getName().equals("logicaEmpresarial.Voluntarios") ||
+                        item.getClass().getName().equals("logicaEmpresarial.VoluntariosInternacionales"))
+                    isSubtipo = true;
+
+
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONAL,valores,true,!isSubtipo,true);
+                if(recogidaId<= 0){
+                    controlerSql.realizarRoolback();
                     existeError = true;
                     mensajeError = controlerSql.getErrores();
                     return  false;
                 }
+                ((Personal) item).setId((recogidaId));
 
+                if(isSubtipo){
+
+                        //Creación de datos del tipo de personal en las tablas hijas.
+                        switch (item.getClass().getName()) {
+                            case "logicaEmpresarial.Contratados":
+                                    valores = new ArrayList<>();
+                                    valores.add(((Personal)item).getId());
+                                    valores.add(((Contratados)item).getTipoContrato());
+                                    valores.add(((Contratados)item).getSalario());
+                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_CONTRATADOS,valores,true,true,false);
+                                break;
+                            case "logicaEmpresarial.Colaboradores":
+                                    valores = new ArrayList<>();
+                                    valores.add(((Personal)item).getId());
+                                    valores.add(((Colaboradores)item).getTipoColaboracion());
+                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_COLABORADORES,valores,true,true,false);
+                                break;
+                            case "logicaEmpresarial.Voluntarios":
+                                    valores = new ArrayList<>();
+                                    valores.add(((Personal)item).getId());
+                                    valores.add(((Voluntarios)item).getAreaVoluntariado());
+                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS,valores,true,true,false);
+                                break;
+                            case "logicaEmpresarial.Voluntariosinternacionales":
+                                valores = new ArrayList<>();
+                                valores.add(((Personal)item).getId());
+                                valores.add(((Voluntarios)item).getAreaVoluntariado());
+                                recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS,valores,true,false,true);
+                                if(recogidaId<= 0){
+                                    controlerSql.realizarRoolback();
+                                    existeError = true;
+                                    mensajeError = controlerSql.getErrores();
+                                    return  false;
+                                }else{
+                                    valores = new ArrayList<>();
+                                    valores.add(recogidaId);//id de voluntario
+                                    valores.add(((VoluntariosInternacionales)item).getPais());
+                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS,valores,true,true,false);
+                                }
+
+
+                                break;
+                        }
+
+                        if(recogidaId<= 0){
+                            controlerSql.realizarRoolback();
+                            existeError = true;
+                            mensajeError = controlerSql.getErrores();
+                            return  false;
+                        }
+
+                        //TODO update idProeycto y id delegacion si tienen
+
+                }
                 //Si nada fallo Retorna ok.
                 return true;
 
