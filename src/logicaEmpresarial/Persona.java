@@ -45,10 +45,14 @@ public abstract class  Persona {
     }
 
     public Tipo getTipo() {
+        if(tipo == null)
+            return Tipo.FISICA;
+
         return tipo;
     }
 
     public Integer getIntTipo(){
+        if(tipo == null)return 0;
         switch (tipo){
             case FISICA:return  0;
             default: return 1;
@@ -78,9 +82,17 @@ public abstract class  Persona {
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
-
+    public void setIntTipo(int tipo){
+        if(tipo == 0){
+            this.tipo = Tipo.FISICA;
+        }else{
+            this.tipo = Tipo.JURIDICA;
+        }
+    }
 
     public void setPersonaId(Integer id){
         this.id= id;
     }
+
+
 }

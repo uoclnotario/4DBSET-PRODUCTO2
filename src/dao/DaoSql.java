@@ -25,20 +25,26 @@ public class DaoSql implements IDao {
     @Override
     public boolean descargaDatos(Apartados apartados) {
 
-
-        return recoger(apartados);
-    /*
+        pilaDatosGenerales = new Ong();
 
         if (recoger(Apartados.DELEGACIONES) &&
                 recoger(Apartados.PROYECTOS) &&
                 recoger(Apartados.PERSONAL) &&
                 recoger(Apartados.USUARIOS)) {
-            //TODO RECORRER PERSONAL Y ANIDAR RELACIONES.
+
+
+          /*
+            if(pilaDatosGenerales.getDelegaciones().size() > 0){
+                for(Delegacion de: pilaDatosGenerales.getUsuarios()){
+
+                }
+            }
+          */
+
             return true;
+        }else{
+            return false;
         }
-
-     */
-
     }
 
     @Override
@@ -55,14 +61,12 @@ public class DaoSql implements IDao {
 
     @Override
     public boolean crear(Object item, Apartados apartado) {
-        //Asi es como se deberia de hacer para escribir en limpio:
-        //estas variables son constantes y queda mejor que nos la llevemos a otra parte del codigo auqnue de momento las dejo por aqui
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (idPersona,fechaAlta,fechaBaja,estado,idDelegacion,idProyecto)VALUES(?,?,?,?,?,?);";
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (tipo,idPersona,fechaAlta,fechaBaja,estado,idDelegacion,idProyecto)VALUES(?,?,?,?,?,?,?);";
         final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
         final String SQL_INSERT_DELEGACION = "INSERT INTO delegacion(nombre,direccion,telefono)VALUES(?,?,?);";
-        final String SQL_INSERT_PROYECTO = "INSERT INTO proyecto(fechaAlta,fechaBaja,nombre,fechaInicio,estado)VALUES(?,?,?,?,?,?);";
-        final String SQL_INSERT_USUARIO = "INSERT INTO usuario(tipoUsuarios,nombre,hasing,rol)VALUES(?,?,?,?,?);";
+        final String SQL_INSERT_PROYECTO = "INSERT INTO proyectos(fechaAlta,fechaBaja,nombre,estado)VALUES(?,?,?,?);";
+        final String SQL_INSERT_USUARIO = "INSERT INTO usuarios (tipoUsuario,nombre,hashing)VALUES(?,?,?);";
 
         //Subentidades de PERSONAL
         final String SQL_INSERT_COLABORADORES ="INSERT INTO colaboradores(idPersonal,tipoColaboracion)VALUES(?,?);";
@@ -74,178 +78,178 @@ public class DaoSql implements IDao {
         ArrayList<Object> valores = new ArrayList<>();
         Integer recogidaId;
 
-        switch (apartado) {
-            case PERSONAL:
-                //Inicia transaccion
+            switch (apartado) {
+                case PERSONAL:
+                    //Inicia transaccion
 
-                 // PERSONA
-                valores = new ArrayList<>();
-                valores.add(((Persona)item).getIntTipo());
-                valores.add(((Persona)item).getNif_dni());
-                valores.add(((Persona)item).getNombre());
-                valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaDeNacimiento())));
-                valores.add(((Persona)item).getDomicilio());
-
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONA,valores,true,false,true);
-                if(recogidaId<= 0){
-                    controlerSql.realizarRoolback();
-                    existeError = true;
-                    mensajeError = controlerSql.getErrores();
-                    return  false;
-                }
-                ((Persona)item).setPersonaId(recogidaId);
-
-
-                //Crear datos Personal..
-                valores = new ArrayList<>();
-                valores.add(((Personal)item).getPersonaId());
-                valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaAlta())));
-                valores.add(controlerSql.getValNull(convertSqlDate(((Personal)item).getFechaBaja())));
-                valores.add(((Personal)item).getEstado());
-
-                if(((Personal)item).getDelegacion() != null){
-                    valores.add(((Personal)item).getDelegacion().getId());
-                }else{
-                    valores.add(null);
-                }
-
-                if(((Personal)item).getProyecto() != null){
-                    valores.add(((Personal)item).getProyecto().getId());
-                }else{
-                    valores.add(null);
-                }
-
-
-                Boolean isSubtipo = false;
-                //Verificamos si es de un tipo especifico.
-                if (item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
-                        item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
-                        item.getClass().getName().equals("logicaEmpresarial.Voluntarios") ||
-                        item.getClass().getName().equals("logicaEmpresarial.VoluntariosInternacionales"))
-                    isSubtipo = true;
+                    // PERSONA
+                    valores = new ArrayList<>();
+                    valores.add(((Personal) item).getIntTipo());
+                    valores.add(((Personal) item).getNif_dni());
+                    valores.add(((Personal) item).getNombre());
+                    valores.add(controlerSql.getValNull(convertSqlDate(((Personal) item).getFechaDeNacimiento())));
+                    valores.add(((Personal) item).getDomicilio());
 
 
 
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONAL,valores,true,!isSubtipo,true);
-                if(recogidaId<= 0){
-                    controlerSql.realizarRoolback();
-                    existeError = true;
-                    mensajeError = controlerSql.getErrores();
-                    return  false;
-                }
-                ((Personal) item).setId((recogidaId));
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONA, valores, true, false, true);
 
-                if(isSubtipo){
+                    if (recogidaId <= 0) {
+                        controlerSql.realizarRoolback();
+                        existeError = true;
+                        mensajeError = controlerSql.getErrores();
+                        return false;
+                    }
+                    ((Persona) item).setPersonaId(recogidaId);
+
+
+                    //Crear datos Personal..
+                    valores = new ArrayList<>();
+                    valores.add(((Personal) item).getIntTIpo());
+                    valores.add(((Personal) item).getPersonaId());
+                    valores.add(controlerSql.getValNull(convertSqlDate(((Personal) item).getFechaAlta())));
+                    valores.add(controlerSql.getValNull(convertSqlDate(((Personal) item).getFechaBaja())));
+                    valores.add(((Personal) item).getEstado());
+
+                    if (((Personal) item).getDelegacion() != null) {
+                        valores.add(((Personal) item).getDelegacion().getId());
+                    } else {
+                        valores.add(null);
+                    }
+
+                    if (((Personal) item).getProyecto() != null) {
+                        valores.add(((Personal) item).getProyecto().getId());
+                    } else {
+                        valores.add(null);
+                    }
+
+
+                    Boolean isSubtipo = false;
+                    //Verificamos si es de un tipo especifico.
+                    if (item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
+                            item.getClass().getName().equals("logicaEmpresarial.Contratados") ||
+                            item.getClass().getName().equals("logicaEmpresarial.Voluntarios") ||
+                            item.getClass().getName().equals("logicaEmpresarial.VoluntariosInternacionales"))
+                        isSubtipo = true;
+
+
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_PERSONAL, valores, true, !isSubtipo, true);
+                    if (recogidaId <= 0) {
+                        controlerSql.realizarRoolback();
+                        existeError = true;
+                        mensajeError = controlerSql.getErrores();
+                        return false;
+                    }
+                    ((Personal) item).setId((recogidaId));
+
+                    if (isSubtipo) {
 
                         //Creación de datos del tipo de personal en las tablas hijas.
                         switch (item.getClass().getName()) {
                             case "logicaEmpresarial.Contratados":
-                                    valores = new ArrayList<>();
-                                    valores.add(((Personal)item).getId());
-                                    valores.add(((Contratados)item).getTipoContrato());
-                                    valores.add(((Contratados)item).getSalario());
-                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_CONTRATADOS,valores,true,true,false);
+                                valores = new ArrayList<>();
+                                valores.add(((Personal) item).getId());
+                                valores.add(((Contratados) item).getTipoContrato());
+                                valores.add(((Contratados) item).getSalario());
+                                recogidaId = controlerSql.ejecutar(SQL_INSERT_CONTRATADOS, valores, true, true, false);
                                 break;
                             case "logicaEmpresarial.Colaboradores":
-                                    valores = new ArrayList<>();
-                                    valores.add(((Personal)item).getId());
-                                    valores.add(((Colaboradores)item).getTipoColaboracion());
-                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_COLABORADORES,valores,true,true,false);
+                                valores = new ArrayList<>();
+                                valores.add(((Personal) item).getId());
+                                valores.add(((Colaboradores) item).getIntTipoColaboracion());
+                                recogidaId = controlerSql.ejecutar(SQL_INSERT_COLABORADORES, valores, true, true, false);
                                 break;
                             case "logicaEmpresarial.Voluntarios":
-                                    valores = new ArrayList<>();
-                                    valores.add(((Personal)item).getId());
-                                    valores.add(((Voluntarios)item).getAreaVoluntariado());
-                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS,valores,true,true,false);
+                                valores = new ArrayList<>();
+                                valores.add(((Personal) item).getId());
+                                valores.add(((Voluntarios) item).getAreaVoluntariado());
+                                recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, true, false);
                                 break;
                             case "logicaEmpresarial.Voluntariosinternacionales":
                                 valores = new ArrayList<>();
-                                valores.add(((Personal)item).getId());
-                                valores.add(((Voluntarios)item).getAreaVoluntariado());
-                                recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS,valores,true,false,true);
-                                if(recogidaId<= 0){
+                                valores.add(((Personal) item).getId());
+                                valores.add(((Voluntarios) item).getAreaVoluntariado());
+                                recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, false, true);
+                                if (recogidaId <= 0) {
                                     controlerSql.realizarRoolback();
                                     existeError = true;
                                     mensajeError = controlerSql.getErrores();
-                                    return  false;
-                                }else{
+                                    return false;
+                                } else {
                                     valores = new ArrayList<>();
                                     valores.add(recogidaId);//id de voluntario
-                                    valores.add(((VoluntariosInternacionales)item).getPais());
-                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS,valores,true,true,false);
+                                    valores.add(((VoluntariosInternacionales) item).getPais());
+                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, true, false);
                                 }
 
 
                                 break;
                         }
 
-                        if(recogidaId<= 0){
+                        if (recogidaId <= 0) {
                             controlerSql.realizarRoolback();
                             existeError = true;
                             mensajeError = controlerSql.getErrores();
-                            return  false;
+                            return false;
                         }
 
-                        //TODO update idProeycto y id delegacion si tienen
+                    }
 
-                }
-
-                //Si nada fallo Retorna ok.
-                return true;
-            case USUARIOS:
-                valores.add(((Usuario)item).getNombre());
-                valores.add(((Usuario)item).getHasing());
-                valores.add(((Usuario)item).getRol());
-                valores.add(((Usuario)item).getId());
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO,valores,false,false,false);
-                if(recogidaId<= 0){
-                    controlerSql.realizarRoolback();
-                    existeError = true;
-                    mensajeError = controlerSql.getErrores();
-                    return  false;
-                }else{
-                    ((Usuario)item).setId(recogidaId);
+                    //Si nada fallo Retorna ok.
                     return true;
-                }
+                case USUARIOS:
+                    valores.add(((Usuario) item).getIntRol());
+                    valores.add(((Usuario) item).getNombre());
+                    valores.add(((Usuario) item).getHasing());
+                    System.out.println();
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO, valores, false, false, false);
+                    if (recogidaId <= 0) {
+                        controlerSql.realizarRoolback();
+                        existeError = true;
+                        mensajeError = controlerSql.getErrores();
+                        return false;
+                    } else {
+                        ((Usuario) item).setId(recogidaId);
+                        return true;
+                    }
 
-            case DELEGACIONES:
-                //TODO
-                valores.add(((Delegacion)item).getNombre());//Nombre
-                valores.add(((Delegacion)item).getDireccion());//Dirección
-                valores.add(((Delegacion)item).getTelefono());//Telefono
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION,valores,false,false,false);
-                if(recogidaId<= 0){
-                    controlerSql.realizarRoolback();
-                    existeError = true;
-                    mensajeError = controlerSql.getErrores();
-                    return  false;
-                }else{
-                    ((Delegacion)item).setId(recogidaId);
-                    return true;
-                }
+                case DELEGACIONES:
+                    //TODO
+                    valores.add(((Delegacion) item).getNombre());//Nombre
+                    valores.add(((Delegacion) item).getDireccion());//Dirección
+                    valores.add(((Delegacion) item).getTelefono());//Telefono
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION, valores, false, false, false);
+                    if (recogidaId <= 0) {
+                        controlerSql.realizarRoolback();
+                        existeError = true;
+                        mensajeError = controlerSql.getErrores();
+                        return false;
+                    } else {
+                        ((Delegacion) item).setId(recogidaId);
+                        return true;
+                    }
 
-            case PROYECTOS:
-                //TODO
-                valores.add(((Proyecto)item).getId());
-                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto)item).getFechaAlta())));
-                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto)item).getFechaBaja())));
-                valores.add(((Proyecto)item).getNombre());
-                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto)item).getFechaDeInicio())));
-                valores.add(((Proyecto)item).getEstado());
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO,valores,false,false,false);
-                if(recogidaId<= 0){
-                    controlerSql.realizarRoolback();
-                    existeError = true;
-                    mensajeError = controlerSql.getErrores();
-                    return  false;
-                }else{
-                    ((Proyecto)item).setId(recogidaId);
-                    return true;
-                }
-            default:
-                return false;
-        }
+                case PROYECTOS:
+                    //TODO
+                    valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto) item).getFechaAlta())));
+                    valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto) item).getFechaBaja())));
+                    valores.add(((Proyecto) item).getNombre());
+                    valores.add(((Proyecto) item).getEstado());
 
+
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO, valores, false, false, false);
+                    if (recogidaId <= 0) {
+                        controlerSql.realizarRoolback();
+                        existeError = true;
+                        mensajeError = controlerSql.getErrores();
+                        return false;
+                    } else {
+                        ((Proyecto) item).setId(recogidaId);
+                        return true;
+                    }
+                default:
+                    return false;
+            }
     }
 
     @Override
@@ -331,30 +335,31 @@ public class DaoSql implements IDao {
     @Override
     public boolean borrar(int indice, Apartados apartado) {
 
-        String ident = String.valueOf(indice);
-        final String SQL_DELETE_PERSONAL    = "DELETE personal,persona FROM persona LEFT JOIN personal ON persona.id = personal.idPersona where personal.id = " + ident +";";
-        final String SQL_DELETE_DELEGACION  = "DELETE FROM delegacion WHERE idDelegacion = " + ident +";" ;
-        final String SQL_DELETE_PROYECTO    = "DELETE FROM proyecto WHERE id = " + ident +";";
-        final String SQL_DELETE_USUARIO     = "DELETE FROM usuario WHERE id = " + ident+ ";" ;
 
 
-        System.out.println(SQL_DELETE_DELEGACION);
+        final String SQL_DELETE_PERSONAL    = "DELETE personal,persona FROM persona LEFT JOIN personal ON persona.id = personal.idPersona where personal.id =";
+        final String SQL_DELETE_DELEGACION  = "DELETE FROM delegacion WHERE id =";
+        final String SQL_DELETE_PROYECTO    = "DELETE FROM proyecto WHERE id = ";
+        final String SQL_DELETE_USUARIO     = "DELETE FROM usuario WHERE id = " ;
+
+
+
 
         //Creación de variables dependiendo del apartado:
         String cadenaSql;
 
         switch (apartado) {
             case PERSONAL:
-                cadenaSql = SQL_DELETE_PERSONAL;
+                cadenaSql = SQL_DELETE_PERSONAL + getPilaDatosGenerales().getPersonal().get(indice).getId();
                 break;
             case DELEGACIONES:
-                cadenaSql = SQL_DELETE_DELEGACION;
+                cadenaSql = SQL_DELETE_DELEGACION  + getPilaDatosGenerales().getDelegaciones().get(indice).getId() ;
                 break;
             case  PROYECTOS:
-                cadenaSql = SQL_DELETE_PROYECTO;
+                cadenaSql = SQL_DELETE_PROYECTO +  getPilaDatosGenerales().getProyectos().get(indice).getId();
                 break;
             case USUARIOS:
-                cadenaSql = SQL_DELETE_USUARIO;
+                cadenaSql = SQL_DELETE_USUARIO  + getPilaDatosGenerales().getUsuarios().get(indice).getId();
                 break;
             default:
                 return false;
@@ -376,7 +381,7 @@ public class DaoSql implements IDao {
 
        PreparedStatement ps = null;
        ResultSet rs = null;
-       String sql = "SELECT * FROM usuario WHERE hashing = ?";
+       String sql = "SELECT * FROM usuarios WHERE hashing = ?";
 
        try{
            ps = controlerSql.getConecction().prepareStatement(sql);
@@ -419,16 +424,16 @@ public class DaoSql implements IDao {
 
         switch (apartados) {
             case PERSONAL:
-                sql = "SELECT * FROM 4dbset.personal";
+                sql = "SELECT * FROM vistapersonal";
                 break;
             case DELEGACIONES:
                 sql = "SELECT * FROM delegacion";
                 break;
             case PROYECTOS:
-                sql = "SELECT * FROM 4dbset.proyectos;";
+                sql = "SELECT * FROM proyectos;";
                 break;
             case USUARIOS:
-                sql = "SELECT * FROM 4dbset.usuarios;";
+                sql = "SELECT * FROM usuarios;";
                 break;
             default:
                 return false;
@@ -446,23 +451,22 @@ public class DaoSql implements IDao {
             ResultSet rs = sqlConection.executeQuery();
 
             while (rs.next())
-                if (create(rs, apartados) != null)
-                    switch (apartados) {
-                        case PERSONAL:
-                            pilaDatosGenerales.getPersonal().add((Personal) create(rs, apartados));
-                            break;
-                        case DELEGACIONES:
-                            pilaDatosGenerales.getDelegaciones().add((Delegacion) create(rs, apartados));
-                            break;
-                        case PROYECTOS:
-                            pilaDatosGenerales.getProyectos().add((Proyecto) create(rs, apartados));
-                            break;
-                        case USUARIOS:
-                            pilaDatosGenerales.getUsuarios().add((Usuario) create(rs, apartados));
-                            break;
-                        default:
-                            return false;
-                    }
+                switch (apartados) {
+                    case PERSONAL:
+                        pilaDatosGenerales.getPersonal().add((Personal) create(rs, apartados));
+                        break;
+                    case DELEGACIONES:
+                        pilaDatosGenerales.getDelegaciones().add((Delegacion) create(rs, apartados));
+                        break;
+                    case PROYECTOS:
+                        pilaDatosGenerales.getProyectos().add((Proyecto) create(rs, apartados));
+                        break;
+                    case USUARIOS:
+                        pilaDatosGenerales.getUsuarios().add((Usuario) create(rs, apartados));
+                        break;
+                    default:
+                        return false;
+                }
             return true;
 
         } catch (Exception e) {
@@ -481,14 +485,73 @@ public class DaoSql implements IDao {
 
         switch (apartado) {
             case PERSONAL:
-                element = new Personal();
+                switch (rs.getInt("tipo")){
+                    case 1:
+                        element=new Colaboradores();
+                        ((Colaboradores) element).setIntTipoColaboracion(rs.getInt("tipoColaboracion"));
+                    break;
+                    case 2:element=new Contratados();
+                        ((Contratados) element).setTipoContrato(rs.getString("tipoContrato"));
+                        ((Contratados) element).setSalario(rs.getFloat("salario"));
+                    break;
+                    case 3:element=new Voluntarios();
+                        ((Voluntarios) element).setAreaVoluntariado(rs.getString("areaVoluntariado"));
+                    break;
+                    case 4:element=new VoluntariosInternacionales();
+                        ((Voluntarios) element).setAreaVoluntariado(rs.getString("areaVoluntariado"));
+                        ((VoluntariosInternacionales) element).setPais(rs.getString("pais"));
+                    break;
+                    default:
+                        element=new Personal();
+                    break;
+                }
+
+                ((Personal) element).setId(rs.getInt("id"));
                 ((Personal) element).setEstado(rs.getBoolean("estado"));
-                ((Personal) element).setId(rs.getInt("idPersonal"));
+
+
+                //Recogida de datos de persona.
+                ((Personal) element).setPersonaId(rs.getInt("idPersona"));
+                ((Personal) element).setNif_dni(rs.getString("nif_dni"));
+                ((Personal) element).setNombre(rs.getString("nombre"));
+                ((Personal) element).setFechaDeNacimiento(rs.getDate("fechaNacimiento"));
+                ((Personal) element).setDomicilio(rs.getString("domicilio"));
+                ((Personal) element).setIntTipo(rs.getInt("tipo"));
+
+                //Recogida datos de Personal.
+                ((Personal) element).setFechaAlta(rs.getDate("fechaAlta"));
+                ((Personal) element).setFechaAlta(rs.getDate("fechaBaja"));
+
+                Integer idDelegacion = rs.getInt("idDelegacion");
+                if(idDelegacion > 0 &&  getPilaDatosGenerales().getDelegaciones().size() > 0){
+                    for(Delegacion del: getPilaDatosGenerales().getDelegaciones()){
+                        if(idDelegacion == del.getId()){
+                            ((Personal)element).setDelegacion(del);
+                            //del.getPersonal().add((Personal) element);
+                            break;
+                        }
+                    }
+
+                }
+
+                Integer idProyecto = rs.getInt("idProyecto");
+                if(idProyecto > 0 &&  getPilaDatosGenerales().getProyectos().size() > 0){
+                    for(Proyecto pro: getPilaDatosGenerales().getProyectos()){
+                        if(idProyecto == pro.getId()){
+                            ((Personal)element).setProyecto(pro);
+                            break;
+                        }
+                    }
+
+                }
+
+
+
                 break;
 
             case DELEGACIONES:
                 element = new Delegacion();
-                ((Delegacion) element).setId(rs.getInt("idDelegacion"));
+                ((Delegacion) element).setId(rs.getInt("id"));
                 ((Delegacion) element).setNombre(rs.getString("nombre"));
                 ((Delegacion) element).setDireccion(rs.getString("direccion"));
                 ((Delegacion) element).setTelefono(rs.getString("telefono"));
@@ -496,13 +559,16 @@ public class DaoSql implements IDao {
 
             case PROYECTOS:
                 element = new Proyecto();
-                ((Proyecto) element).setId(rs.getInt("idProyectos"));
+                ((Proyecto) element).setId(rs.getInt("id"));
                 ((Proyecto) element).setNombre(rs.getString("Nombre"));
+                ((Proyecto) element).setFechaAlta(rs.getDate("fechaAlta"));
+                ((Proyecto) element).setFechaBaja(rs.getDate("fechaBaja"));
+
                 break;
 
             case USUARIOS:
                 element = new Usuario();
-                ((Usuario) element).setId(rs.getInt("idUsuario"));
+                ((Usuario) element).setId(rs.getInt("id"));
                 ((Usuario) element).setIntRol(rs.getInt("tipoUsuario"));
                 ((Usuario) element).setNombre(rs.getString("nombre"));
                 ((Usuario) element).setHasing(rs.getString("hashing"));

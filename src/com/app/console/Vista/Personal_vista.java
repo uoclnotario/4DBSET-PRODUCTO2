@@ -497,6 +497,7 @@ public class Personal_vista implements Vista {
         }
 
 
+
         //SELECCIONAR UN proyecto.
         if(datos.getProyectos().size() > 0){
 
@@ -535,7 +536,6 @@ public class Personal_vista implements Vista {
           nuevoPersonal.setEstado(true);
           nuevoPersonal.setFechaAlta(new Date(System.currentTimeMillis()));
       }
-
         return nuevoPersonal;
     }
 }

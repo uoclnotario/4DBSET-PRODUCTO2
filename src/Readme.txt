@@ -3,13 +3,13 @@ Listado de tareas para finalizar producto 2.
 
 Clase DaoSql.
 	Metodos por desarrollar:
-	[]1-descargaDAtos.
+	[x]1-descargaDAtos.
 		-Tiene que descargar los datos de la bd, descangandose los datos de todos los apartados y haciendo la relació de la bd en java.
 
 	[X]2-recogidaListado.
 		-Funcionaria igual que xml(no tiene diferencia.)
 
-	[]3-crear
+	[x]3-crear
 		-Creara un nuevo elemento dependiendo de los diferentes apartados.
 
 	[]4-modificar
@@ -25,4 +25,5 @@ Clase DaoSql.
 		-Funciona igual que dao XML
 	
 
-    []Creación de metodo para exportar los datos de xml a sql.
+    [X]8-Creación de metodo para exportar los datos de xml a sql.
+    []9-Exportar de xml a sql.

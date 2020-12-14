@@ -47,8 +47,6 @@ public  class Personal extends Persona {
     public void setFechaBaja(Date fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
-
-
     public Delegacion getDelegacion() {
         return delegacion;
     }
@@ -84,8 +82,16 @@ public  class Personal extends Persona {
             default: return "No definido";
         }
 
-
     }
 
+    public Integer getIntTIpo(){
+        switch(this.getClass().getName()){
+            case "logicaEmpresarial.Colaboradores":return 1;
+            case "logicaEmpresarial.Voluntarios":return 2;
+            case "logicaEmpresarial.VoluntariosInternacionales":return 3;
+            case "logicaEmpresarial.Contratados":return 4;
+            default: return 0;
+        }
+    }
 
 }

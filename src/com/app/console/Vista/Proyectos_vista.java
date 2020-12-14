@@ -36,7 +36,7 @@ public class Proyectos_vista implements Vista{
 
 
             System.out.println("Indique que desea realizar:");
-            System.out.println("\t- Indique el indice del usuario a visualizar o modificar ");
+            System.out.println("\t- Indique el indice del proyecto a visualizar o modificar ");
         }
 
         System.out.println("\t- 0 Crear un nuevo.");

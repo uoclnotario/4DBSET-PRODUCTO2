@@ -138,7 +138,7 @@ public class SqlController {
                                         return generatedKeys.getInt(1);
                                     }
                                     else {
-                                        throw new SQLException("Creating user failed, no ID obtained.");
+                                        throw new Exception("Creating user failed, no ID obtained.");
                                     }
                                 }
 
@@ -308,19 +308,11 @@ public class SqlController {
 
         update("CREATE TABLE IF NOT EXISTS `PROYECTOS` (\n" +
                 "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
-                "  `fechaAlta` DATE NOT NULL,\n" +
-                "  `fechaBaja` DATE NOT NULL,\n" +
-                "  `nombre` VARCHAR(45) NOT NULL,\n" +
-                "  `fechaDeInicio` DATE NOT NULL,\n" +
+                "  `fechaAlta` DATE NULL,\n" +
+                "  `fechaBaja` DATE NULL,\n" +
+                "  `nombre` VARCHAR(45) NULL,\n" +
                 "  `estado` BIT(1) NOT NULL,\n" +
-                "  `idDelegacion` INT NULL,\n" +
-                "  PRIMARY KEY (`id`),\n" +
-                "  INDEX `fk_PROYECTOS_DELEGACION1_idx` (`idDelegacion` ASC) VISIBLE,\n" +
-                "  CONSTRAINT `fk_PROYECTOS_DELEGACION1`\n" +
-                "    FOREIGN KEY (`idDelegacion`)\n" +
-                "    REFERENCES `DELEGACION` (`id`)\n" +
-                "    ON DELETE NO ACTION\n" +
-                "    ON UPDATE NO ACTION)\n" +
+                "  PRIMARY KEY (`id`))\n" +
                 "ENGINE = InnoDB;");
 
         update( "CREATE TABLE IF NOT EXISTS `PERSONAL` (\n" +
@@ -333,6 +325,7 @@ public class SqlController {
                 "  `idDelegacion` INT NULL,\n" +
                 "  `idPersona` INT NULL,\n" +
                 "  `idProyecto` INT NULL,\n" +
+                "  `tipo` INT NOT NULL,\n" +
                 "  PRIMARY KEY (`id`),\n" +
                 "  INDEX `fk_PERSONAL_DELEGACION1_idx` (`idDelegacion` ASC) VISIBLE,\n" +
                 "  INDEX `fk_PERSONAL_PERSONA1_idx` (`idPersona` ASC) VISIBLE,\n" +
@@ -366,9 +359,10 @@ public class SqlController {
                 "    ON DELETE CASCADE\n" +
                 "    ON UPDATE CASCADE)\n" +
                 "ENGINE = InnoDB;\n");
+
         update("CREATE TABLE IF NOT EXISTS `COLABORADORES` (\n" +
                 "  `idPersonal` INT NOT NULL,\n" +
-                "  `tipoColaboracion` VARCHAR(45) NOT NULL,\n" +
+                "  `tipoColaboracion` INT NOT NULL,\n" +
                 "  PRIMARY KEY (`idPersonal`),\n" +
                 "  CONSTRAINT `fk_COLABORADORES_PERSONAL1`\n" +
                 "    FOREIGN KEY (`idPersonal`)\n" +
@@ -405,10 +399,41 @@ public class SqlController {
                 "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                 "  `nombre` VARCHAR(45) NOT NULL,\n" +
                 "  `tipoUsuario` INT NOT NULL,\n" +
-                "  `hashing` VARCHAR(20) NOT NULL,\n" +
+                "  `hashing` VARCHAR(40) NOT NULL,\n" +
                 "  PRIMARY KEY (`id`))\n" +
                 "ENGINE = InnoDB;");
 
+        update("CREATE \n" +
+                "    ALGORITHM = UNDEFINED \n" +
+                "    DEFINER = `root`@`localhost` \n" +
+                "    SQL SECURITY DEFINER\n" +
+                "VIEW `vistapersonal` AS\n" +
+                "    SELECT \n" +
+                "        `pl`.`id` AS `id`,\n" +
+                "        `pl`.`fechaAlta` AS `fechaAlta`,\n" +
+                "        `pl`.`fechaBaja` AS `fechaBaja`,\n" +
+                "        `pl`.`estado` AS `estado`,\n" +
+                "        `pl`.`tipo` AS `tipo`,\n" +
+                "        `pl`.`idDelegacion` AS `idDelegacion`,\n" +
+                "        `pl`.`idProyecto` AS `idProyecto`,\n" +
+                "        `ps`.`id` AS `idPersona`,\n" +
+                "        `ps`.`tipoPersona` AS `tipoPersona`,\n" +
+                "        `ps`.`nif_dni` AS `nif_dni`,\n" +
+                "        `ps`.`nombre` AS `nombre`,\n" +
+                "        `ps`.`fechaNacimiento` AS `fechaNacimiento`,\n" +
+                "        `ps`.`domicilio` AS `domicilio`,\n" +
+                "        `ct`.`tipoContrato` AS `tipoContrato`,\n" +
+                "        `ct`.`salario` AS `salario`,\n" +
+                "        `cl`.`tipoColaboracion` AS `tipoColaboracion`,\n" +
+                "        `vl`.`areaVoluntariado` AS `areaVoluntariado`,\n" +
+                "        `vii`.`pais` AS `pais`\n" +
+                "    FROM\n" +
+                "        (((((`personal` `pl`\n" +
+                "        LEFT JOIN `persona` `ps` ON ((`pl`.`idPersona` = `ps`.`id`)))\n" +
+                "        LEFT JOIN `contratados` `ct` ON ((`ct`.`idPersonal` = `pl`.`id`)))\n" +
+                "        LEFT JOIN `colaboradores` `cl` ON ((`cl`.`idPersonal` = `pl`.`id`)))\n" +
+                "        LEFT JOIN `voluntarios` `vl` ON ((`vl`.`idPersonal` = `pl`.`id`)))\n" +
+                "        LEFT JOIN `voluntarios internacionales` `vii` ON ((`vii`.`volunariosId` = `vl`.`id`)))");
 
         return true;
     }

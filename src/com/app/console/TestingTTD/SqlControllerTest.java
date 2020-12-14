@@ -27,14 +27,21 @@ public class SqlControllerTest {
         SqlController conexion = new SqlController("localhost","3306","4DBSET","root","1021");
         DaoSql sqlDao = new DaoSql(conexion);
 
-  /*       //Usuario admin de prueba
-
         Usuario user = new Usuario();
         user.setNombre("admin");
         user.setPassword("1021");
-
+ /*
         //Testing logueo.
-        Assert.assertThat(sqlDao.Login(user), CoreMatchers.is(true));
+        Boolean retoerno = sqlDao.crear(user,Apartados.USUARIOS);
+        if(sqlDao.existeUnError())
+            System.out.println(sqlDao.getMensajeError());
+
+        Assert.assertThat(retoerno, CoreMatchers.is(true));
+
+
+
+       //Usuario admin de prueba
+
 
         //Testing el objeto user es rellenada y recibida por referencia.
 
@@ -50,7 +57,7 @@ public class SqlControllerTest {
         nuevoDelegacion.setDireccion("EnAlgunLugar");
         nuevoDelegacion.setTelefono(null);
         Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
-*/
+
         // Parametros
         Date fecha = new Date(System.currentTimeMillis());
         Delegacion delegacion = new Delegacion();
@@ -81,7 +88,7 @@ public class SqlControllerTest {
         Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
 
         
-
+*/
 
 
         //Test de creación PROYECTO.

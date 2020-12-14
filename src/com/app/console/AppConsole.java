@@ -6,6 +6,8 @@ import dao.IDao;
 import logicaEmpresarial.Ong;
 import logicaEmpresarial.Usuario;
 
+import java.sql.SQLException;
+
 
 public class AppConsole {
 
@@ -35,7 +37,7 @@ public class AppConsole {
             }
         }
     }
-    private void run() {
+    private void run() throws SQLException {
         boolean userLogueado = false;
 
         do {
@@ -59,7 +61,7 @@ public class AppConsole {
         }while(true);//Bucle infinito, la aplicación si el usuario quiere salir, debera de cerrar la ventana.
 
     }
-    private boolean mostrarMenu(){
+    private boolean mostrarMenu() throws SQLException {
 
         String entradaUsuario = vistaMenu.MostrarMenu(usuarioAutentificado,PALABRAPARAVOLVER);
         int accesoApartado,minimo,maximo;
@@ -100,7 +102,7 @@ public class AppConsole {
         }
 
     }
-    private boolean abrirApartado(Apartados apartados){
+    private boolean abrirApartado(Apartados apartados) throws SQLException {
 
         //Cargar modelo factory y llamar a visualizar
          vista = getVista(apartados);
@@ -143,7 +145,7 @@ public class AppConsole {
 
                 if(indiceSeleccionado == 0){//Si es cero se Creara un nuevo elemento, por lo que llamamos a Crear.
                    //Aqui se podria añadir una restricción para que si el elemento ya existe de une error y no se cree.
-                    // vistaMenu.mensajeElementoCreado(modelo.crear(vista.crearElemento(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados));
+                     vistaMenu.mensajeElementoCreado(modelo.crear(vista.crearElemento(modelo.getPilaDatosGenerales(),"CANCELAR"),apartados),modelo);
 
                 }else{//De lo contrario llama a mostrar uno.
                     while(mostarUno(indiceSeleccionado-1,apartados));//Abirmos mostrar uno pasandole el apartado seleccionado -1.

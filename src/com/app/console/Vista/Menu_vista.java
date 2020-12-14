@@ -1,5 +1,6 @@
 package com.app.console.Vista;
 
+import dao.IDao;
 import logicaEmpresarial.Usuario;
 
 
@@ -31,12 +32,15 @@ public class Menu_vista {
         System.out.println("Adios "+user.getNombre());
     }
 
-    public void mensajeElementoCreado(boolean elementoCreado){
+    public void mensajeElementoCreado(boolean elementoCreado, IDao dao){
 
         if(elementoCreado){
             System.out.println("Se ha creado correctamente");
         }else{
-            System.out.println("No se ha creado, debido a que se ha cancelado.");
+            if(dao.existeUnError())
+                System.out.println("Se ha producido un error y no se ha podido guardar información:"+dao.getMensajeError());
+            else
+                System.out.println("No se ha creado, debido a que se ha cancelado.");
         }
 
     }

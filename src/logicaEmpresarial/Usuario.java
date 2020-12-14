@@ -56,7 +56,15 @@ public class Usuario {
         }
     }
     public int getId() {return id;}
+    public Integer getIntRol(){
+        if(this.rol == null)
+            return 1;
 
+        switch (this.rol){
+            case ADMINISTRADOR:return 2;
+            default:return 1;
+        }
+    }
 
     public void setIntRol(int e){
         switch (e){

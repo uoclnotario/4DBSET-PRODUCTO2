@@ -25,6 +25,18 @@ public  class Colaboradores extends Personal {
         return tipoColaboracion;
     }
 
+    public int getIntTipoColaboracion(){
+        if(tipoColaboracion == null)
+            return 0;
+
+        switch (tipoColaboracion){
+            case ECONOMICA:return 1;
+            case MANODEOBRA:return 2;
+            case SOCIAL:return 3;
+            default:return 0;
+        }
+    }
+
     public void setIntTipoColaboracion(int tipoColaboracion) {
 
         switch (tipoColaboracion){
