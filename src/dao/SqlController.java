@@ -312,6 +312,7 @@ public class SqlController {
                 "  `fechaBaja` DATE NULL,\n" +
                 "  `nombre` VARCHAR(45) NULL,\n" +
                 "  `estado` BIT(1) NOT NULL,\n" +
+                "  `tipo` BIT(1) NOT NULL,\n" +
                 "  PRIMARY KEY (`id`))\n" +
                 "ENGINE = InnoDB;");
 
