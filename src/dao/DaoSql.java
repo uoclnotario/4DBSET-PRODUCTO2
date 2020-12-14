@@ -65,7 +65,7 @@ public class DaoSql implements IDao {
         final String SQL_INSERT_PERSONAL = "INSERT INTO personal (tipo,idPersona,fechaAlta,fechaBaja,estado,idDelegacion,idProyecto)VALUES(?,?,?,?,?,?,?);";
         final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
         final String SQL_INSERT_DELEGACION = "INSERT INTO delegacion(nombre,direccion,telefono)VALUES(?,?,?);";
-        final String SQL_INSERT_PROYECTO = "INSERT INTO proyectos(fechaAlta,fechaBaja,nombre,estado)VALUES(?,?,?,?);";
+        final String SQL_INSERT_PROYECTO = "INSERT INTO proyectos(fechaAlta,fechaBaja,nombre,estado,tipo)VALUES(?,?,?,?,?);";
         final String SQL_INSERT_USUARIO = "INSERT INTO usuarios (tipoUsuario,nombre,hashing)VALUES(?,?,?);";
 
         //Subentidades de PERSONAL
@@ -165,7 +165,7 @@ public class DaoSql implements IDao {
                                 valores.add(((Voluntarios) item).getAreaVoluntariado());
                                 recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, true, false);
                                 break;
-                            case "logicaEmpresarial.Voluntariosinternacionales":
+                            case "logicaEmpresarial.VoluntariosInternacionales":
                                 valores = new ArrayList<>();
                                 valores.add(((Personal) item).getId());
                                 valores.add(((Voluntarios) item).getAreaVoluntariado());
@@ -179,7 +179,7 @@ public class DaoSql implements IDao {
                                     valores = new ArrayList<>();
                                     valores.add(recogidaId);//id de voluntario
                                     valores.add(((VoluntariosInternacionales) item).getPais());
-                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, true, false);
+                                    recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOSINTERNACIONALES, valores, true, true, false);
                                 }
 
 
@@ -202,7 +202,7 @@ public class DaoSql implements IDao {
                     valores.add(((Usuario) item).getNombre());
                     valores.add(((Usuario) item).getHasing());
                     System.out.println();
-                    recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO, valores, false, false, false);
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO, valores, false, false, true);
                     if (recogidaId <= 0) {
                         controlerSql.realizarRoolback();
                         existeError = true;
@@ -214,11 +214,10 @@ public class DaoSql implements IDao {
                     }
 
                 case DELEGACIONES:
-                    //TODO
                     valores.add(((Delegacion) item).getNombre());//Nombre
                     valores.add(((Delegacion) item).getDireccion());//Dirección
                     valores.add(((Delegacion) item).getTelefono());//Telefono
-                    recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION, valores, false, false, false);
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION, valores, false, false, true);
                     if (recogidaId <= 0) {
                         controlerSql.realizarRoolback();
                         existeError = true;
@@ -230,14 +229,13 @@ public class DaoSql implements IDao {
                     }
 
                 case PROYECTOS:
-                    //TODO
                     valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto) item).getFechaAlta())));
                     valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto) item).getFechaBaja())));
                     valores.add(((Proyecto) item).getNombre());
                     valores.add(((Proyecto) item).getEstado());
+                    valores.add(((Proyecto) item).getIntTipo());
 
-
-                    recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO, valores, false, false, false);
+                    recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO, valores, false, false, true);
                     if (recogidaId <= 0) {
                         controlerSql.realizarRoolback();
                         existeError = true;
@@ -254,81 +252,102 @@ public class DaoSql implements IDao {
 
     @Override
     public boolean modificar(Object item, int indice, Apartados apartado) {
-/*
-        String ident = String.valueOf(indice);
+        //TODO FINALIZAR APARTADO MODIFICACIÓN
 
-        final String SQL_UPDATE_PERSONAL = "UPDATE `persona` WHERE idPersona = '" + ident + "';";
-        final String SQL_UPDATE_DELEGACION = "UPDATE `delegacion` WHERE id = '" + ident + "';";
-        final String SQL_UPDATE_PROYECTO = "UPDATE `proyecto WHERE id = '" + ident + "';";
-        final String SQL_UPDATE_USUARIO = "UPDATE `usuario WHERE id = '" + ident + "';";
 
-        //Si os fijais le he quitado el nombre de la base de datos a las consultas por que es redundante, ya que en la conexión
-        //Ya especificamos el nombre de la base de datos a la que nos hemos conectados y la utilidad de conexión ya esta conectada a la base de datos.
+        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (tipo,idPersona,fechaAlta,fechaBaja,estado,idDelegacion,idProyecto)VALUES(?,?,?,?,?,?,?);";
+        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
 
-        //Creación de variables dependiendo del apartado:
-        String cadenaSql;
+        final String SQL_INSERT_DELEGACION = "UPDATE delegacion SET nombre = ?,direccion = ?,telefono = ? WHERE id = ?;";
+        final String SQL_INSERT_PROYECTO = "UPDATE proyectos SET fechaAlta = ?,fechaBaja = ?,nombre = ?,estado = ?,tipo = ? WHERE id = ?;";
+        final String SQL_INSERT_USUARIO = "UPDATE usuarios SET nombre = ?, tipoUsuario = ?, hashing = ? WHERE id = ?;";
+
+
+        //Subentidades de PERSONAL
+        final String SQL_INSERT_COLABORADORES ="INSERT INTO colaboradores(idPersonal,tipoColaboracion)VALUES(?,?);";
+        final String SQL_INSERT_CONTRATADOS = "INSERT INTO contratados(idPersonal,tipoContrato,salario)VALUES(?,?,?);";
+        final String SQL_INSERT_VOLUNTARIOS=  "INSERT INTO voluntarios(idPersonal,areaVoluntariado)VALUES(?,?);";
+        final String SQL_INSERT_VOLUNTARIOSINTERNACIONALES=  "INSERT INTO voluntarios internacionales(volunariosId,pais)VALUES(?,?);";
+
+        if(item == null)
+            return false;
+
+
+        //Modificar el item.
+        switch (apartado){
+            case NINGUNO: return false;
+            case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
+            case PERSONAL:
+                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);//Ponemos a null la delegación del personal asignado, para quitarlo de la memoria
+                pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
+                break;
+            case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
+            case USUARIOS: pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);break;
+            default: return false;
+        }
+
+
+        //Seteamos los valores
+        ArrayList<Object> valores = new ArrayList<>();
+        Integer recogidaId;
 
         switch (apartado) {
             case PERSONAL:
-                cadenaSql = SQL_UPDATE_PERSONAL;
-                break;
-            case PROYECTOS:
-                cadenaSql = SQL_UPDATE_DELEGACION;
-                break;
-            case DELEGACIONES:
-                cadenaSql = SQL_UPDATE_PROYECTO;
-                break;
+
+                return true;
             case USUARIOS:
-                cadenaSql = SQL_UPDATE_USUARIO;
-                break;
+                valores.add(((Usuario) item).getIntRol());
+                valores.add(((Usuario) item).getNombre());
+                valores.add(((Usuario) item).getHasing());
+                valores.add(((Usuario) item).getId());
+
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO, valores, false, false, false);
+                if (recogidaId <= 0) {
+                    controlerSql.realizarRoolback();
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return false;
+                } else {
+                    return true;
+                }
+
+            case DELEGACIONES:
+                valores.add(((Delegacion) item).getNombre());
+                valores.add(((Delegacion) item).getDireccion());
+                valores.add(((Delegacion) item).getTelefono());
+                valores.add(((Delegacion) item).getId());
+
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION, valores, false, false, false);
+                if (recogidaId <= 0) {
+                    controlerSql.realizarRoolback();
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return false;
+                } else {
+                    return true;
+                }
+
+            case PROYECTOS:
+                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto) item).getFechaAlta())));
+                valores.add(controlerSql.getValNull(convertSqlDate(((Proyecto) item).getFechaBaja())));
+                valores.add(((Proyecto) item).getNombre());
+                valores.add(((Proyecto) item).getEstado());
+                valores.add(((Proyecto) item).getIntTipo());
+                valores.add(((Proyecto)item).getId());
+
+                recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO, valores, false, false, false);
+                if (recogidaId <= 0) {
+                    controlerSql.realizarRoolback();
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return false;
+                } else {
+                    return true;
+                }
             default:
                 return false;
         }
 
-        //Ahora se crea el statment
-        PreparedStatement cadenaCreacion = controlerSql.getPrepare(cadenaSql);
-
-        try {
-            if (cadenaCreacion != null) {
-
-                //Seteamos los valores
-                switch (apartado) {
-                    case PERSONAL:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Personal) item).getId());
-                        break;
-                    case PROYECTOS:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Proyecto) item).getId());
-                        break;
-                    case DELEGACIONES:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Delegacion) item).getId());
-                        break;
-                    case USUARIOS:
-                        //TODO
-                        cadenaCreacion.setInt(1, ((Usuario) item).getId());
-                        break;
-                    default:
-                        return false;
-                }
-
-                //Ejecugamos la sentencia
-                if (controlerSql.ejecutar(cadenaCreacion) > 0)
-                    return true;
-                else
-                    return false;
-
-            }
-            else {
-                System.out.println("ERROR: prepare vacio");
-                //Muestra el error del prepare vacio
-            }
-
-        } catch (Exception ex) {
-            return false;
-        }*/
-        return false;
     }
 
 
@@ -558,7 +577,14 @@ public class DaoSql implements IDao {
                 break;
 
             case PROYECTOS:
-                element = new Proyecto();
+
+                switch (rs.getInt("tipo")){
+                    case 0:element = new Nacional();break;
+                    case 1:element= new Internacional();break;
+                    default:element = new Proyecto();break;
+                }
+
+
                 ((Proyecto) element).setId(rs.getInt("id"));
                 ((Proyecto) element).setNombre(rs.getString("Nombre"));
                 ((Proyecto) element).setFechaAlta(rs.getDate("fechaAlta"));
@@ -589,62 +615,5 @@ public class DaoSql implements IDao {
         return sDate;
     }
 
-/*  ESTO PARA CUANDO VEAMOS QUE TODO FUNCIONA
-    private String factorySqlQuery(Apartados apartado, Operacion op){
 
-        switch (apartado){
-            case PERSONAL:
-                switch (op){
-                    case SELECT:
-                        return "";
-                    break;
-                    case INSERT:
-                        return "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
-                    break;
-                    case UPDATE:
-                        return "";
-                    break;
-                    case DELETE:
-                        return "DELETE `persona` WHERE idPersona = ?";
-                    break;
-                }
-            break;
-            case DELEGACIONES:
-                switch (op){
-                    case SELECT:
-                        return "";
-                    break;
-                    case INSERT:
-                        return "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
-                    break;
-                    case UPDATE:
-                        return "";
-                    break;
-                    case DELETE:
-                        return "DELETE `persona` WHERE idPersona = ?";
-                    break;
-                }
-                break;
-            case PROYECTOS:
-                switch (op){
-                    case SELECT:
-                        return "";
-                    break;
-                    case INSERT:
-                        return "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?,?)";
-                    break;
-                    case UPDATE:
-                        return "";
-                    break;
-                    case DELETE:
-                        return "DELETE `persona` WHERE idPersona = ?";
-                    break;
-                }
-                break;
-
-        }
-    }
-
-
- */
 }

@@ -152,7 +152,7 @@ public class Proyectos_vista implements Vista{
             return null;
         }
 
-
+        nuevoProyecto.setId(datos.getProyectos().get(indice).getId());
         if(!esMOdificacion){
             nuevoProyecto.setEstado(true);
             nuevoProyecto.setFechaAlta(new Date(System.currentTimeMillis()));

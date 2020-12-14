@@ -26,11 +26,17 @@ public class SqlControllerTest {
 
         SqlController conexion = new SqlController("localhost","3306","4DBSET","root","1021");
         DaoSql sqlDao = new DaoSql(conexion);
+  /*
+        Proyecto edit = new Proyecto();
+        edit.setNombre("Prueba Modificacion");
+        edit.setId(1);
+        edit.
+        sqlDao.modificar()
 
         Usuario user = new Usuario();
         user.setNombre("admin");
         user.setPassword("1021");
- /*
+
         //Testing logueo.
         Boolean retoerno = sqlDao.crear(user,Apartados.USUARIOS);
         if(sqlDao.existeUnError())

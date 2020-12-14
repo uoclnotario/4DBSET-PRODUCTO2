@@ -23,6 +23,7 @@ public class ExportacionDeXmlASql {
 
     @Test
     public boolean testCrear() throws Exception{
+        //TODO DESARROLLAR ALGORITMO DE EXPORTACIÓN
         //Esta función precondicion es que ya se haya creado la base de datos desde cero, y se encuentre vacia.
         IDao daoXml = FactoryDAO.lodaModel(FactoryDAO.typeDao.XML);
 

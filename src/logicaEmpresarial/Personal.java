@@ -87,9 +87,9 @@ public  class Personal extends Persona {
     public Integer getIntTIpo(){
         switch(this.getClass().getName()){
             case "logicaEmpresarial.Colaboradores":return 1;
-            case "logicaEmpresarial.Voluntarios":return 2;
-            case "logicaEmpresarial.VoluntariosInternacionales":return 3;
-            case "logicaEmpresarial.Contratados":return 4;
+            case "logicaEmpresarial.Contratados":return 2;
+            case "logicaEmpresarial.Voluntarios":return 3;
+            case "logicaEmpresarial.VoluntariosInternacionales":return 4;
             default: return 0;
         }
     }

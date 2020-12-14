@@ -3,11 +3,13 @@ package logicaEmpresarial;
 import java.util.Date;
 import javax.swing.plaf.BorderUIResource;
 
-public  class Proyecto extends Personal {
+public  class Proyecto {
 
 
     public void setDelegacion(Delegacion delegacion) {
+
     }
+
 
     public  enum  Tipo{NACIONAL,INTERNACIONAL};
 
@@ -50,7 +52,15 @@ public  class Proyecto extends Personal {
         return fechaBaja;
     }
     public boolean getEstado() { return estado;   }
-
+    public int getId() {
+        return id;
+    }
+    public int getIntTipo(){
+        switch (this.getClass().getName()){
+            case "logicaEmpresarial.Internacional":return 1;
+            default:return 0;
+        }
+    }
 
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
@@ -65,6 +75,8 @@ public  class Proyecto extends Personal {
         this.fechaDeInicio = fechaDeInicio;
     }
     public void setEstado(boolean estado) { this.estado = estado; }
-
+    public void setId(int id){
+        this.id = id;
+    }
 
 }

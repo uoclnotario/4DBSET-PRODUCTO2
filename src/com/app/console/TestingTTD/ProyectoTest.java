@@ -23,7 +23,6 @@ public class ProyectoTest {
         delegacion.setNombre("dele1");
 
         proyecto.setDelegacion(delegacion);
-        delegacion.getPersonal().add(proyecto);
 
         //Se crea en el xml los datos
         dao.crear(proyecto, Apartados.PROYECTOS);
@@ -38,7 +37,7 @@ public class ProyectoTest {
         //verficamos que proyectos esta bien.
         Assert.assertThat(dao.getPilaDatosGenerales().getProyectos().get(0).getNombre(), CoreMatchers.is("proy1"));
 
-        proyecto.setProyecto(proyecto);
+
 
         dao.modificar(proyecto,0, Apartados.PROYECTOS);
 

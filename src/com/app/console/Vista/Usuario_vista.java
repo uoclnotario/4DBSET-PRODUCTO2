@@ -81,7 +81,7 @@ public class Usuario_vista implements Vista {
 
         if (esMOdificacion) {
             System.out.println("Modificación de Usuario:");
-            System.out.println("Inserte el nombre de usuario["+datos.getUsuarios().get(indice)+"]:");
+            System.out.println("Inserte el nombre de usuario["+datos.getUsuarios().get(indice).getNombre()+"]:");
         }else{
             System.out.println("Creación de Usuario:");
             System.out.println("Inserte el nombre de usuario:");
@@ -114,7 +114,7 @@ public class Usuario_vista implements Vista {
         }else{
             nuevoUsuario.setIntRol(Integer.parseInt(entradaTexto));
         }
-
+        nuevoUsuario.setId(datos.getUsuarios().get(indice).getId());
         return nuevoUsuario;
     }
 }
