@@ -13,10 +13,8 @@ import java.util.Optional;
 
 public class Personal_vista implements Vista {
 
-
     @Override
     public String mostrarLIstado(List listado, String salir, Usuario user){
-
         FuncionesConsola.mostrarEncabezado("LISTADO DE PERSONAL");
 
         if(listado == null || listado.size() == 0){
@@ -66,14 +64,13 @@ public class Personal_vista implements Vista {
         return FuncionesConsola.leerConsola();
     }
 
-
     private void mostrarDato(Personal persona){
-
-
         System.out.printf("%-25s %-5s\n", "Nombre:", persona.getNombre());
         System.out.printf("%-25s %-5s\n", "NIF:", persona.getNif_dni());
+
         if(persona.getFechaDeNacimiento() != null)
             System.out.printf("%-25s %-5s\n", "Fecha de nacimiento:", FuncionesConsola.formatoFecha.format(persona.getFechaDeNacimiento()));
+
         System.out.printf("%-25s %-5s\n", "Domicilio:", persona.getDomicilio());
         System.out.printf("%-25s %-5s\n", "Tipo:", persona.getTipoString());
 
@@ -158,8 +155,8 @@ public class Personal_vista implements Vista {
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Personal nuevoPersonal;
         Personal viejoPersonal = null;
-
         String entradaTexto;
+
         int entradaNumero = -1;
         boolean esMOdificacion = indice != -1;
         int identificarHijo = -1;
@@ -170,8 +167,6 @@ public class Personal_vista implements Vista {
         System.out.println("\t 2-Colaborador");
         System.out.println("\t 3-Voluntario");
         System.out.println("\t 4-Voluntario internacional");
-
-
 
 
         if(esMOdificacion){
@@ -210,26 +205,23 @@ public class Personal_vista implements Vista {
 
             entradaNumero = Integer.parseInt(entradaTexto);
 
-
         }
 
 
         switch (entradaNumero) {
             case 1: nuevoPersonal = new Contratados();break;
-            case 2: nuevoPersonal =new Colaboradores();break;
+            case 2: nuevoPersonal = new Colaboradores();break;
             case 3: nuevoPersonal = new Voluntarios();break;
             case 4: nuevoPersonal = new VoluntariosInternacionales();break;
             default :
                 System.out.println("Se ha producido un error");
                 return null;
-
         }
 
 
 
         //dni
         if(esMOdificacion) {
-            nuevoPersonal = viejoPersonal;
             System.out.println("Inserte el DNI:[" + viejoPersonal.getNif_dni() + "]");
         }
         else
@@ -306,6 +298,7 @@ public class Personal_vista implements Vista {
                                                             FuncionesConsola.comprobaConversion.TEXTO,
                                                             PALABRACANCELAR,
                                                             esMOdificacion);
+
         if(entradaTexto != null) {
             if(entradaTexto.equals("(default)"))
                 nuevoPersonal.setDomicilio(datos.getPersonal().get(indice).getDomicilio());
@@ -314,9 +307,6 @@ public class Personal_vista implements Vista {
         }else{
             return null;
         }
-
-
-
 
         //El personal que quiere ser creado es del mismo tipo que el anterior?
         boolean permiteDefault = false;
@@ -491,10 +481,14 @@ public class Personal_vista implements Vista {
                                                                 PALABRACANCELAR,
                                                                 esMOdificacion);
 
-
-            entradaNumero = Integer.parseInt(entradaTexto);
-            if(entradaNumero <= datos.getDelegaciones().size() && entradaNumero > 0 ){
-                nuevoPersonal.setDelegacion(datos.getDelegaciones().get(entradaNumero-1));
+            if(entradaTexto.equals("(default)"))
+            {
+                nuevoPersonal.setDelegacion(viejoPersonal.getDelegacion());
+            }else{
+                entradaNumero = Integer.parseInt(entradaTexto);
+                if(entradaNumero <= datos.getDelegaciones().size() && entradaNumero > 0 ){
+                    nuevoPersonal.setDelegacion(datos.getDelegaciones().get(entradaNumero-1));
+                }
             }
         }
 
@@ -526,12 +520,14 @@ public class Personal_vista implements Vista {
                     esMOdificacion);
 
 
-
-            entradaNumero = Integer.parseInt(entradaTexto);
-            if(entradaNumero <= datos.getProyectos().size() && entradaNumero > 0 ){
-                nuevoPersonal.setProyecto(datos.getProyectos().get(entradaNumero-1));
+            if(entradaTexto.equals("(default)")){
+                nuevoPersonal.setProyecto(viejoPersonal.getProyecto());
+            } else {
+                entradaNumero = Integer.parseInt(entradaTexto);
+                if (entradaNumero <= datos.getProyectos().size() && entradaNumero > 0) {
+                    nuevoPersonal.setProyecto(datos.getProyectos().get(entradaNumero - 1));
+                }
             }
-
 
         }
 
@@ -540,8 +536,11 @@ public class Personal_vista implements Vista {
           nuevoPersonal.setEstado(true);
           nuevoPersonal.setFechaAlta(new Date(System.currentTimeMillis()));
       }else{
+          nuevoPersonal.setFechaAlta(viejoPersonal.getFechaAlta());
+          nuevoPersonal.setFechaBaja(viejoPersonal.getFechaBaja());
           nuevoPersonal.setId(datos.getPersonal().get(indice).getId());
       }
         return nuevoPersonal;
     }
+
 }

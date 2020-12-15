@@ -55,7 +55,6 @@ public class Proyectos_vista implements Vista{
 
         return FuncionesConsola.leerConsola();
     }
-
     public void mostrarDato(Proyecto proyecto){
 
         DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
@@ -86,7 +85,6 @@ public class Proyectos_vista implements Vista{
     public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR){
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
-
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Proyecto nuevoProyecto;
         String entradaTexto;

@@ -38,7 +38,10 @@ public class Menu_vista {
             System.out.println("Se ha creado correctamente");
         }else{
             if(dao.existeUnError())
-                System.out.println("Se ha producido un error y no se ha podido guardar información:"+dao.getMensajeError());
+                if(dao.getMensajeError() != null)
+                    System.out.println("Se ha producido un error y no se ha podido guardar información:"+dao.getMensajeError());
+                else
+                    System.out.println("Se ha producido un error y no se ha podido guardar información:Razones desconocidas...");
             else
                 System.out.println("No se ha creado, debido a que se ha cancelado.");
         }

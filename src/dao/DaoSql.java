@@ -250,19 +250,30 @@ public class DaoSql implements IDao {
         final String SQL_UPDATE_PROYECTO = "UPDATE proyectos SET fechaAlta = ?,fechaBaja = ?,nombre = ?,estado = ?,tipo = ? WHERE id = ?;";
         final String SQL_UPDATE_USUARIO = "UPDATE usuarios SET nombre = ?, tipoUsuario = ?, hashing = ? WHERE id = ?;";
 
+        final String SQL_INSERT_COLABORADORES ="INSERT INTO colaboradores(idPersonal,tipoColaboracion)VALUES(?,?);";
+        final String SQL_INSERT_CONTRATADOS = "INSERT INTO contratados(idPersonal,tipoContrato,salario)VALUES(?,?,?);";
+        final String SQL_INSERT_VOLUNTARIOS=  "INSERT INTO voluntarios(idPersonal,areaVoluntariado)VALUES(?,?);";
+        final String SQL_INSERT_VOLUNTARIOSINTERNACIONALES=  "INSERT INTO `voluntarios internacionales`(`volunariosId`,`pais`)VALUES(?,?);";
 
-
-        if(item == null)
-            return false;
+        final String SQL_DELETE_CONTRATADOS="DELETE FROM contratados WHERE idPersonal=?";
+        final String SQL_DELETE_COLABORADORES="DELETE FROM voluntarios WHERE idPersonal=?";
+        final String SQL_DELETE_VOLUNTARIOS="DELETE FROM colaboradores WHERE idPersonal=?";
 
 
 
         //Seteamos los valores
         ArrayList<Object> valores = new ArrayList<>();
         Integer recogidaId;
+        String sqlDelete="";
+        boolean isSubtipo=false;
+
+        if(item == null)
+            return false;
 
         switch (apartado) {
             case PERSONAL:
+                //Recogida perosnal guardado.
+                Persona personalAntiguo = pilaDatosGenerales.getPersonal().get(indice);
 
                 valores = new ArrayList<>();
                 valores.add(((Personal) item).getIntTipo());
@@ -288,16 +299,88 @@ public class DaoSql implements IDao {
                 }
                 valores.add(((Personal) item).getId());
 
-                recogidaId = controlerSql.ejecutar(SQL_UPDATE_PERSONAL, valores, false, false, false);
+                recogidaId = controlerSql.ejecutar(SQL_UPDATE_PERSONAL, valores, true, false, false);
                 if (recogidaId <= 0) {
+                    controlerSql.realizarRoolback();
                     existeError = true;
                     mensajeError = controlerSql.getErrores();
                     System.out.println("Error al modificar="+mensajeError);
                     return false;
-                } else {
+                }
+
+
+
+                //Delete de datos antiguos.
+                switch (item.getClass().getName()) {
+                    case "logicaEmpresarial.Contratados":               isSubtipo = true;sqlDelete=SQL_DELETE_CONTRATADOS;break;
+                    case "logicaEmpresarial.Colaboradores":             isSubtipo = true;sqlDelete=SQL_DELETE_COLABORADORES;break;
+                    case "logicaEmpresarial.Voluntarios":               isSubtipo = true;sqlDelete=SQL_DELETE_VOLUNTARIOS;break;
+                    case "logicaEmpresarial.VoluntariosInternacionales":isSubtipo = true;sqlDelete=SQL_DELETE_VOLUNTARIOS;break;
+                }
+
+                if(isSubtipo) {
+                    valores = new ArrayList<>();
+                    valores.add(((Personal) personalAntiguo).getId());
+                    recogidaId = controlerSql.ejecutar(sqlDelete, valores, true, false, false);
+
+                    if (recogidaId < 0) {
+                        controlerSql.realizarRoolback();
+                        existeError = true;
+                        mensajeError = controlerSql.getErrores();
+                        return false;
+                    }
+                }
+
+                //Creación de datos del tipo de personal en las tablas hijas.
+                switch (item.getClass().getName()) {
+                    case "logicaEmpresarial.Contratados":
+                        valores = new ArrayList<>();
+                        valores.add(((Personal) item).getId());
+                        valores.add(((Contratados) item).getTipoContrato());
+                        valores.add(((Contratados) item).getSalario());
+                        recogidaId = controlerSql.ejecutar(SQL_INSERT_CONTRATADOS, valores, true, true, false);
+                        break;
+                    case "logicaEmpresarial.Colaboradores":
+                        valores = new ArrayList<>();
+                        valores.add(((Personal) item).getId());
+                        valores.add(((Colaboradores) item).getIntTipoColaboracion());
+                        recogidaId = controlerSql.ejecutar(SQL_INSERT_COLABORADORES, valores, true, true, false);
+                        break;
+                    case "logicaEmpresarial.Voluntarios":
+                        valores = new ArrayList<>();
+                        valores.add(((Personal) item).getId());
+                        valores.add(((Voluntarios) item).getAreaVoluntariado());
+                        recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, true, false);
+                        break;
+                    case "logicaEmpresarial.VoluntariosInternacionales":
+                        valores = new ArrayList<>();
+                        valores.add(((Personal) item).getId());
+                        valores.add(((Voluntarios) item).getAreaVoluntariado());
+                        recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOS, valores, true, false, true);
+                        if (recogidaId <= 0) {
+                            controlerSql.realizarRoolback();
+                            existeError = true;
+                            mensajeError = controlerSql.getErrores();
+                            return false;
+                        } else {
+                            valores = new ArrayList<>();
+                            valores.add(recogidaId);//id de voluntario
+                            valores.add(((VoluntariosInternacionales) item).getPais());
+                            recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOSINTERNACIONALES, valores, true, true, false);
+                        }
+                        break;
+                }
+
+                if (recogidaId <= 0) {
+                    controlerSql.realizarRoolback();
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return false;
+                }else{
                     pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
                     return true;
                 }
+
 
             case USUARIOS:
                 valores.add(((Usuario) item).getIntRol());
