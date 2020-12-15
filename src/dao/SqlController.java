@@ -315,7 +315,7 @@ public class SqlController {
 
         update( "CREATE TABLE IF NOT EXISTS `PERSONAL` (\n" +
                 "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
-                "  `fechaAlta` DATE NOT NULL,\n" +
+                "  `fechaAlta` DATE NULL,\n" +
                 "  `fechaBaja` DATE NULL,\n" +
                 "  `estado` TINYINT NOT NULL,\n" +
                 "  `delegacion` INT NULL,\n" +

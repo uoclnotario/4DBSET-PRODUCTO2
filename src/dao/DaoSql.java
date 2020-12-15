@@ -256,18 +256,6 @@ public class DaoSql implements IDao {
             return false;
 
 
-        //Modificar el item.
-        switch (apartado){
-            case NINGUNO: return false;
-            case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
-            case PERSONAL:
-                pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
-                break;
-            case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
-            case USUARIOS: pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);break;
-            default: return false;
-        }
-
 
         //Seteamos los valores
         ArrayList<Object> valores = new ArrayList<>();
@@ -304,8 +292,10 @@ public class DaoSql implements IDao {
                 if (recogidaId <= 0) {
                     existeError = true;
                     mensajeError = controlerSql.getErrores();
+                    System.out.println("Error al modificar="+mensajeError);
                     return false;
                 } else {
+                    pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
                     return true;
                 }
 
@@ -322,6 +312,7 @@ public class DaoSql implements IDao {
                     mensajeError = controlerSql.getErrores();
                     return false;
                 } else {
+                    pilaDatosGenerales.getUsuarios().set(indice,(Usuario) item);
                     return true;
                 }
 
@@ -338,6 +329,7 @@ public class DaoSql implements IDao {
                     mensajeError = controlerSql.getErrores();
                     return false;
                 } else {
+                    pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);
                     return true;
                 }
 
@@ -356,6 +348,7 @@ public class DaoSql implements IDao {
                     mensajeError = controlerSql.getErrores();
                     return false;
                 } else {
+                    pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);
                     return true;
                 }
             default:
@@ -553,7 +546,7 @@ public class DaoSql implements IDao {
 
                 //Recogida datos de Personal.
                 ((Personal) element).setFechaAlta(rs.getDate("fechaAlta"));
-                ((Personal) element).setFechaAlta(rs.getDate("fechaBaja"));
+                ((Personal) element).setFechaBaja(rs.getDate("fechaBaja"));
 
                 Integer idDelegacion = rs.getInt("idDelegacion");
                 if(idDelegacion > 0 &&  getPilaDatosGenerales().getDelegaciones().size() > 0){

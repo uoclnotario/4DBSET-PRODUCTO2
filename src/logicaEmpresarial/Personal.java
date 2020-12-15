@@ -47,6 +47,7 @@ public  class Personal extends Persona {
     public void setFechaBaja(Date fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
+
     public Delegacion getDelegacion() {
         return delegacion;
     }

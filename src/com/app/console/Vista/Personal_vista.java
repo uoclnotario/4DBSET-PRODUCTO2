@@ -228,8 +228,10 @@ public class Personal_vista implements Vista {
 
 
         //dni
-        if(esMOdificacion)
-            System.out.println("Inserte el DNI:["+viejoPersonal.getNif_dni()+"]");
+        if(esMOdificacion) {
+            nuevoPersonal = viejoPersonal;
+            System.out.println("Inserte el DNI:[" + viejoPersonal.getNif_dni() + "]");
+        }
         else
             System.out.println("Inserte el DNI:");
 
