@@ -152,6 +152,7 @@ public class SqlController {
 
 
                     }catch (Exception e){
+                        System.out.println(e.getMessage());
                         errores = e;
                         return -1;
                     }

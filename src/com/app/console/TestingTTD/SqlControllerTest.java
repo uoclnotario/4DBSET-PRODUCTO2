@@ -63,7 +63,7 @@ public class SqlControllerTest {
         nuevoDelegacion.setDireccion("EnAlgunLugar");
         nuevoDelegacion.setTelefono(null);
         Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
-
+*/
         // Parametros
         Date fecha = new Date(System.currentTimeMillis());
         Delegacion delegacion = new Delegacion();
@@ -81,20 +81,12 @@ public class SqlControllerTest {
         nuevoPersonal.setTipoContrato("Temporal");
         nuevoPersonal.setSalario(100f);
 
+        sqlDao.descargaDatos(Apartados.PERSONAL);
 
-        Delegacion nuevoDelegacion = new Delegacion();
-        nuevoDelegacion.setNombre("PruebaDelegacion");
-        nuevoDelegacion.setDireccion("EnAlgunLugar");
-        nuevoDelegacion.setTelefono(null);
-
-
-        Assert.assertThat(sqlDao.crear(nuevoDelegacion,Apartados.DELEGACIONES), CoreMatchers.is(true));
-        nuevoPersonal.setDelegacion(nuevoDelegacion);
-
-        Assert.assertThat(sqlDao.crear(nuevoPersonal,Apartados.PERSONAL), CoreMatchers.is(true));
+        Assert.assertThat(sqlDao.modificar(nuevoPersonal,0,Apartados.PERSONAL), CoreMatchers.is(true));
 
         
-*/
+
 
 
         //Test de creación PROYECTO.

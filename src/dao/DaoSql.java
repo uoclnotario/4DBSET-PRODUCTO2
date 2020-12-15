@@ -213,6 +213,7 @@ public class DaoSql implements IDao {
                         return true;
                     }
 
+
                 case DELEGACIONES:
                     valores.add(((Delegacion) item).getNombre());//Nombre
                     valores.add(((Delegacion) item).getDireccion());//Dirección
@@ -255,19 +256,14 @@ public class DaoSql implements IDao {
         //TODO FINALIZAR APARTADO MODIFICACIÓN
 
 
-        final String SQL_INSERT_PERSONAL = "INSERT INTO personal (tipo,idPersona,fechaAlta,fechaBaja,estado,idDelegacion,idProyecto)VALUES(?,?,?,?,?,?,?);";
-        final String SQL_INSERT_PERSONA = "INSERT INTO persona (TipoPersona,NIF_DNI,Nombre,FechaNacimiento,Domicilio)VALUES(?,?,?,?,?);";
-
-        final String SQL_INSERT_DELEGACION = "UPDATE delegacion SET nombre = ?,direccion = ?,telefono = ? WHERE id = ?;";
-        final String SQL_INSERT_PROYECTO = "UPDATE proyectos SET fechaAlta = ?,fechaBaja = ?,nombre = ?,estado = ?,tipo = ? WHERE id = ?;";
-        final String SQL_INSERT_USUARIO = "UPDATE usuarios SET nombre = ?, tipoUsuario = ?, hashing = ? WHERE id = ?;";
+        final String SQL_UPDATE_PERSONAL = "UPDATE persona INNER JOIN personal on personal.idPersona = persona.id SET persona.tipoPersona = ?,persona.nif_dni = ?,persona.nombre = ?,persona.fechaNacimiento = ?,persona.domicilio = ?, personal.tipo = ?, personal.fechaAlta =?, personal.fechaBaja=?, personal.estado = ?, personal.idDelegacion=?,personal.idProyecto=? WHERE personal.id = ? ;";
 
 
-        //Subentidades de PERSONAL
-        final String SQL_INSERT_COLABORADORES ="INSERT INTO colaboradores(idPersonal,tipoColaboracion)VALUES(?,?);";
-        final String SQL_INSERT_CONTRATADOS = "INSERT INTO contratados(idPersonal,tipoContrato,salario)VALUES(?,?,?);";
-        final String SQL_INSERT_VOLUNTARIOS=  "INSERT INTO voluntarios(idPersonal,areaVoluntariado)VALUES(?,?);";
-        final String SQL_INSERT_VOLUNTARIOSINTERNACIONALES=  "INSERT INTO voluntarios internacionales(volunariosId,pais)VALUES(?,?);";
+        final String SQL_UPDATE_DELEGACION = "UPDATE delegacion SET nombre = ?,direccion = ?,telefono = ? WHERE id = ?;";
+        final String SQL_UPDATE_PROYECTO = "UPDATE proyectos SET fechaAlta = ?,fechaBaja = ?,nombre = ?,estado = ?,tipo = ? WHERE id = ?;";
+        final String SQL_UPDATE_USUARIO = "UPDATE usuarios SET nombre = ?, tipoUsuario = ?, hashing = ? WHERE id = ?;";
+
+
 
         if(item == null)
             return false;
@@ -278,7 +274,6 @@ public class DaoSql implements IDao {
             case NINGUNO: return false;
             case PROYECTOS: pilaDatosGenerales.getProyectos().set(indice,(Proyecto) item);break;
             case PERSONAL:
-                pilaDatosGenerales.getPersonal().get(indice).setDelegacion(null);//Ponemos a null la delegación del personal asignado, para quitarlo de la memoria
                 pilaDatosGenerales.getPersonal().set(indice,(Personal)item);
                 break;
             case DELEGACIONES: pilaDatosGenerales.getDelegaciones().set(indice,(Delegacion) item);break;
@@ -294,14 +289,46 @@ public class DaoSql implements IDao {
         switch (apartado) {
             case PERSONAL:
 
-                return true;
+                valores = new ArrayList<>();
+                valores.add(((Personal) item).getIntTipo());
+                valores.add(((Personal) item).getNif_dni());
+                valores.add(((Personal) item).getNombre());
+                valores.add(controlerSql.getValNull(convertSqlDate(((Personal) item).getFechaDeNacimiento())));
+                valores.add(((Personal) item).getDomicilio());
+                valores.add(((Personal) item).getIntTIpo());
+                valores.add(controlerSql.getValNull(convertSqlDate(((Personal) item).getFechaAlta())));
+                valores.add(controlerSql.getValNull(convertSqlDate(((Personal) item).getFechaBaja())));
+                valores.add(((Personal) item).getEstado());
+
+                if (((Personal) item).getDelegacion() != null) {
+                    valores.add(((Personal) item).getDelegacion().getId());
+                } else {
+                    valores.add(null);
+                }
+
+                if (((Personal) item).getProyecto() != null) {
+                    valores.add(((Personal) item).getProyecto().getId());
+                } else {
+                    valores.add(null);
+                }
+                valores.add(((Personal) item).getId());
+
+                recogidaId = controlerSql.ejecutar(SQL_UPDATE_PERSONAL, valores, false, false, false);
+                if (recogidaId <= 0) {
+                    existeError = true;
+                    mensajeError = controlerSql.getErrores();
+                    return false;
+                } else {
+                    return true;
+                }
+
             case USUARIOS:
                 valores.add(((Usuario) item).getIntRol());
                 valores.add(((Usuario) item).getNombre());
                 valores.add(((Usuario) item).getHasing());
                 valores.add(((Usuario) item).getId());
 
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO, valores, false, false, false);
+                recogidaId = controlerSql.ejecutar(SQL_UPDATE_USUARIO, valores, false, false, false);
                 if (recogidaId <= 0) {
                     controlerSql.realizarRoolback();
                     existeError = true;
@@ -317,7 +344,7 @@ public class DaoSql implements IDao {
                 valores.add(((Delegacion) item).getTelefono());
                 valores.add(((Delegacion) item).getId());
 
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_DELEGACION, valores, false, false, false);
+                recogidaId = controlerSql.ejecutar(SQL_UPDATE_DELEGACION, valores, false, false, false);
                 if (recogidaId <= 0) {
                     controlerSql.realizarRoolback();
                     existeError = true;
@@ -335,7 +362,7 @@ public class DaoSql implements IDao {
                 valores.add(((Proyecto) item).getIntTipo());
                 valores.add(((Proyecto)item).getId());
 
-                recogidaId = controlerSql.ejecutar(SQL_INSERT_PROYECTO, valores, false, false, false);
+                recogidaId = controlerSql.ejecutar(SQL_UPDATE_PROYECTO, valores, false, false, false);
                 if (recogidaId <= 0) {
                     controlerSql.realizarRoolback();
                     existeError = true;

@@ -2,14 +2,10 @@ package com.app.console.Vista;
 
 import logicaEmpresarial.*;
 
-import javax.print.DocFlavor;
-import java.awt.desktop.SystemEventListener;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class Proyectos_vista implements Vista{
 
@@ -49,7 +45,7 @@ public class Proyectos_vista implements Vista{
     public String mostrarUnElemento(Object elemento, String salir, Usuario user) {
 
         System.out.println("---MOSTRANDO DATOS DE PROYECTO---");
-        MostrarDato((Proyecto)elemento);
+        mostrarDato((Proyecto)elemento);
 
         System.out.println("Indique que desea realizar:");;
         System.out.println("\t- 0 Modificar este proyecto.");
@@ -59,7 +55,8 @@ public class Proyectos_vista implements Vista{
 
         return FuncionesConsola.leerConsola();
     }
-    public void MostrarDato(Proyecto proyecto){
+
+    public void mostrarDato(Proyecto proyecto){
 
         DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         System.out.printf("%-25s %-5s\n", "Nombre:", proyecto.getNombre());
@@ -89,6 +86,7 @@ public class Proyectos_vista implements Vista{
     public Object modificarElemento(Ong datos, int indice, String PALABRACANCEALR){
         return solicitarNuevo(datos,indice,PALABRACANCEALR);
     }
+
     private Object solicitarNuevo(Ong datos, int indice, String PALABRACANCELAR){
         Proyecto nuevoProyecto;
         String entradaTexto;

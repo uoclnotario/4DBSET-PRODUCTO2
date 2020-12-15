@@ -24,7 +24,7 @@ public class AppConsole {
 
         while (true) {
             vistaMenu = new Menu_vista();
-            modelo = FactoryDAO.lodaModel(FactoryDAO.typeDao.SQL);
+            modelo = FactoryDAO.loadModel(FactoryDAO.typeDao.SQL);
             if(modelo !=null){
                 try {
                     run();

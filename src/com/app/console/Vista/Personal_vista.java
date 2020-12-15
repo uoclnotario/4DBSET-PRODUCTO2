@@ -532,6 +532,8 @@ public class Personal_vista implements Vista {
 
 
         }
+
+        nuevoPersonal.setId(datos.getPersonal().get(indice).getId());
       if(!esMOdificacion){
           nuevoPersonal.setEstado(true);
           nuevoPersonal.setFechaAlta(new Date(System.currentTimeMillis()));

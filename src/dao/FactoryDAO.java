@@ -3,7 +3,7 @@ package dao;
 public class FactoryDAO {
     public enum typeDao{XML,SQL}
 
-    public static IDao lodaModel(typeDao tipoPersistencia){
+    public static IDao loadModel(typeDao tipoPersistencia){
         switch (tipoPersistencia){
             case XML:
                     //Configurar los datos de configuración del dao.
