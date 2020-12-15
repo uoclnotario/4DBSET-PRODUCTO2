@@ -99,6 +99,7 @@ public class Usuario_vista implements Vista {
 
 
         if(esMOdificacion){
+            nuevoUsuario.setId(datos.getUsuarios().get(indice).getId());
             System.out.println("Indique los privilegios del usuario["+datos.getUsuarios().get(indice).getRolString()+"]");
         }
 
@@ -114,7 +115,8 @@ public class Usuario_vista implements Vista {
         }else{
             nuevoUsuario.setIntRol(Integer.parseInt(entradaTexto));
         }
-        nuevoUsuario.setId(datos.getUsuarios().get(indice).getId());
+
+
         return nuevoUsuario;
     }
 }

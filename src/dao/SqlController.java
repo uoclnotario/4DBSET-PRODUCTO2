@@ -15,16 +15,16 @@ public class SqlController {
     private String pass;
     private Exception errores;
     private Connection conn = null;
+    private boolean bdRecienCreada;
 
     public SqlController(String host,String port,String dbName, String user, String pass){
         this.user= user;
         this.pass= pass;
         this.dbName = dbName;
+        this.bdRecienCreada = false;
 
         this.cadenaConexion=String.format("jdbc:mysql://%s:%s/%s?useSSL=false", host, port, dbName);
         compobarDBname(host,port);
-
-
     }
 
     public Object getValNull(Date val){
@@ -66,7 +66,7 @@ public class SqlController {
 
             }catch (SQLException e){
                 //Fallo al cerrar la conexión.
-                System.out.println(e.getMessage());
+                System.out.println("Error en sql:"+e.getMessage());
                 errores = e;
                 return false;
             }
@@ -79,7 +79,6 @@ public class SqlController {
         try{
 
             if(!manualCommit){
-
                 Class.forName(driverMysql);
                 conn = DriverManager.getConnection(cadenaConexion,user,pass);
             }else{
@@ -93,69 +92,65 @@ public class SqlController {
                     conn = DriverManager.getConnection(cadenaConexion,user,pass);
                 }
 
-                if(conn.getAutoCommit()){
+                if(conn.getAutoCommit())
                     conn.setAutoCommit(false);
-                }
+
             }
 
 
             if(!conn.isClosed()){
-                    try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
+                try (PreparedStatement stmt = conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
 
-                        //Se recorre el bucle y se inserta el tipo de valor.
-                        int index = 1;
+                    //Se recorre el bucle y se inserta el tipo de valor.
+                    int index = 1;
 
-                        for(Object e:valores){
-                            if(e instanceof Integer){
-                                stmt.setInt(index,(Integer)e);
-                            }else if(e instanceof String){
-                                //Si es DATE NULL
-                                if(e.equals("'DATENULL'"))
-                                    stmt.setNull(index, Types.DATE);
-                                else
-                                    stmt.setString(index,(String)e);
+                    for(Object e:valores){
+                        if(e instanceof Integer){
+                            stmt.setInt(index,(Integer)e);
+                        }else if(e instanceof String){
+                            //Si es DATE NULL
+                            if(e.equals("'DATENULL'"))
+                                stmt.setNull(index, Types.DATE);
+                            else
+                                stmt.setString(index,(String)e);
 
-                            }else if(e instanceof Boolean){
-                                stmt.setBoolean(index,(Boolean)e);
-                            }else if(e instanceof Float) {
-                                stmt.setFloat(index, (Float)e);
-                            } else if(e instanceof java.sql.Date) {
-                                stmt.setDate(index,(Date)e);
-                            }else{
-                                stmt.setNull(index,0);
-                            }
-                            index++;
-                        }
-
-
-
-                        if(obtenerId){
-                            if(stmt.executeUpdate() > 0 ){
-
-                                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                                    if (generatedKeys.next()) {
-                                        System.out.println(generatedKeys.getInt(1));
-                                        return generatedKeys.getInt(1);
-                                    }
-                                    else {
-                                        throw new Exception("Creating user failed, no ID obtained.");
-                                    }
-                                }
-
-                            }else{
-                                errores = new Exception("No se creo ningun elemento");
-                                return -1;
-                            }
+                        }else if(e instanceof Boolean){
+                            stmt.setBoolean(index,(Boolean)e);
+                        }else if(e instanceof Float) {
+                            stmt.setFloat(index, (Float)e);
+                        } else if(e instanceof java.sql.Date) {
+                            stmt.setDate(index,(Date)e);
                         }else{
-                            return stmt.executeUpdate();
+                            stmt.setNull(index,0);
                         }
-
-
-                    }catch (Exception e){
-                        System.out.println(e.getMessage());
-                        errores = e;
-                        return -1;
+                        index++;
                     }
+
+                    if(obtenerId){
+                        if(stmt.executeUpdate() > 0 ){
+
+                            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                                if (generatedKeys.next())
+                                    return generatedKeys.getInt(1);
+                                else
+                                    throw new Exception("Creating user failed, no ID obtained.");
+
+                            }
+
+                        }else{
+                            errores = new Exception("No se creo ningun elemento");
+                            return -1;
+                        }
+                    }else{
+                        return stmt.executeUpdate();
+                    }
+
+
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                    errores = e;
+                    return -1;
+                }
             }
         }catch ( Exception e){
             //Error de conexión
@@ -163,17 +158,16 @@ public class SqlController {
             errores = e;
             return -1;
         }finally{
-            try {
-                    if (conn != null){
+            try{
+                if (conn != null){
 
-                        if(commitFinall)
-                            conn.commit();
+                    if(commitFinall)
+                        conn.commit();
 
-                        if(!manualCommit ||(manualCommit && commitFinall))
-                            conn.close();
+                    if(!manualCommit ||(manualCommit && commitFinall))
+                        conn.close();
 
-                    }
-
+                }
             }catch (SQLException e){
                 //Fallo al cerrar la conexión.
                 System.out.println(e.getMessage());
@@ -185,6 +179,8 @@ public class SqlController {
     }
 
 
+    public boolean getBdRecienCreada(){return bdRecienCreada;}
+    public void  setBdRecienCreada(boolean estado){this.bdRecienCreada = estado;}
 
     public int ejecutar(PreparedStatement stmt){
         try{
@@ -278,7 +274,7 @@ public class SqlController {
 
 
     private boolean createDBName(String host,String port){
-
+        System.out.println("Creando base de datos..");
         this.cadenaConexion=String.format("jdbc:mysql://%s:%s/?useSSL=false", host, port);
         this.user= user;
         this.pass= pass;
@@ -293,7 +289,7 @@ public class SqlController {
                         "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                         "  `nombre` VARCHAR(45) NOT NULL,\n" +
                         "  `direccion` VARCHAR(150) NULL,\n" +
-                        "  `telefono` VARCHAR(9) NULL,\n" +
+                        "  `telefono` VARCHAR(20) NULL,\n" +
                         "  PRIMARY KEY (`id`))\n" +
                         "ENGINE = InnoDB;" );
 
@@ -437,6 +433,7 @@ public class SqlController {
                 "        LEFT JOIN `voluntarios` `vl` ON ((`vl`.`idPersonal` = `pl`.`id`)))\n" +
                 "        LEFT JOIN `voluntarios internacionales` `vii` ON ((`vii`.`volunariosId` = `vl`.`id`)))");
 
+        bdRecienCreada = true;
         return true;
     }
 }

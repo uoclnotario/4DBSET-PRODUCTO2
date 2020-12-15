@@ -31,16 +31,6 @@ public class DaoSql implements IDao {
                 recoger(Apartados.PROYECTOS) &&
                 recoger(Apartados.PERSONAL) &&
                 recoger(Apartados.USUARIOS)) {
-
-
-          /*
-            if(pilaDatosGenerales.getDelegaciones().size() > 0){
-                for(Delegacion de: pilaDatosGenerales.getUsuarios()){
-
-                }
-            }
-          */
-
             return true;
         }else{
             return false;
@@ -181,8 +171,6 @@ public class DaoSql implements IDao {
                                     valores.add(((VoluntariosInternacionales) item).getPais());
                                     recogidaId = controlerSql.ejecutar(SQL_INSERT_VOLUNTARIOSINTERNACIONALES, valores, true, true, false);
                                 }
-
-
                                 break;
                         }
 
@@ -201,7 +189,6 @@ public class DaoSql implements IDao {
                     valores.add(((Usuario) item).getIntRol());
                     valores.add(((Usuario) item).getNombre());
                     valores.add(((Usuario) item).getHasing());
-                    System.out.println();
                     recogidaId = controlerSql.ejecutar(SQL_INSERT_USUARIO, valores, false, false, true);
                     if (recogidaId <= 0) {
                         controlerSql.realizarRoolback();
