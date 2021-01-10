@@ -12,12 +12,16 @@
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar!/" />
       <root url="file://$PROJECT_DIR$/lib/xStreamLib" />
       <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-5.1.49.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib/javafx-sdk-11.0.2/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="file://$PROJECT_DIR$/lib/xStreamLib" />
+      <root url="file://$PROJECT_DIR$/lib/javafx-sdk-11.0.2/lib" />
     </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/javafx-sdk-11.0.2/lib" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/lib/xStreamLib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/javafx-sdk-11.0.2/lib" recursive="false" type="SOURCES" />
     <jarDirectory url="file://$PROJECT_DIR$/lib/xStreamLib" recursive="false" type="SOURCES" />
   </library>
 </component>

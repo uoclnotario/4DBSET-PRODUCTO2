@@ -14,11 +14,8 @@ public class AppConsole {
     private final String PALABRAPARAVOLVER = "v";
     private Usuario usuarioAutentificado;
     private Menu_vista vistaMenu;
-
     private IDao modelo;//Modelo seleccionado por el usuario en el que se encuentra actualmente la aplicacion.
     private Vista vista;//Vista seleccionada por el usuario en el que se encuenta actualmente al acpliacion.
-    private Ong pilaDatos;
-
 
     public AppConsole(){
 
