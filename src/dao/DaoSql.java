@@ -565,7 +565,9 @@ public class DaoSql implements IDao {
                         pilaDatosGenerales.getPersonal().add((Personal) create(rs, apartados));
                         break;
                     case DELEGACIONES:
+
                         pilaDatosGenerales.getDelegaciones().add((Delegacion) create(rs, apartados));
+                        pilaDatosGenerales.getDelegaciones().get(pilaDatosGenerales.getDelegaciones().size()-1).setIndice(pilaDatosGenerales.getDelegaciones().size()-1);
                         break;
                     case PROYECTOS:
                         pilaDatosGenerales.getProyectos().add((Proyecto) create(rs, apartados));

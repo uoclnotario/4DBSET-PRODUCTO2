@@ -6,6 +6,8 @@ import java.util.List;
 public class Delegacion {
     private int id;
 
+    private int indice;
+
     private String nombre;
     private String direccion;
     private String telefono;
@@ -70,5 +72,13 @@ public class Delegacion {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIndice() {
+        return indice;
+    }
+
+    public void setIndice(int indice) {
+        this.indice = indice;
     }
 }
